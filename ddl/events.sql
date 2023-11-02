@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS events
 (
-    id              INTEGER primary key,
-    user_id         INTEGER references users,
+    id              INTEGER PRIMARY KEY,
+    user_id         INTEGER REFERENCES users,
     sequence_number INTEGER,
     session_id      CHAR(36),
     created_at      TIMESTAMP,
