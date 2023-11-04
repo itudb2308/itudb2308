@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id             INTEGER primary key,
+    id             INTEGER PRIMARY KEY,
     first_name     VARCHAR(20),
     last_name      VARCHAR(20),
     email          VARCHAR(100),
