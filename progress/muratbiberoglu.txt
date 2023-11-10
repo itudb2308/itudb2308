@@ -1,2 +1,4 @@
-WEEK 5 : 
+WEEK 5:
 Created DDL for orders and order_items tables.
+WEEK 6:
+Created BaseRepository Class and implemented Repository Class for orders and order_items
