@@ -11,7 +11,7 @@ class OrderRepository(BaseRepository):
 
     def findById(self, id: int):
         queryFileName = self._constants.SQL_FILES.ORDER_FIND_BY_ID
-        query = self._getSqlQueryAndFormat(queryFileName)
+        query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
 
         result = self.cursor.execute(query).fetchall()
