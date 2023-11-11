@@ -10,3 +10,7 @@ class RepositoryConstants:
         ORDER_FIND_BY_IDS = "order_find_by_ids.sql"
         ORDER_ITEM_FIND_BY_ID = "order_item_find_by_id.sql"
         ORDER_ITEM_FIND_BY_IDS = "order_item_find_by_ids.sql"
+        USER_FIND_BY_ID = "user_find_by_id.sql"
+        USER_FIND_BY_IDS = "user_find_by_ids.sql"
+        EVENTS_FIND_BY_ID = "events.find_by_id.sql"
+        EVENTS_FIND_BY_IDS = "events_find_by_ids.sql"

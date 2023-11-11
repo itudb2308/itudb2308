@@ -2,31 +2,32 @@ import sqlite3
 
 from BaseRepository import BaseRepository
 
-
-class OrderRepository(BaseRepository):
+class UserRepository(BaseRepository):
 
     def __init__(self, connection: sqlite3.Connection):
         self.connection = connection
         self.cursor = self.connection.cursor()
 
     def findById(self, id: int):
-        queryFileName = self._constants.SQL_FILES.ORDER_FIND_BY_ID
+        queryFileName = self._constants.SQL_FILES.USER_FIND_BY_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
 
         result = self.cursor.execute(query).fetchall()
-        if len(result) < 1:
-            raise Exception("Order not found")
+
+        if len(result) < 1 :
+            raise Exception("User not found!")
 
         return result[0]
-
+    
     def findByIds(self, ids: [int]):
-        queryFileName = self._constants.SQL_FILES.ORDER_FIND_BY_IDS
+        queryFileName = self._constants.SQL_FILES.USER_FIND_BY_IDS
         query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(ids=",".join(map(str, ids)))
+        query = query.format(ids=','.join(map(str,ids)))
 
         result = self.cursor.execute(query).fetchall()
-        if len(result) < 1:
-            raise Exception("Order not found")
+
+        if len(result) < 1 :
+            raise Exception("User not found!")
 
         return result
