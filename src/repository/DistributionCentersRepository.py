@@ -16,7 +16,7 @@ class DistributionCentersRepository(BaseRepository):
         result = self.cursor.execute(query).fetchall()
 
         if len(result) < 1 :
-            raise Exception("Event not found!")
+            raise Exception("Distribution center not found!")
 
         return result[0]
     
@@ -28,6 +28,6 @@ class DistributionCentersRepository(BaseRepository):
         result = self.cursor.execute(query).fetchall()
 
         if len(result) < 1 :
-            raise Exception("Event not found!")
+            raise Exception("Distribution center not found!")
 
         return result

@@ -1,3 +1,3 @@
 SELECT *
-FROM distribution_centers as d
+FROM distribution_centers 
 WHERE distribution_centers.id = {id} ; 

@@ -16,7 +16,7 @@ class ProductsRepository(BaseRepository):
         result = self.cursor.execute(query).fetchall()
 
         if len(result) < 1 :
-            raise Exception("Event not found!")
+            raise Exception("Product not found!")
 
         return result[0]
     
@@ -28,6 +28,6 @@ class ProductsRepository(BaseRepository):
         result = self.cursor.execute(query).fetchall()
 
         if len(result) < 1 :
-            raise Exception("Event not found!")
+            raise Exception("Product not found!")
 
         return result
