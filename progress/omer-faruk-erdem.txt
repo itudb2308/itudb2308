@@ -1,2 +1,6 @@
 WEEK 5 : 
 Created DDL for tables : inventory items,products,distribution_centers.
+_______________________________________________________________________
+WEEK 6 : 
+Implemented Repository class for products, inventory_items and distribution_centers tables.
+Created related sql queries.
