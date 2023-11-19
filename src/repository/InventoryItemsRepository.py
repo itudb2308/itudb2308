@@ -1,12 +1,10 @@
 import sqlite3
-
-from BaseRepository import BaseRepository
+from repository.BaseRepository import BaseRepository
 
 class InventoryItemsRepository(BaseRepository):
 
     def __init__(self, connection: sqlite3.Connection):
-        self.connection = connection
-        self.cursor = self.connection.cursor()
+        super().__init__(connection)
 
     def findById(self, id: int):
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_ID
