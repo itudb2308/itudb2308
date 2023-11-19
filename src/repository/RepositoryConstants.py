@@ -8,6 +8,7 @@ class RepositoryConstants:
     class SQL_FILES:
         ORDER_FIND_BY_ID = "order_find_by_id.sql"
         ORDER_FIND_BY_IDS = "order_find_by_ids.sql"
+        ORDER_GET_ALL = "order_get_all.sql"
         ORDER_ITEM_FIND_BY_ID = "order_item_find_by_id.sql"
         ORDER_ITEM_FIND_BY_IDS = "order_item_find_by_ids.sql"
         USER_FIND_BY_ID = "user_find_by_id.sql"
