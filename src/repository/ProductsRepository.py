@@ -5,12 +5,14 @@ class ProductsRepository(BaseRepository):
 
     def __init__(self, connection: sqlite3.Connection):
         super().__init__(connection)
+        self.floatPrecision = 0.1 ; 
         self.defaultArguments = {
             "where": "",
             "order_by": "ORDER BY P.id ASC",
             "limit": 20,
             "offset": 0
         }
+        
 
     def handleWhereStatement(self,queryArguments) : 
         if len(queryArguments["where"]) == 0 : 
@@ -61,7 +63,8 @@ class ProductsRepository(BaseRepository):
         if "cost" in kwargs : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"]  + f" P.cost = '{kwargs['cost']}' "
+            queryArguments["where"] = queryArguments["where"] + f" P.cost BETWEEN {kwargs['cost']} - {self.floatPrecision} AND {kwargs['cost']} + {self.floatPrecision}"
+
         
         if "category" in kwargs : 
             self.handleWhereStatement(queryArguments)
@@ -81,7 +84,8 @@ class ProductsRepository(BaseRepository):
         if "retail_price" in kwargs : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"] + f" P.retail_price = '{kwargs['retail_price']}' "
+            queryArguments["where"] = queryArguments["where"] + f" P.retail_price BETWEEN {kwargs['retail_price']} - {self.floatPrecision} AND {kwargs['retail_price']} + {self.floatPrecision}"
+
 
         if "department" in kwargs : 
             self.handleWhereStatement(queryArguments)
@@ -102,7 +106,7 @@ class ProductsRepository(BaseRepository):
         if "order_by" in kwargs.keys():
             columnName = kwargs["order_by"]["columnName"]
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
-            queryArguments["order_by"] = f" ORDER BY o.{columnName} {ascOrDesc}"
+            queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
 
         query.format(**queryArguments)
