@@ -28,6 +28,6 @@ class InventoryItemsRepository(BaseRepository):
         result = self.cursor.execute(query).fetchall()
 
         if len(result) < 1 :
-            raise Exception("Inventory item found!")
+            raise Exception("Inventory item not found!")
 
         return result
