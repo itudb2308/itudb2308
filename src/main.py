@@ -7,7 +7,7 @@ connection = sqlite3.connect("./src/db/db.sqlite", check_same_thread=False)
 
 app = Flask(__name__)
 app.register_blueprint(OrdersBlueprint("orders", __name__, connection), url_prefix="/orders")
-app.register_blueprint(ProductsBlueprint("orders", __name__, connection), url_prefix="/orders")
+app.register_blueprint(ProductsBlueprint("products", __name__, connection), url_prefix="/products")
 
 @app.route('/', methods = ['GET'])
 def index():
