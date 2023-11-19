@@ -4,3 +4,5 @@ _______________________________________________________________________
 WEEK 6 : 
 Implemented Repository class for products, inventory_items and distribution_centers tables.
 Created related sql queries.
+WEEK 7 : 
+Created products blueprint, implemented get all query for products and implemented get_all endpoint for products.
