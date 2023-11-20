@@ -1,3 +1,3 @@
 SELECT *
-FROM users
-WHERE users.id IN ({ids});
+FROM users as u
+WHERE u.id IN ({ids});

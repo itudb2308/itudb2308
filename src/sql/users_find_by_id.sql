@@ -1,3 +1,3 @@
 SELECT *
-FROM users
-WHERE users.id = {id};
+FROM users as u
+WHERE u.id = {id};
