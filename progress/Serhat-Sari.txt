@@ -5,3 +5,8 @@ WEEK 6 :
 Changed the file structure, created src folder, added db and ddl folders inside the src folder. 
 Created main.py for flask routing, base.html for templating and first draft of the index page.
 Implemented repository class for events and users.
+
+------
+
+WEEK 7:
+Created blueprint for users, implemented getting all the users query.

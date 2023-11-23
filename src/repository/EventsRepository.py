@@ -11,21 +11,12 @@ class EventsRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
 
-        result = self.cursor.execute(query).fetchall()
+        return self.cursor.execute(query).fetchall()[0]
 
-        if len(result) < 1 :
-            raise Exception("Event not found!")
-
-        return result[0]
     
     def findByIds(self, ids: [int]):
         queryFileName = self._constants.SQL_FILES.EVENTS_FIND_BY_IDS
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(ids=','.join(map(str,ids)))
 
-        result = self.cursor.execute(query).fetchall()
-
-        if len(result) < 1 :
-            raise Exception("Event not found!")
-
-        return result
+        return self.cursor.execute(query).fetchall()
