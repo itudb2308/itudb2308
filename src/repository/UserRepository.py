@@ -14,7 +14,7 @@ class UserRepository(BaseRepository):
         super().__init__(connection)
 
     def findById(self, id: int):
-        queryFileName = self._constants.SQL_FILES.USER_FIND_BY_ID
+        queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
 
@@ -22,7 +22,7 @@ class UserRepository(BaseRepository):
 
     
     def findByIds(self, ids: [int]):
-        queryFileName = self._constants.SQL_FILES.USER_FIND_BY_IDS
+        queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_IDS
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(ids=','.join(map(str,ids)))
 
