@@ -10,3 +10,15 @@ Implemented repository class for events and users.
 
 WEEK 7:
 Created blueprint for users, implemented getting all the users query.
+
+------
+
+WEEK 8:
+Created get all endpoint for users.
+Fixed desync with the sql file names.
+Moved handleWhereStatement to BaseRepository to get rid of the redundant code.
+
+
+------
+
+
