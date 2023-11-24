@@ -28,13 +28,6 @@ class UserRepository(BaseRepository):
 
         return self.cursor.execute(query).fetchall()
     
-    def handleWhere(self,queryArguments):
-
-        if len(queryArguments["where"]) == 0:
-            queryArguments["where"] = "WHERE "
-        else:
-            queryArguments["where"] = queryArguments["where"] + " AND "
-    
     def getAll(self, **kwargs):
         queryFileName = self._constants.SQL_FILES.USERS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
@@ -46,28 +39,28 @@ class UserRepository(BaseRepository):
         if "offset" in kwargs.keys():
             settings["offset"] = kwargs["offset"]
         if "first_name" in kwargs.keys():
-            self.handleWhere(settings)
+            self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.first_name LIKE '%{kwargs['first_name']}%'"
         if "last_name" in kwargs.keys():
-            self.handleWhere(settings)
+            self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.last_name LIKE '%{kwargs['last_name']}%'"
         if "email" in kwargs.keys():
-            self.handleWhere(settings)
+            self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.email = '{kwargs['email']}'"
         if "age" in kwargs.keys():
             if "lower_bound" in kwargs["age"]:
-                self.handleWhere(settings)
+                self.handleWhereStatement(settings)
                 lower_bound = kwargs["age"]["lower_bound"]
                 settings["where"] = settings["where"] + f"u.age >= {lower_bound}"
             if "upper_bound" in kwargs["age"]:
-                self.handleWhere(settings)
+                self.handleWhereStatement(settings)
                 upper_bound = kwargs["age"]["upper_bound"]
                 settings["where"] = settings["where"] + f"u.age <= {upper_bound}"
         if "gender" in kwargs.keys():
-            self.handleWhere(settings)
+            self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.gender = '{kwargs['gender']}'"
         if "country" in kwargs.keys():
-            self.handleWhere(settings)
+            self.handleWhereStatement(settings)
             settings["where"] = settings["where"] +f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
         
