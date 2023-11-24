@@ -1,18 +1,4 @@
-body {
-    
-    background-image: url('itu.png');
-    background-size:18%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    position: absolute;
-    top:0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-}
-
-.content{
+.content {
     margin-left: 25px;
     margin-top: 25px;
 }
