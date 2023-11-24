@@ -12,7 +12,7 @@ app.register_blueprint(UsersBlueprint("users",__name__,connection), url_prefix="
 app.register_blueprint(ProductsBlueprint("products", __name__, connection), url_prefix="/products")
 
 @app.route('/', methods = ['GET'])
-def index():
+def homePage():
     return render_template('index.html')
 
 if __name__ == "__main__":

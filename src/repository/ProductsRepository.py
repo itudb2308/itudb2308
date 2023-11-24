@@ -12,13 +12,6 @@ class ProductsRepository(BaseRepository):
             "limit": 20,
             "offset": 0
         }
-        
-
-    def handleWhereStatement(self,queryArguments) : 
-        if len(queryArguments["where"]) == 0 : 
-            queryArguments["where"] = "WHERE "
-        else :
-            queryArguments["where"] = queryArguments["where"] + " AND "
 
     def findById(self, id: int):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID
@@ -109,6 +102,6 @@ class ProductsRepository(BaseRepository):
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
 
-        query.format(**queryArguments)
+        query = query.format(**queryArguments)
 
         return self.cursor.execute(query).fetchall() 

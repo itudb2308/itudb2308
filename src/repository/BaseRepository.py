@@ -15,3 +15,10 @@ class BaseRepository:
         with open(path_join(self._constants.SQL_FOLDER_PATH, filePath)) as f:
             query = f.read()
         return query
+    
+    def handleWhereStatement(self,queryArguments):
+
+        if len(queryArguments["where"]) == 0:
+            queryArguments["where"] = "WHERE "
+        else:
+            queryArguments["where"] = queryArguments["where"] + " AND "

@@ -38,20 +38,14 @@ class OrderRepository(BaseRepository):
         if "offset" in kwargs.keys():
             settings["offset"] = kwargs["offset"]
         if "status" in kwargs.keys():
-            where = settings["where"]
-            firstConstraint = len(where) == 0
-            where = "WHERE " if firstConstraint else where + " AND "
-            settings["where"] = where + f"o.status = '{kwargs['status']}'"
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"o.status = '{kwargs['status']}'"
         if "gender" in kwargs.keys():
-            where = settings["where"]
-            firstConstraint = len(where) == 0
-            where = "WHERE " if firstConstraint else where + " AND "
-            settings["where"] = where + f"o.gender = '{kwargs['gender']}'"
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"o.gender = '{kwargs['gender']}'"
         if "user_id" in kwargs.keys():
-            where = settings["where"]
-            firstConstraint = len(where) == 0
-            where = "WHERE " if firstConstraint else where + " AND "
-            settings["where"] = where + f"o.user_id = {kwargs['user_id']}"
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"o.user_id = {kwargs['user_id']}"
         if "order_by" in kwargs.keys():
             field = kwargs["order_by"]["field"]
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
