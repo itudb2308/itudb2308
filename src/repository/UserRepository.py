@@ -62,5 +62,5 @@ class UserRepository(BaseRepository):
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] +f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
-        print(query)
+        
         return self.cursor.execute(query).fetchall()
