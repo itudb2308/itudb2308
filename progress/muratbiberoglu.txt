@@ -4,3 +4,5 @@ WEEK 6:
 Created BaseRepository Class and implemented Repository Class for orders and order_items
 WEEK 7:
 Created get all endpoint for orders, and created related queries, methods etc.
+WEEK 8:
+Created filter and detail pages for orders.
