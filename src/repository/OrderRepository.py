@@ -33,23 +33,27 @@ class OrderRepository(BaseRepository):
 
         # construct the query
         settings = getAllSettings.copy()
-        if "limit" in kwargs.keys():
+        if "limit" in kwargs.keys() and kwargs["limit"] != "":
             settings["limit"] = kwargs["limit"]
-        if "offset" in kwargs.keys():
+        if "offset" in kwargs.keys() and kwargs["offset"] != "":
             settings["offset"] = kwargs["offset"]
-        if "status" in kwargs.keys():
+        if "status" in kwargs.keys() and kwargs["status"] != "":
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"o.status = '{kwargs['status']}'"
-        if "gender" in kwargs.keys():
+        if "gender" in kwargs.keys() and kwargs["gender"] != "":
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"o.gender = '{kwargs['gender']}'"
-        if "user_id" in kwargs.keys():
+        if "user_id" in kwargs.keys() and kwargs["user_id"] != "":
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"o.user_id = {kwargs['user_id']}"
-        if "order_by" in kwargs.keys():
+        if "order_id" in kwargs.keys() and kwargs["order_id"] != "":
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"o.id = {kwargs['order_id']}"
+        if "order_by" in kwargs.keys() and kwargs["order_by"] != "":
             field = kwargs["order_by"]["field"]
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
             settings["order_by"] = f"ORDER BY o.{field} {ascOrDesc}"
         query = query.format(**settings)
+        print(query)
 
         return self.cursor.execute(query).fetchall()

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+
+{% block body %}
+<form class="form-inline" action="{{ url_for('orders.ordersPage') }}" method="post">
+<div class="form-group">
+    <label for="order_id">Order Id:</label>
+    <input type="number" class="form-control" name="order_id" id="order_id">
+</div>
+<div class="form-group">
+    <label for="customer_name">Customer Name:</label>
+    <input type="text" class="form-control" name="customer_name" id="customer_name">
+</div>
+<div class="form-group">
+    <label for="status">Order Status:</label>
+    <input type="text" class="form-control" name="status" id="status">
+</div>
+<div class = "form-group">
+    <label for="gender">Gender</label>
+    <input type="text" class="form-control" name="gender" id="gender" placeholder="Enter only M or F">
+</div>
+<button type="submit" class="btn btn-warning">Filter</button>
+</form>
+
+{% if orders %}
+    <h1>Selected Users</h1>
+    <ul>
+        {% for order in orders %}
+            <a href="{{ url_for('orders.orderDetailPage', id = order[0])}}"><li>{{ order[0]|string + ", " + order[1]|string + ", " + order[2] + ", " + order[3] + ", " + order[8]|string }}</li></a>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
