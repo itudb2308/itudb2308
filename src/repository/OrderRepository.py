@@ -54,6 +54,5 @@ class OrderRepository(BaseRepository):
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
             settings["order_by"] = f"ORDER BY o.{field} {ascOrDesc}"
         query = query.format(**settings)
-        print(query)
 
         return self.cursor.execute(query).fetchall()

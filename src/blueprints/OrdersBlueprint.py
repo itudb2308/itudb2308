@@ -11,7 +11,6 @@ def OrdersBlueprint(name: str, importName: str, connection: Connection):
         if request.method == "POST":
             settings = request.form.to_dict()
             orders = repository.getAll(**settings)
-            print(*orders, sep="\n")
             return render_template("orders.html", orders = orders)
         else:
             return render_template("orders.html")
