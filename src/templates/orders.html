@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Orders{% endblock %}
 
 
 {% block body %}
@@ -25,7 +25,7 @@
 </form>
 
 {% if orders %}
-    <h1>Selected Users</h1>
+    <h1>Selected Orders</h1>
     <ul>
         {% for order in orders %}
             <a href="{{ url_for('orders.orderDetailPage', id = order[0])}}"><li>{{ order[0]|string + ", " + order[1]|string + ", " + order[2] + ", " + order[3] + ", " + order[8]|string }}</li></a>
