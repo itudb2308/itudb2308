@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS users
     created_at     TIMESTAMP
 );
 
-
 CREATE TABLE IF NOT EXISTS events
 (
     id              BIGSERIAL PRIMARY KEY,
