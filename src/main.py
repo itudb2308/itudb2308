@@ -1,10 +1,15 @@
-import sqlite3
+import psycopg2
 from flask import Flask, render_template
 from blueprints.OrdersBlueprint import OrdersBlueprint
 from blueprints.UsersBlueprint import UsersBlueprint
 from blueprints.ProductsBlueprint import ProductsBlueprint
 
-connection = sqlite3.connect("./src/db/db.sqlite", check_same_thread=False)
+connection = psycopg2.connect(
+    host = "localhost",
+    database = "postgres",
+    user = "postgres",
+    password = "postgres"
+)
 
 app = Flask(__name__)
 app.register_blueprint(OrdersBlueprint("orders", __name__, connection), url_prefix="/orders")

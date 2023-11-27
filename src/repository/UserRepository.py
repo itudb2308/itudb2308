@@ -1,4 +1,3 @@
-import sqlite3
 from repository.BaseRepository import BaseRepository
 
 getAllSettings = {
@@ -10,24 +9,15 @@ getAllSettings = {
 
 class UserRepository(BaseRepository):
 
-    def __init__(self, connection: sqlite3.Connection):
+    def __init__(self, connection):
         super().__init__(connection)
 
     def findById(self, id: int):
-        queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_ID
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id=id)
+        return self._findById(id, self._constants.SQL_FILES.USERS_FIND_BY_ID)
 
-        return self.cursor.execute(query).fetchall()[0]
-
-    
     def findByIds(self, ids: [int]):
-        queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_IDS
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(ids=','.join(map(str,ids)))
+        return self._findByIds(ids, self._constants.SQL_FILES.USERS_FIND_BY_IDS)
 
-        return self.cursor.execute(query).fetchall()
-    
     def getAll(self, **kwargs):
         queryFileName = self._constants.SQL_FILES.USERS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
@@ -40,10 +30,10 @@ class UserRepository(BaseRepository):
             settings["offset"] = kwargs["offset"]
         if "first_name" in kwargs.keys() and kwargs["first_name"] != "":
             self.handleWhereStatement(settings)
-            settings["where"] = settings["where"] + f"u.first_name LIKE '%{kwargs['first_name']}%'"
+            settings["where"] = settings["where"] + f"u.first_name ILIKE '%{kwargs['first_name']}%'"
         if "last_name" in kwargs.keys() and kwargs["last_name"] != "":
             self.handleWhereStatement(settings)
-            settings["where"] = settings["where"] + f"u.last_name LIKE '%{kwargs['last_name']}%'"
+            settings["where"] = settings["where"] + f"u.last_name ILIKE '%{kwargs['last_name']}%'"
         if "email" in kwargs.keys() and kwargs["email"] != "":
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.email = '{kwargs['email']}'"
@@ -62,5 +52,6 @@ class UserRepository(BaseRepository):
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] +f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
-        
-        return self.cursor.execute(query).fetchall()
+
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
