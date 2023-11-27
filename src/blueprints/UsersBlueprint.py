@@ -1,5 +1,6 @@
 from flask import Blueprint, request, render_template
 from repository.UserRepository import UserRepository
+from dto.User import User
 
 def UsersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
@@ -16,10 +17,6 @@ def UsersBlueprint(name: str, importName: str, connection):
 
     @bp.route('/<id>', methods = ["GET"])
     def userDetailPage(id: str):
-        user = repository.findById(int(id))
-        user_info = []
-        for infos in user:
-            user_info.append(infos)
-        return user_info
+        return render_template('userDetail.html', user = User(repository.findById(int(id))))
 
     return bp
