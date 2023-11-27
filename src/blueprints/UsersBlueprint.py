@@ -1,8 +1,7 @@
-from sqlite3 import Connection
 from flask import Blueprint, request, render_template
 from repository.UserRepository import UserRepository
 
-def UsersBlueprint(name: str, importName: str, connection: Connection):
+def UsersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
     repository = UserRepository(connection)
 

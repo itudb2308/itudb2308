@@ -1,11 +1,10 @@
-import sqlite3
 from repository.BaseRepository import BaseRepository
 
 class ProductsRepository(BaseRepository):
 
-    def __init__(self, connection: sqlite3.Connection):
+    def __init__(self, connection):
         super().__init__(connection)
-        self.floatPrecision = 0.1 ; 
+        self.floatPrecision = 0.1
         self.defaultArguments = {
             "where": "",
             "order_by": "ORDER BY P.id ASC",
@@ -14,28 +13,10 @@ class ProductsRepository(BaseRepository):
         }
 
     def findById(self, id: int):
-        queryFileName = self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id=id)
+        return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID)
 
-        result = self.cursor.execute(query).fetchall()
-
-        if len(result) < 1 :
-            raise Exception("Product not found!")
-
-        return result[0]
-    
     def findByIds(self, ids: [int]):
-        queryFileName = self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(ids=','.join(map(str,ids)))
-
-        result = self.cursor.execute(query).fetchall()
-
-        if len(result) < 1 :
-            raise Exception("Product not found!")
-
-        return result
+        return self._findByIds(ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS)
 
     def getAll(self, **kwargs) : 
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_ALL
@@ -104,4 +85,5 @@ class ProductsRepository(BaseRepository):
 
         query = query.format(**queryArguments)
 
-        return self.cursor.execute(query).fetchall() 
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
