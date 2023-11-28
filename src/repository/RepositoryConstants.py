@@ -23,5 +23,6 @@ class RepositoryConstants:
         PRODUCTS_FIND_BY_ID = "products_find_by_id.sql" 
         PRODUCTS_FIND_BY_IDS = "products_find_by_ids.sql" 
         PRODUCTS_GET_ALL = "products_get_all.sql"
+        GET_DISTINCT_COUNTRY = "get_distinct_country.sql"
         
 
