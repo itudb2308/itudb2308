@@ -55,3 +55,7 @@ class UserRepository(BaseRepository):
 
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def getDistinctCountry(self):
+        self.cursor.execute("SELECT DISTINCT(country) from users")
+        return self.cursor.fetchall()
