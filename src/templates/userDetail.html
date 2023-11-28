@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}User Detail Page{% endblock %}
+
+{% block body %}
+    {% if user %}
+        <h1>{{ user.first_name + " " + user.last_name }}</h1>
+        <div><strong>Mail : </strong><a href = {{ "mailto:" + user.email }}>{{ user.email }}</a></div>
+        <div><strong>Age : </strong>{{ user.age }}</div>
+        <div><strong>Gender : </strong>{{ user.gender }}</div>
+        <div>
+            <strong>Full Address : </strong>
+            <a href= {{ "https://www.google.com/maps/search/?api=1&query=" + user.latitude|string + "," + user.longitude|string }}>
+                {{ user.fullAddress }}
+            </a>
+        </div>
+        <div>
+            <strong>Member Since : </strong>
+                {{ user.created_at }}
+        </div>
+
+    {% endif %}
+{% endblock %}

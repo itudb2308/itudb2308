@@ -55,3 +55,9 @@ class UserRepository(BaseRepository):
 
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def getDistinctCountry(self):
+        queryFileName = self._constants.SQL_FILES.GET_DISTINCT_COUNTRY
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
