@@ -6,7 +6,7 @@
 {% block body %}
 <div class = "row">
     <div class = "col-4">
-        <form action="{{ url_for('users.usersPage') }}" method="post">
+        <form action="{{ url_for('admin.users.usersPage') }}" method="post">
         <div class = "row">
             <div class="form-group col">
                 <label for="first_name">First Name:</label>
@@ -59,7 +59,7 @@
             <h1>Selected Users</h1>
             <ul>
                 {% for user in users %}
-                    <a href="{{ url_for('users.userDetailPage', id = user[0])}}"><li>{{ user[0:3]}}</li></a>
+                    <a href="{{ url_for('admin.users.userDetailPage', id = user[0])}}"><li>{{ user[0:3]}}</li></a>
                 {% endfor %}
             </ul>
         {% endif %}

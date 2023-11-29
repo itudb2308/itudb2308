@@ -1,8 +1,6 @@
 import psycopg2
 from flask import Flask, render_template
-from blueprints.OrdersBlueprint import OrdersBlueprint
-from blueprints.UsersBlueprint import UsersBlueprint
-from blueprints.ProductsBlueprint import ProductsBlueprint
+from blueprints.AdminBlueprint import AdminBlueprint
 
 connection = psycopg2.connect(
     host = "localhost",
@@ -12,9 +10,7 @@ connection = psycopg2.connect(
 )
 
 app = Flask(__name__)
-app.register_blueprint(OrdersBlueprint("orders", __name__, connection), url_prefix="/orders")
-app.register_blueprint(UsersBlueprint("users",__name__,connection), url_prefix="/users")
-app.register_blueprint(ProductsBlueprint("products", __name__, connection), url_prefix="/products")
+app.register_blueprint(AdminBlueprint("admin", __name__, connection), url_prefix="/admin")
 
 @app.route('/', methods = ['GET'])
 def homePage():
