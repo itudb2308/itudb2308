@@ -20,9 +20,9 @@
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
               <a class="nav-link active" aria-current="page" href="{{ url_for('homePage')}}">Home</a>
-              <a class="nav-link" href="{{ url_for('users.usersPage') }}">Users</a>
-              <a class="nav-link" href="{{ url_for('products.productsView') }}">Products</a>
-              <a class="nav-link" href="{{ url_for('orders.ordersPage') }}">Orders</a>
+              <a class="nav-link" href="{{ url_for('admin.users.usersPage') }}">Users</a>
+              <a class="nav-link" href="{{ url_for('admin.products.productsView') }}">Products</a>
+              <a class="nav-link" href="{{ url_for('admin.orders.ordersPage') }}">Orders</a>
             </div>
           </div>
         </div>
@@ -34,6 +34,6 @@
       </div>
         
         <p id="itu"></p>
-
+      <script src="{{url_for('static', filename='script.js')}}"></script>
 </body>
 </html>

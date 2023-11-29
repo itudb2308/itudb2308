@@ -1,0 +1,1 @@
+SELECT DISTINCT(gender) FROM orders;

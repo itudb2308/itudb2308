@@ -4,33 +4,72 @@
 
 
 {% block body %}
-<form class="form-inline" action="{{ url_for('orders.ordersPage') }}" method="post">
-<div class="form-group">
-    <label for="order_id">Order Id:</label>
-    <input type="number" class="form-control" name="order_id" id="order_id">
+<div class="row">
+    <div class="col-2">
+        <form action="{{ url_for('admin.orders.ordersPage') }}" method="get">
+            <div class="form-group">
+                <label for="customer_name">Customer Name:</label>
+                <input id="customer_name" type="text" class="form-control" name="customer_name" onchange="filterOnChange(this.id)" value="{% if customer_name %}{{ customer_name }}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="status">Order Status</label>
+                <select id="status" class="form-control" name="status" aria-label="Status" onchange="filterOnChange(this.id)">
+                    <option {% if not status %}selected{% endif %} value = ""></option>
+                    {% for statusItem in statusItems %}
+                        <option {% if status == statusItem %}selected{% endif %}
+                            value = "{{ statusItem }}">{{ statusItem }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" class="form-control" name="gender" aria-label="Gender" onchange="filterOnChange(this.id)">
+                    <option {% if not gender %}selected{% endif %} value = ""></option>
+                    {% for genderItem in genderItems %}
+                        <option {% if gender == genderItem %}selected{% endif %}
+                            value = "{{ genderItem }}">{{ genderItem }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-success" type="submit">Filter</button>
+            <button class="btn btn-primary" type="reset">Reset</button>
+        </form>
+    </div>
+    <div class="col-10">
+        {% if orders %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Order Number</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                {% for order in orders %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('admin.orders.orderDetailPage', id = order.id)}}">
+                                Order #{{ order.id }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.users.userDetailPage', id = order.user_id) }}">
+                                {{ order.customer_name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ order.status }}
+                        </td>
+                    </tr>
+                    <!-- <div>Ordered At: {{ order.created_at }}</div>
+                    <div>Shipped At: {{ order.shipped_at }}</div>
+                    <div>Delivered At: {{ order.delivered_at }}</div>
+                    <div>Returned At: {{ order.returned_at }}</div> -->
+                {% endfor %}
+            </table>
+        {% else %}
+            <h1>No orders found...</h1>
+        {% endif %}
+    </div>
 </div>
-<div class="form-group">
-    <label for="customer_name">Customer Name:</label>
-    <input type="text" class="form-control" name="customer_name" id="customer_name">
-</div>
-<div class="form-group">
-    <label for="status">Order Status:</label>
-    <input type="text" class="form-control" name="status" id="status">
-</div>
-<div class = "form-group">
-    <label for="gender">Gender</label>
-    <input type="text" class="form-control" name="gender" id="gender" placeholder="Enter only M or F">
-</div>
-<button type="submit" class="btn btn-warning">Filter</button>
-</form>
-
-{% if orders %}
-    <h1>Selected Orders</h1>
-    <ul>
-        {% for order in orders %}
-            <a href="{{ url_for('orders.orderDetailPage', id = order[0])}}"><li>{{ order[0]|string + ", " + order[1]|string + ", " + order[2] + ", " + order[3] + ", " + order[8]|string }}</li></a>
-        {% endfor %}
-    </ul>
-{% endif %}
-
 {% endblock %}
