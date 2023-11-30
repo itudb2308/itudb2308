@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from repository.ProductsRepository import ProductsRepository
 
 
@@ -6,12 +6,15 @@ def ProductsBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
     repository = ProductsRepository(connection)
 
-    @bp.route('/', methods = ["POST"])
-    def productsView():
-        content_type = request.headers.get('Content-Type')
-        if (content_type == 'application/json'):
-            return repository.getAll(**request.get_json())
-        else:
-            return 'Content-Type not supported!'
+    @bp.route('/', methods = ["POST","GET"])
+    def productsPage():
+        settings = request.form.to_dict()
+        products = repository.getAll(**settings)
+        return render_template('products.html', products = products)
+    
+    @bp.route('/<id>', methods = ["POST","GET"])
+    def productDetailPage():
+        return render_template('productDetailPage.html')
+    
 
     return bp
