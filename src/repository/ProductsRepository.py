@@ -4,7 +4,6 @@ class ProductsRepository(BaseRepository):
 
     def __init__(self, connection):
         super().__init__(connection)
-        self.floatPrecision = 0.1
         self.defaultArguments = {
             "where": "",
             "order_by": "ORDER BY P.id ASC",
@@ -37,7 +36,16 @@ class ProductsRepository(BaseRepository):
         if "cost" in kwargs : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"] + f" P.cost BETWEEN {kwargs['cost']} - {self.floatPrecision} AND {kwargs['cost']} + {self.floatPrecision}"
+            # since cost is float, we need to search in the given range
+            # here we assume that the user will give the lower and upper bound of the range
+            # if the user only give one of them,
+            # we will assume that the other bound is 0 or infinity
+            if "costLowerBound" not in kwargs.keys() : 
+                kwargs["costLowerBound"] = 0
+            if "costUpperBound" not in kwargs.keys() :
+                kwargs["costUpperBound"] = float("inf")
+            
+            queryArguments["where"] = queryArguments["where"] + f" P.cost BETWEEN {kwargs['costLowerBound']} AND {kwargs['costUpperBound']} "
 
         
         if "category" in kwargs : 
