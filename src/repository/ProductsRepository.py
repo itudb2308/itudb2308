@@ -82,13 +82,31 @@ class ProductsRepository(BaseRepository):
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.distribution_center_id = '{kwargs['distribution_center_id']}' "
 
-        if "order_by" in kwargs.keys() and kwargs["order_by"] != "":
-            columnName = kwargs["order_by"]["columnName"]
-            ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
+        if "order_by_columnName" in kwargs.keys() and kwargs["order_by_columnName"] != "":
+            columnName = kwargs["order_by_columnName"]
+    
+            # set default order direction is ascending
+            if "order_direction" not in kwargs.keys() or kwargs["order_direction"] == "":
+                kwargs["order_direction"] = "Ascending"
+    
+            ascOrDesc = "ASC" if kwargs["order_direction"] == "Ascending" else "DESC"
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
         query = query.format(**queryArguments)
+        print(f"queryArguments : {queryArguments}")
+        print(f"query : {query}")
 
-        print(f"query: {query}")
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+    
+    def getColoumnNames(self):
+        queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_COLUMN_NAMES
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+    
+    def getCategories(self):
+        queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_CATEGORIES
+        query = self._getSqlQueryFromFile(queryFileName)
         self.cursor.execute(query)
         return self.cursor.fetchall()
