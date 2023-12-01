@@ -89,21 +89,21 @@
                 {% for product in products %}
                     <tr>
                         <td>
-                            <a href="{{ url_for('admin.products.productDetailPage', id = product[0])}}">
-                                Product #{{ product[0] }}
+                            <a href="{{ url_for('admin.products.productDetailPage', id = product.id)}}">
+                                Product #{{ product.id }}
                             </a>
                         </td>
                         <td>
-                            {{ product[2] }}
+                            {{ product.category }}
                         </td>
                             <td>
-                            {{ product[3] }}
+                            {{ product.name }}
                         </td>
                         <td>
-                            {{ product[1] }} 
+                            {{ product.cost }} 
                         </td>
                         <td>
-                            {{ product[5] }}
+                            {{ product.retail_price }}
                         </td>
                     </tr>
                 {% endfor %}

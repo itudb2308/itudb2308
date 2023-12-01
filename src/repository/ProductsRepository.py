@@ -93,9 +93,7 @@ class ProductsRepository(BaseRepository):
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
         query = query.format(**queryArguments)
-        print(f"queryArguments : {queryArguments}")
-        print(f"query : {query}")
-
+        
         self.cursor.execute(query)
         return self.cursor.fetchall()
     

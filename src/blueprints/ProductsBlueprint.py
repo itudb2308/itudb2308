@@ -11,7 +11,9 @@ def ProductsBlueprint(name: str, importName: str, connection):
     @bp.route('/', methods = ["POST","GET"])
     def productsPage():
         settings = request.args.to_dict()
-        products = repository.getAll(**settings)
+        fetchedProducts = repository.getAll(**settings)
+        products = [Product(p) for p in fetchedProducts]
+
         return render_template('products.html', products = products , columnNames = columnNames , categories = categories  )
     
     @bp.route('/<int:id>', methods = ["GET"])
