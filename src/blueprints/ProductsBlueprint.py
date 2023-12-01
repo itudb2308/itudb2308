@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 from repository.ProductsRepository import ProductsRepository
-
+from dto.Product import Product
 
 def ProductsBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
@@ -14,8 +14,10 @@ def ProductsBlueprint(name: str, importName: str, connection):
         products = repository.getAll(**settings)
         return render_template('products.html', products = products , columnNames = columnNames , categories = categories  )
     
-    @bp.route('/<id>', methods = ["POST","GET"])
-    def productDetailPage():
-        return render_template('productDetailPage.html')
+    @bp.route('/<int:id>', methods = ["GET"])
+    def productDetailPage(id):
+        return render_template('productDetailPage.html',product = Product(repository.findById(int(id))) )
 
     return bp
+
+    

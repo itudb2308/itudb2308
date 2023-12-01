@@ -89,7 +89,7 @@
                 {% for product in products %}
                     <tr>
                         <td>
-                            <a href="{{ url_for('admin.products.productDetailPage', id = product.id)}}">
+                            <a href="{{ url_for('admin.products.productDetailPage', id = product[0])}}">
                                 Product #{{ product[0] }}
                             </a>
                         </td>
