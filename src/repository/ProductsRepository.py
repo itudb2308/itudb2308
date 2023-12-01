@@ -20,78 +20,75 @@ class ProductsRepository(BaseRepository):
     def getAll(self, **kwargs) : 
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
-
+        
         queryArguments = self.defaultArguments.copy()
         
         # ! Assuming all kwargs key will be the same as corresponding columns name 
-        if "limit" in kwargs.keys():
+        if "limit" in kwargs.keys() and kwargs["limit"] != "":
             queryArguments["limit"] = kwargs["limit"]
-        if "offset" in kwargs.keys():
+
+        if "offset" in kwargs.keys() and kwargs["offset"] != "":
             queryArguments["offset"] = kwargs["offset"]
-        if "id" in kwargs :
+        if "id" in kwargs and kwargs["id"] != "" :
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.id = '{kwargs['id']}' "
         
-        if "cost" in kwargs : 
-            self.handleWhereStatement(queryArguments)
-            # add requested condition
-            # since cost is float, we need to search in the given range
-            # here we assume that the user will give the lower and upper bound of the range
-            # if the user only give one of them,
-            # we will assume that the other bound is 0 or infinity
-            if "costLowerBound" not in kwargs.keys() : 
-                kwargs["costLowerBound"] = 0
-            if "costUpperBound" not in kwargs.keys() :
-                kwargs["costUpperBound"] = float("inf")
+        if ("costLowerBound" in kwargs) or ("costUpperBound" in kwargs): 
+            if "costLowerBound" in kwargs.keys() and kwargs["costLowerBound"] != "" :
+                self.handleWhereStatement(queryArguments)
+                queryArguments["where"] = queryArguments["where"] + f" P.cost >= {kwargs['costLowerBound']} "    
+            if "costUpperBound" in kwargs.keys() and kwargs["costUpperBound"] != "" :
+                self.handleWhereStatement(queryArguments)
+                queryArguments["where"] = queryArguments["where"] + f" P.cost <= {kwargs['costUpperBound']} "    
+
             
-            queryArguments["where"] = queryArguments["where"] + f" P.cost BETWEEN {kwargs['costLowerBound']} AND {kwargs['costUpperBound']} "
 
         
-        if "category" in kwargs : 
+        if "category" in kwargs and kwargs["category"] != "" : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.category = '{kwargs['category']}' "
 
-        if "name" in kwargs : 
+        if "name" in kwargs and kwargs["name"] != "": 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] =queryArguments["where"] + f" P.name = '{kwargs['name']}' "
         
-        if "brand" in kwargs : 
+        if "brand" in kwargs and kwargs["brand"] != "" : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.brand = '{kwargs['brand']}' "
         
-        if "retail_price" in kwargs : 
+        if "retail_price" in kwargs and kwargs["retail_price"] != "" : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.retail_price BETWEEN {kwargs['retail_price']} - {self.floatPrecision} AND {kwargs['retail_price']} + {self.floatPrecision}"
 
 
-        if "department" in kwargs : 
+        if "department" in kwargs and kwargs["department"] != "": 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.department = '{kwargs['department']}' "
         
-        if "sku" in kwargs : 
+        if "sku" in kwargs and  kwargs["sku"] != "": 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.sku = '{kwargs['sku']}' "
          
 
-        if "distribution_center_id" in kwargs : 
+        if "distribution_center_id" in kwargs and kwargs["distribution_center_id"] != "": 
             self.handleWhereStatement(queryArguments)
             # add requested condition
             queryArguments["where"] = queryArguments["where"] + f" P.distribution_center_id = '{kwargs['distribution_center_id']}' "
 
-        if "order_by" in kwargs.keys():
+        if "order_by" in kwargs.keys() and kwargs["order_by"] != "":
             columnName = kwargs["order_by"]["columnName"]
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
-
         query = query.format(**queryArguments)
 
+        print(f"query: {query}")
         self.cursor.execute(query)
         return self.cursor.fetchall()

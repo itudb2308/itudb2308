@@ -8,13 +8,12 @@ def ProductsBlueprint(name: str, importName: str, connection):
 
     @bp.route('/', methods = ["POST","GET"])
     def productsPage():
-        settings = request.form.to_dict()
+        settings = request.args.to_dict()
         products = repository.getAll(**settings)
-        return render_template('products.html', products = products)
+        return render_template('products.html', products = products )
     
     @bp.route('/<id>', methods = ["POST","GET"])
     def productDetailPage():
         return render_template('productDetailPage.html')
-    
 
     return bp
