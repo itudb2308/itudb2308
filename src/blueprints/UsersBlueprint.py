@@ -12,7 +12,7 @@ def UsersBlueprint(name: str, importName: str, connection):
         result = service.usersPage(querySettings)
         return render_template('users.html', **querySettings, **result)
 
-    @bp.route('/<id>', methods = ["GET"])
+    @bp.route('/<int:id>', methods = ["GET"])
     def userDetailPage(id: str):
         result = service.userDetailPage(int(id))
         return render_template('userDetail.html', **result)

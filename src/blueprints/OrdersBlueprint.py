@@ -12,7 +12,7 @@ def OrdersBlueprint(name: str, importName: str, connection):
         result = service.ordersPage(querySettings)
         return render_template("orders.html", querySettings=querySettings, **result)
 
-    @bp.route("/<id>", methods = ["GET"])
+    @bp.route("/<int:id>", methods = ["GET"])
     def orderDetailPage(id: str):
         result = service.orderDetailPage(id)
         return render_template("orderDetail.html", **result)
