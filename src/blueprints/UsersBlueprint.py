@@ -13,8 +13,8 @@ def UsersBlueprint(name: str, importName: str, connection):
         users = repository.getAll(**settings)
         return render_template('users.html', users = users, countryArray = countryArray)
 
-    @bp.route('/<id>', methods = ["GET"])
+    @bp.route('/<int:id>', methods = ["GET"])
     def userDetailPage(id: str):
-        return render_template('userDetail.html', user = User(repository.findById(int(id))))
+        return render_template('userDetail.html', user = User(repository.findById(id)))
 
     return bp
