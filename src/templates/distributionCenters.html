@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Distribution Centers {% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-10">
+        {% if distributionCenters %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Distribution Center ID</th>
+                        <th scope="col">Name </th>
+                        <th scope="col">Latitude </th>
+                        <th scope="col">Longitude </th>
+                    </tr>
+                </thead>
+                {% for distributionCenter in distributionCenters %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = distributionCenter.id)}}">
+                                Distribution Center #{{ distributionCenter.id }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ distributionCenter.name }}
+                        </td>
+                        <td>
+                            {{ distributionCenter.latitude }}
+                        </td>
+                        <td>
+                            {{ distributionCenter.longitude }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h1>No distribution center found...</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
