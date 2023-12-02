@@ -19,8 +19,8 @@ def OrdersBlueprint(name: str, importName: str, connection):
         orders = [Order(o) for o in repository.getAll(**settings)]
         return render_template("orders.html", orders = orders, **settings, statusItems = statusItems, genderItems = genderItems)
 
-    @bp.route("/<id>", methods = ["GET"])
+    @bp.route("/<int:id>", methods = ["GET"])
     def orderDetailPage(id: str):
-        return render_template("orderDetail.html", order = Order(repository.findById(int(id))))
+        return render_template("orderDetail.html", order = Order(repository.findById(id)))
 
     return bp

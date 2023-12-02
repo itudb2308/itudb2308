@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Distribution Centers {% endblock %}
+
+{% block body %}
+        <h1>{{ distributionCenter.name }}</h1>
+        <h2> ID : {{ distributionCenter.id}} </h1>
+        <div>
+            <strong>Coordinate : </strong>
+            <a href= {{ "https://www.google.com/maps/search/?api=1&query=" + distributionCenter.latitude|string + "," + distributionCenter.longitude|string }}>
+                {{ distributionCenter.latitude }}
+                ,
+                {{ distributionCenter.longitude }}
+            </a>
+        </div>
+{% endblock %}

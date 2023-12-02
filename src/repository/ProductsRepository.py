@@ -42,9 +42,6 @@ class ProductsRepository(BaseRepository):
                 self.handleWhereStatement(queryArguments)
                 queryArguments["where"] = queryArguments["where"] + f" P.cost <= {kwargs['costUpperBound']} "    
 
-            
-
-        
         if "category" in kwargs and kwargs["category"] != "" : 
             self.handleWhereStatement(queryArguments)
             # add requested condition
