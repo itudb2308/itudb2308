@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 
-{% block title %} Distribution Centers {% endblock %}
+{% block title %} distributionCenter Details {% endblock %}
 
 {% block body %}
-        <h1>{{ distributionCenter.name }}</h1>
-        <h2> ID : {{ distributionCenter.id}} </h1>
-        <div>
-            <strong>Coordinate : </strong>
-            <a href= {{ "https://www.google.com/maps/search/?api=1&query=" + distributionCenter.latitude|string + "," + distributionCenter.longitude|string }}>
-                {{ distributionCenter.latitude }}
-                ,
+    <div class="distributionCenter-detail-container">
+        <h1 class="distributionCenter-title"> <strong> {{ distributionCenter.name }} </strong> Distribution Center </h1>
+        <h2 class="distributionCenter-id"> ID : {{ distributionCenter.id }} </h2>
+        <div class="location-link">
+            <strong>Location:</strong>
+            <a href="{{ "https://www.google.com/maps/search/?api=1&query=" + distributionCenter.latitude|string + "," + distributionCenter.longitude|string }}">
+                {{ distributionCenter.latitude }},
                 {{ distributionCenter.longitude }}
             </a>
         </div>
+        <div class="map-container">
+            <iframe
+                class="map-frame"
+                frameborder="0" style="border:0"
+                src="https://www.google.com/maps?q={{ distributionCenter.latitude|string }},{{ distributionCenter.longitude|string }}&hl=es;z=14&amp;output=embed">
+            </iframe>
+        </div>
+    </div>
 {% endblock %}
