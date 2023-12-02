@@ -1,10 +1,9 @@
 from flask import Blueprint, request, render_template
 from service.DistributionCenterService import DistributionCenterService
 
-def DistributionCentersBlueprint(name: str, importName: str, connection):
+def DistributionCentersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
-    service = DistributionCenterService(connection)
-    
+
     @bp.route('/', methods = ["POST","GET"])
     def distributionCentersPage():
         querySettings = request.args.to_dict()
@@ -17,5 +16,3 @@ def DistributionCentersBlueprint(name: str, importName: str, connection):
         return render_template('distributionCenterDetail.html', **result)
 
     return bp
-
-    

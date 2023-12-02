@@ -1,9 +1,8 @@
 from flask import Blueprint, request, render_template
 from service.OrderService import OrderService
 
-def OrdersBlueprint(name: str, importName: str, connection):
+def OrdersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
-    service = OrderService(connection)
 
     @bp.route('/', methods = ["GET"])
     def ordersPage():

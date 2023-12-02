@@ -1,9 +1,8 @@
 from flask import Blueprint, request, render_template
 from service.ProductService import ProductService
 
-def ProductsBlueprint(name: str, importName: str, connection):
+def ProductsBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
-    service = ProductService(connection)
 
     @bp.route('/', methods = ["GET"])
     def productsPage():
