@@ -1,12 +1,11 @@
 from repository.OrderRepository import OrderRepository
-from repository.UserRepository import UserRepository
+import service
 from dto.Order import Order
 from dto.User import User
 
 class OrderService:
     def __init__(self, connection) -> None:
         self.repository = OrderRepository(connection)
-        self.userRepository = UserRepository(connection)
 
     # PAGE METHODS
     def ordersPage(self, querySettings: dict) -> dict:
@@ -20,7 +19,7 @@ class OrderService:
         result = dict()
         result["order"] = self.findById(id)
         user_id = result["order"].user_id
-        result["user"] = User(self.userRepository.findById(user_id))
+        # result["user"] = self.userService.findById(user_id)
         return result
 
     # SERVICE METHODS

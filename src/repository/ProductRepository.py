@@ -90,11 +90,11 @@ class ProductRepository(BaseRepository):
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
         query = query.format(**queryArguments)
-        
+
         self.cursor.execute(query)
         return self.cursor.fetchall()
-    
-    def getColoumnNames(self):
+
+    def getColumnNames(self):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_COLUMN_NAMES
         query = self._getSqlQueryFromFile(queryFileName)
         self.cursor.execute(query)

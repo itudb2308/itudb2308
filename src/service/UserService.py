@@ -1,5 +1,6 @@
 from dto.User import User
 from repository.UserRepository import UserRepository
+import service
 
 class UserService:
     def __init__(self, connection) -> None:
@@ -15,6 +16,8 @@ class UserService:
     def userDetailPage(self, id: int) -> dict:
         result = dict()
         result["user"] = self.findById(id)
+        user_id = result["user"].id
+        result["orders"] = self.orderService.getAll({"user_id": user_id})
         return result
 
     # SERVICE METHODS

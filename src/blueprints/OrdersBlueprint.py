@@ -1,5 +1,4 @@
 from flask import Blueprint, request, render_template
-from dto.Order import Order
 from service.OrderService import OrderService
 
 def OrdersBlueprint(name: str, importName: str, connection):

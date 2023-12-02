@@ -1,22 +1,20 @@
 from flask import Blueprint, request, render_template
-from repository.DistributionCenterRepository import DistributionCenterRepository
-from dto.DistributionCenter import DistributionCenter
+from service.DistributionCenterService import DistributionCenterService
 
 def DistributionCentersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
-    repository = DistributionCenterRepository(connection)
+    service = DistributionCenterService(connection)
     
     @bp.route('/', methods = ["POST","GET"])
     def distributionCentersPage():
-        settings = request.args.to_dict()
-        fetchedProducts = repository.getAll(**settings)
-        distributionCenters = [DistributionCenter(p) for p in fetchedProducts]
+        querySettings = request.args.to_dict()
+        result = service.distributionCentersPage(querySettings)
+        return render_template('distributionCenters.html', **result)
 
-        return render_template('distributionCenters.html', distributionCenters = distributionCenters )
-    
     @bp.route('/<int:id>', methods = ["GET"])
     def distributionCenterDetailPage(id):
-        return render_template('distributionCenterDetail.html',distributionCenter = DistributionCenter(repository.findById(int(id))) )
+        result = service.distributionCenterDetailPage(id)
+        return render_template('distributionCenterDetail.html', **result)
 
     return bp
 

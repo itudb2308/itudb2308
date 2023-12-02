@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template
 from service.UserService import UserService
-from dto.User import User
 
 def UsersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
