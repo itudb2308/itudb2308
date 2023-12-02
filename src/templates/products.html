@@ -99,10 +99,10 @@
                             {{ product.name }}
                         </td>
                         <td>
-                            {{ product.cost }} 
+                            {{ '%.2f' | format(product.cost) }} 
                         </td>
                         <td>
-                            {{ product.retail_price }}
+                            {{ '%.2f' | format(product.retail_price) }}
                         </td>
                     </tr>
                 {% endfor %}
