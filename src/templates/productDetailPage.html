@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Product Detail{% endblock %}
+{% block body %}
+    <h1> {{ product.name }} </h1>
+    <ul>
+
+        <li><strong>ID:</strong> {{ product.id }}</li>
+                <li><strong>Cost:</strong> {{ product.cost }}</li>
+                <li><strong>Category:</strong> {{ product.category }}</li>
+                <li><strong>Name:</strong> {{ product.name }}</li>
+                <li><strong>Brand:</strong> {{ product.brand }}</li>
+                <li><strong>Retail Price:</strong> {{ product.retail_price }}</li>
+                <li><strong>Department:</strong> {{ product.department }}</li>
+                <li><strong>SKU:</strong> {{ product.sku }}</li>
+                <li><strong>Distribution Center ID:</strong> {{ product.distribution_center_id }}</li>
+                <li><strong>ID:</strong> {{ product.id }}</li>
+            </ul>
+        {% endblock %}
+        <!-- END: abpxx6d04wxr -->
