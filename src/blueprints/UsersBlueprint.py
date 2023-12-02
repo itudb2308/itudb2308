@@ -6,11 +6,11 @@ def UsersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
     service = UserService(connection)
 
-    @bp.route('/', methods = ["GET", "POST"])
+    @bp.route('/', methods = ["GET"])
     def usersPage():
-        querySettings = request.form.to_dict()
+        querySettings = request.args.to_dict()
         result = service.usersPage(querySettings)
-        return render_template('users.html', **querySettings, **result)
+        return render_template('users.html', querySettings=querySettings, **result)
 
     @bp.route('/<int:id>', methods = ["GET"])
     def userDetailPage(id: str):

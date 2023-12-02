@@ -1,20 +1,20 @@
 from flask import Blueprint, request, render_template
-from repository.ProductsRepository import ProductsRepository
+from repository.ProductRepository import ProductRepository
 from dto.Product import Product
 
 def ProductsBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
-    repository = ProductsRepository(connection)
+    repository = ProductRepository(connection)
     columnNames = [s[0] for s in repository.getColoumnNames()]
     categories =  [c[0] for c in repository.getCategories() ]
 
-    @bp.route('/', methods = ["POST","GET"])
+    @bp.route('/', methods = ["GET"])
     def productsPage():
-        settings = request.args.to_dict()
-        fetchedProducts = repository.getAll(**settings)
+        querySettings = request.args.to_dict()
+        fetchedProducts = repository.getAll(**querySettings)
         products = [Product(p) for p in fetchedProducts]
 
-        return render_template('products.html', products = products , columnNames = columnNames , categories = categories  )
+        return render_template('products.html', querySettings=querySettings, products = products , columnNames = columnNames , categories = categories  )
     
     @bp.route('/<int:id>', methods = ["GET"])
     def productDetailPage(id):

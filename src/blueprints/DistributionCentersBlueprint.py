@@ -1,10 +1,10 @@
 from flask import Blueprint, request, render_template
-from repository.DistributionCentersRepository import DistributionCentersRepository
+from repository.DistributionCenterRepository import DistributionCenterRepository
 from dto.DistributionCenter import DistributionCenter
 
 def DistributionCentersBlueprint(name: str, importName: str, connection):
     bp = Blueprint(name, importName)
-    repository = DistributionCentersRepository(connection)
+    repository = DistributionCenterRepository(connection)
     
     @bp.route('/', methods = ["POST","GET"])
     def distributionCentersPage():

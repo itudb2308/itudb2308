@@ -8,43 +8,50 @@
         <form action="{{ url_for('admin.products.productsPage') }}" method="GET" class="form-container">
             <div class="form-group">
                 <label for="category">Product Category : </label> 
-                <select id="category" class="form-control" name="category">
-                    <option value="" checked> Not Selected </option>
+                <select id="category" class="form-control" name="category" onchange="filterOnChange(this.id)">
+                    <option value="" {% if not querySettings["category"] %}selected{% endif %}> Not Selected </option>
                     {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        <option {% if querySettings["category"] == category %}selected{% endif %}
+                            value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                 </select>
             </div>
             
             <div class="form-group">
                 <label for="name">Product Name</label>
-                <input id="name" type="text" class="form-control" name="name" >
+                <input id="name" type="text" class="form-control" name="name" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["name"] %}{{ querySettings["name"] }}{% endif %}">
             </div>
             
             <div class="row">
                 <div class="form-group col">
                     <label for="costLowerBound">Product Cost Lower Bound :</label>
-                    <input id="costLowerBound" type="number" class="form-control" name="costLowerBound">
+                    <input id="costLowerBound" type="number" class="form-control" name="costLowerBound" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["costLowerBound"] %}{{ querySettings["costLowerBound"] }}{% endif %}">
                 </div>
 
                 <div class="form-group col">
                     <label for="costUpperBound">Product Cost Upper Bound :</label>
-                    <input id="costUpperBound" type="number" class="form-control" name="costUpperBound">
+                    <input id="costUpperBound" type="number" class="form-control" name="costUpperBound" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["costUpperBound"] %}{{ querySettings["costUpperBound"] }}{% endif %}">
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col">
-                    <label for="limit">Limit :  </label>
-                    <input id="limit" type="number" class="form-control" name="limit">
+                    <label for="limit">Limit: </label>
+                    <input id="limit" type="number" class="form-control" name="limit" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["limit"] %}{{ querySettings["limit"] }}{% endif %}">
                 </div>
     
                 <div class="form-group col">
                     <label for="order_by_columnName">Order By:</label>
-                    <select id="order_by_columnName" class="form-control" name="order_by_columnName">
-                        <option value="" checked> Not Selected </option>
+                    <select id="order_by_columnName" class="form-control" name="order_by_columnName" onchange="filterOnChange(this.id)">
+                        <option value="" {% if not querySettings["order_by_columnName"] %}selected{% endif %}
+                            value="" checked> Not Selected </option>
                         {% for column in columnNames %}
-                            <option value="{{ column }}">{{ column }}</option>
+                            <option {% if querySettings["order_by_columnName"] == column %}selected{% endif %}
+                                value="{{ column }}">{{ column }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -53,23 +60,38 @@
             <div class="row">
                 <div class="form-group col">
                     <label for="brand">Brand :</label>
-                    <input id="brand" type="text" class="form-control" name="brand">
+                    <input id="brand" type="text" class="form-control" name="brand" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["brand"] %}{{ querySettings["brand"] }}{% endif %}">
                 </div>
 
                 <div class="form-group col">
                     <label for="department">Department :</label> 
-                    <select id = "department" class="form-control" name="department">
-                        <option value="" checked> Not Selected </option>
-                        <option value="Men"> Men </option>
-                        <option value="Men"> Women </option>
+                    <select id = "department" class="form-control" name="department" onchange="filterOnChange(this.id)">
+                        <option {% if not querySettings["department"] %}selected{% endif %}
+                            value=""> Not Selected </option>
+                        <option {% if querySettings["department"] == "Men" %}selected{% endif %}
+                            value="Men"> Men </option>
+                        <option {% if querySettings["department"] == "Women" %}selected{% endif %}
+                            value="Women"> Women </option>
                     </select>
                 </div>
             </div>    
             <div class="form-group">
                 <label>Order Direction:</label>
                 <div>
-                    <label><input type="radio" name="order_direction" value="Ascending" checked> Ascending</label>
-                    <label><input type="radio" name="order_direction" value="Descending"> Descending</label>
+                    <label>
+                        <input type="radio" name="order_direction" value="Ascending" onchange="filterOnChange(this.id)"
+                            {% if not querySettings["order_direction"] or
+                                querySettings["order_direction"] == "Ascending" %}
+                                checked {% endif %}>
+                        Ascending
+                    </label>
+                    <label>
+                        <input type="radio" name="order_direction" value="Descending" onchange="filterOnChange(this.id)"
+                            {% if querySettings["order_direction"] == "Descending" %}
+                                checked {% endif %}>
+                        Descending
+                    </label>
                 </div>
             </div>
 

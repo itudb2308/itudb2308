@@ -30,4 +30,4 @@ class UserService:
         return [User(u) for u in self.repository.getAll(**settings)]
 
     def getDistinctCountry(self) -> [str]:
-        return self.repository.getDistinctCountry()
+        return [c[0] for c in self.repository.getDistinctCountry()]

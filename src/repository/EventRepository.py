@@ -1,6 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
-class EventsRepository(BaseRepository):
+class EventRepository(BaseRepository):
 
     def __init__(self, connection):
         super().__init__(connection)

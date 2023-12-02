@@ -6,48 +6,54 @@
 {% block body %}
 <div class = "row">
     <div class = "col-4">
-        <form action="{{ url_for('admin.users.usersPage') }}" method="post">
+        <form action="{{ url_for('admin.users.usersPage') }}" method="get">
         <div class = "row">
             <div class="form-group col">
                 <label for="first_name">First Name:</label>
-                <input type="text" class="form-control" name="first_name" id="first_name"> 
+                <input type="text" class="form-control" name="first_name" id="first_name" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["first_name"] %}{{ querySettings["first_name"] }}{% endif %}">
             </div>
             <div class="form-group col">
                 <label for="last_name">Last Name:</label>
-                <input type="text" class="form-control" name="last_name" id="last_name">
+                <input type="text" class="form-control" name="last_name" id="last_name" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["last_name"] %}{{ querySettings["last_name"] }}{% endif %}">
             </div>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" id="email">
+            <input type="email" class="form-control" name="email" id="email" onchange="filterOnChange(this.id)"
+                value="{% if querySettings["email"] %}{{ querySettings["email"] }}{% endif %}">
         </div>
         <div class = "row">
             <div class = "form-group col">
                 <label for="country">Country:</label>
-                <select class="form-control" name="country" id="country">
-                    <option selected></option>
-                    {% for country in countryArray %}
-                    <option value = "{{country}}"> {{ country }} </option>
+                <select class="form-control" name="country" id="country" onchange="filterOnChange(this.id)">
+                    <option {% if not querySettings["country"] %}selected{% endif %} value = ""></option>
+                    {% for country in countryItems %}
+                        <option {% if querySettings["country"] == country %}selected{% endif %}
+                            value = "{{country}}"> {{ country }} </option>
                     {% endfor %}
                 </select>
             </div>
             <div class = "form-group col">
                 <label for="gender">Gender</label>
-                <select class="form-control" name="gender" id="gender">
-                    <option value = ""> Don't specify </option>
-                    <option value = "M"> Male </option>
-                    <option value = "F"> Female </option>
+                <select class="form-control" name="gender" id="gender" onchange="filterOnChange(this.id)">
+                    <option {% if not querySettings["gender"] %}selected{% endif %} value = ""></option>
+                    <option {% if querySettings["gender"] == "M" %}selected{% endif %} value = "M">Male</option>
+                    <option {% if querySettings["gender"] == "F" %}selected{% endif %} value = "F">Female</option>
                 </select>
             </div>
         </div>
         <div class = "row">
             <div class="form-group col">
                 <label for="ageLower">Minimum Age:</label>
-                <input type="number" class="form-control" name="ageLower" id="ageLower">
+                <input type="number" class="form-control" name="ageLower" id="ageLower" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["ageLower"] %}{{ querySettings["ageLower"] }}{% endif %}">
             </div>
             <div class="form-group col">
                 <label for="ageUpper">Maximum Age:</label>
-                <input type="number" class="form-control" name="ageUpper" id="ageUpper">
+                <input type="number" class="form-control" name="ageUpper" id="ageUpper" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["ageUpper"] %}{{ querySettings["ageUpper"] }}{% endif %}">
             </div>
         </div>
         <button class="btn btn-success" type="submit">Filter</button>
