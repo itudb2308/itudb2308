@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/main.css">
     <title>{% block title %}{% endblock %}</title>
     <style>
         body {
@@ -22,11 +23,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('homePage')}}">Home</a>
+                <a class="nav-link active" aria-current="page" href="{{ url_for('admin.homePage')}}">Home</a>
                 <a class="nav-link" href="{{ url_for('admin.users.usersPage') }}">Users</a>
                 <a class="nav-link" href="{{ url_for('admin.products.productsPage') }}">Products</a>
                 <a class="nav-link" href="{{ url_for('admin.orders.ordersPage') }}">Orders</a>
                 <a class="nav-link" href="{{ url_for('admin.distributionCenters.distributionCentersPage') }}">Distribution Centers</a>
+                {% if session["logged_in"] == True %}
+                    <a class="nav-link" id="log" href="{{ url_for('admin.loginPage') }}">Login</a>
+                {% else %}
+                    <a class="nav-link" id="log" href="{{ url_for('admin.logoutPage') }}">Logout</a>
+                {% endif %}
             </div>
         </div>
     </nav>
