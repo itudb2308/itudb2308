@@ -36,6 +36,7 @@ services["user"].orderService = services["order"]
 
 app = Flask(__name__)
 app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="/admin")
+app.secret_key = "OPFSUJIOFWQNDMSAZVB23098I12OPDJKASDJ"
 
 @app.route('/', methods = ['GET'])
 def homePage():
