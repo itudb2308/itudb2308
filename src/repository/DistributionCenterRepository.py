@@ -1,6 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
-class DistributionCentersRepository(BaseRepository):
+class DistributionCenterRepository(BaseRepository):
 
     def __init__(self, connection):
         super().__init__(connection)

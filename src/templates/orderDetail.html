@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Orders{% endblock %}
+{% block title %}Order Detail{% endblock %}
 
 
 {% block body %}
     {% if order %}
         <h1>Order #{{ order.id }}</h1>
-        <!-- <div><strong>Customer : </strong><a href = "{{ url_for('admin.users.userDetailPage', id = order.user_id) }}">{{ order.full_name }}</a></div> -->
+        <div>
+            <strong>Customer : </strong>
+            <a href = "{{ url_for('admin.users.userDetailPage', id = user.id) }}">
+                {{ user.first_name + " " + user.last_name }}
+            </a>
+        </div>
         <div><strong>Number of Items: </strong>{{ order.num_of_items }}</div>
         <div><strong>Ordered At: </strong>{{ order.created_at }}</div>
         <div><strong>Shipped At: </strong>{{ order.shipped_at }}</div>
         <div><strong>Delivered At: </strong>{{ order.delivered_at }}</div>
         <div><strong>Returned At: </strong>{{ order.returned_at }}</div>
+    {% endif %}
+    {% if orderItems %}
     {% endif %}
 {% endblock %}

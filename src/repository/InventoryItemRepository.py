@@ -1,6 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
-class InventoryItemsRepository(BaseRepository):
+class InventoryItemRepository(BaseRepository):
 
     def __init__(self, connection):
         super().__init__(connection)

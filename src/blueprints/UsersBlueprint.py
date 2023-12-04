@@ -1,20 +1,18 @@
 from flask import Blueprint, request, render_template
-from repository.UserRepository import UserRepository
-from dto.User import User
+from service.UserService import UserService
 
-def UsersBlueprint(name: str, importName: str, connection):
+def UsersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
-    repository = UserRepository(connection)
-    countryArray = [s[0] for s in repository.getDistinctCountry()]
 
-    @bp.route('/', methods = ["GET", "POST"])
+    @bp.route('/', methods = ["GET"])
     def usersPage():
-        settings = request.form.to_dict()
-        users = repository.getAll(**settings)
-        return render_template('users.html', users = users, countryArray = countryArray)
+        querySettings = request.args.to_dict()
+        result = service.usersPage(querySettings)
+        return render_template('users.html', querySettings=querySettings, **result)
 
     @bp.route('/<int:id>', methods = ["GET"])
     def userDetailPage(id: str):
-        return render_template('userDetail.html', user = User(repository.findById(id)))
+        result = service.userDetailPage(int(id))
+        return render_template('userDetail.html', **result)
 
     return bp

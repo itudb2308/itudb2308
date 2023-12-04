@@ -1,6 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
-class ProductsRepository(BaseRepository):
+class ProductRepository(BaseRepository):
 
     def __init__(self, connection):
         super().__init__(connection)
@@ -50,7 +50,7 @@ class ProductsRepository(BaseRepository):
         if "name" in kwargs and kwargs["name"] != "": 
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] =queryArguments["where"] + f" P.name = '{kwargs['name']}' "
+            queryArguments["where"] = queryArguments["where"] + f" P.name ILIKE '%{kwargs['name']}%' "
         
         if "brand" in kwargs and kwargs["brand"] != "" : 
             self.handleWhereStatement(queryArguments)
@@ -90,11 +90,11 @@ class ProductsRepository(BaseRepository):
             queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
 
         query = query.format(**queryArguments)
-        
+
         self.cursor.execute(query)
         return self.cursor.fetchall()
-    
-    def getColoumnNames(self):
+
+    def getColumnNames(self):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_COLUMN_NAMES
         query = self._getSqlQueryFromFile(queryFileName)
         self.cursor.execute(query)
