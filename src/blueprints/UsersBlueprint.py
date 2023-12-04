@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, session, redirect, url_fo
 from service.UserService import UserService
 from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
 
-def UsersBlueprint(name: str, importName: str, service):
+def UsersBlueprint(name: str, importName: str, service: UserService):
     bp = Blueprint(name, importName)
 
     @bp.before_request

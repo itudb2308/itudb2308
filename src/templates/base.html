@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/main.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
     <title>{% block title %}{% endblock %}</title>
     <style>
         body {
@@ -28,11 +28,11 @@
                 <a class="nav-link" href="{{ url_for('admin.products.productsPage') }}">Products</a>
                 <a class="nav-link" href="{{ url_for('admin.orders.ordersPage') }}">Orders</a>
                 <a class="nav-link" href="{{ url_for('admin.distributionCenters.distributionCentersPage') }}">Distribution Centers</a>
-                {% if session["logged_in"] == True %}
-                    <a class="nav-link" id="log" href="{{ url_for('admin.loginPage') }}">Login</a>
-                {% else %}
-                    <a class="nav-link" id="log" href="{{ url_for('admin.logoutPage') }}">Logout</a>
-                {% endif %}
+                    {% if session["logged_in"] %}
+                        <a class="nav-link ml-auto" id="log" href="{{ url_for('admin.logoutPage') }}">Logout</a>
+                    {% else %}
+                        <a class="nav-link ml-auto" id="log" href="{{ url_for('admin.loginPage') }}">Login</a>
+                    {% endif %}
             </div>
         </div>
     </nav>

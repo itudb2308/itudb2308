@@ -19,6 +19,55 @@
                 {{ user.created_at }}
         </div>
 
-        {{ orders }}
+            {% if orders %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order Number</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    {% for order in orders %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('admin.orders.orderDetailPage', id = order.id)}}">
+                                    Order #{{ order.id }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ order.status }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h1>No orders found...</h1>
+            {% endif %}
+
+            
+            {% if events %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Event Number</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    {% for order in orders %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('admin.orders.orderDetailPage', id = order.id)}}">
+                                    Order #{{ order.id }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ order.status }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h1>No orders found...</h1>
+            {% endif %}
     {% endif %}
 {% endblock %}
