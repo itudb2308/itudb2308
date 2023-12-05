@@ -40,7 +40,41 @@ def ProductsBlueprint(name: str, importName: str, service):
                     for err in errorMessages:
                         flash(f"{fieldName}: {err}", "danger")
                 return render_template('addProduct.html', form = form)
+    
+    @bp.route('/update_product/<int:id>', methods = ["GET", "POST"])
+    def updateProductPage(id):
+        if request.method == "GET":
+            product = service.findById(id)
+            product = product.__dict__
+
+            # change buttons text to "Update Product" instead of "Add Product"
+            form = AddProductForm(data=product)
+            form.submit.label.text = "Update Product"
+
+            return render_template('updateProduct.html', form=form, id=id)
+        else :
+            form = AddProductForm(request.form) 
+            form.submit.label.text = "Update Product"
+
+            if form.validate_on_submit():
+                product = form.data
+                # add id to product such that repository can use it to update the product
+                product["id"] = id
+
+                # update product on database
+                result = service.updateProductPage(product)
+                # redirect to product detail page of the updated product
+                flash("Product updated successfully", "success")
+                return redirect(url_for('admin.products.productDetailPage', id=result))
             
+            else :
+                flash("Form data is invalid", "danger")
+                for fieldName, errorMessages in form.errors.items():
+                    for err in errorMessages:
+                        flash(f"{fieldName}: {err}", "danger")
+                return render_template('updateProduct.html', form = form, id=id)
+
+
     class AddProductForm(FlaskForm):
         # get choices for form fields from database
         distribution_centers_choices = service.getDistributionCenters({"order_by_columnName": "name", "order_by_direction": "asc"})

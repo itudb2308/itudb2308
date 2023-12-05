@@ -26,6 +26,10 @@ class ProductService:
     def addProductPage(self, product: dict) -> int:
         return  self.productRepository.addProduct(product)
 
+    def updateProductPage(self, product: dict) -> int:
+        return  self.productRepository.updateProduct(product)
+
+
     # SERVICE METHODS
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
