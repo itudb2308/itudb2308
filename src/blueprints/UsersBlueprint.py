@@ -23,5 +23,10 @@ def UsersBlueprint(name: str, importName: str, service: UserService):
     def userDetailPage(id: str):
         result = service.userDetailPage(int(id))
         return render_template('userDetail.html', **result)
+    
+    @bp.route('/events/<int:id>', methods = ["GET"])
+    def eventDetailPage(id: str):
+        result = service.eventDetailPage(int(id))
+        return render_template('eventDetail.html', **result)
 
     return bp

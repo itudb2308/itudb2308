@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Detail{% endblock %}
+
+{% block body %}
+    {% if event %}
+        <h1>Event #{{ event.id }}</h1>
+        <div><strong>Session ID: </strong>{{ event.session_id }}</div>
+        <div><strong>Event Type: </strong>{{ event.event_type }}</div>
+        <div><strong>Event Created At: </strong>{{ event.created_at }}</div>
+    {% endif %}
+{% endblock %}

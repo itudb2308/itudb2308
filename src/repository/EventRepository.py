@@ -2,7 +2,7 @@ from repository.BaseRepository import BaseRepository
 
 getAllSettings = {
     "where": "",
-    "order_by": "ORDER BY events.id ASC",
+    "order_by": "ORDER BY e.id ASC",
     "limit": 20,
     "offset": 0
 }
@@ -19,7 +19,11 @@ class EventRepository(BaseRepository):
         return self._findByIds(ids, self._constants.SQL_FILES.EVENTS_FIND_BY_IDS)
 
     def getAll(self, **kwargs):
+        queryFileName = self._constants.SQL_FILES.EVENTS_GET_ALL
+        query = self._getSqlQueryFromFile(queryFileName)
+
         settings = getAllSettings.copy()
+
         if "limit" in kwargs.keys() and kwargs["limit"] != "":
             settings["limit"] = kwargs["limit"]
         if "offset" in kwargs.keys() and kwargs["offset"] != "":
@@ -30,6 +34,12 @@ class EventRepository(BaseRepository):
         if "session_id" in kwargs.keys() and kwargs["session_id"] != "":
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"e.session_id = {kwargs['session_id']}"
+        if "created_at" in kwargs.keys() and kwargs["created_at"] != "":
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"e.created_at = {kwargs['created_at']}"
+        if "event_type" in kwargs.keys() and kwargs["event_type"] != "":
+            self.handleWhereStatement(settings)
+            settings["where"] = settings["where"] + f"e.event_type = {kwargs['event_type']}"
         if "order_by" in kwargs.keys() and kwargs["order_by"] != "":
             field = kwargs["order_by"]["field"]
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"

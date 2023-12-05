@@ -50,24 +50,24 @@
                     <thead>
                         <tr>
                             <th scope="col">Event Number</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Created At</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
+                    {% for event in events %}
                         <tr>
                             <td>
-                                <a href="{{ url_for('admin.orders.orderDetailPage', id = order.id)}}">
-                                    Order #{{ order.id }}
+                                <a href="{{ url_for('admin.users.eventDetailPage', id = event.id)}}">
+                                    Event #{{ event.id }}
                                 </a>
                             </td>
                             <td>
-                                {{ order.status }}
+                                {{ event.created_at }}
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
             {% else %}
-                <h1>No orders found...</h1>
+                <h1>No events found...</h1>
             {% endif %}
     {% endif %}
 {% endblock %}

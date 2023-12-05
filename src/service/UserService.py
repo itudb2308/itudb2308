@@ -24,10 +24,18 @@ class UserService:
         result["events"] = self.getAllEvents({"user_id" : id})
         return result
 
+    def eventDetailPage(self, id: int) -> dict:
+        result = dict()
+        result["event"] = self.eventsFindById(id)
+        return result
+
     # SERVICE METHODS
     def findById(self, id: int) -> User:
         return User(self.userRepository.findById(id))
 
+    def eventsFindById(self, id : int) -> Event:
+        return Event(self.eventRepository.findById(id))
+    
     def getAll(self, settings: dict) -> [User]:
         if "limit" not in settings:
             settings["limit"] = 20
