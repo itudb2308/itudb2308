@@ -21,7 +21,6 @@ def ProductsBlueprint(name: str, importName: str, service):
 
     @bp.route('/add_product', methods = ["GET", "POST"])
     def addProductPage():
-        print(request.method)
         if request.method == "GET":            
             form = AddProductForm()
             return render_template('addProduct.html', form=form)
@@ -36,8 +35,6 @@ def ProductsBlueprint(name: str, importName: str, service):
                 return redirect(url_for('admin.products.productDetailPage', id=result))
             
             else :
-                print(f"form.data: {form.data}")
-                print(f"form.errors: {form.errors}")
                 flash("Form data is invalid", "danger")
                 for fieldName, errorMessages in form.errors.items():
                     for err in errorMessages:
