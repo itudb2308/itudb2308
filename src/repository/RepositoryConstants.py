@@ -28,5 +28,9 @@ class RepositoryConstants:
         PRODUCTS_GET_ALL = "products_get_all.sql"
         PRODUCTS_GET_COLUMN_NAMES = "products_get_column_names.sql"
         PRODUCTS_GET_CATEGORIES = "products_get_categories.sql"
+        PRODUCTS_ADD_PRODUCT = "products_add_product.sql"
+        PRODUCTS_UPDATE_PRODUCT = "products_update_product_by_id.sql"
+        PRODUCTS_DELETE_PRODUCT = "products_delete_product_by_id.sql"
+        PRODUCTS_GET_BRAND_NAMES = "products_get_brand_names.sql"
         GET_DISTINCT_COUNTRY = "get_distinct_country.sql"
 

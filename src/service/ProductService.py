@@ -7,6 +7,7 @@ class ProductService:
                  inventoryItemRepository: InventoryItemRepository) -> None:
         self.productRepository = productRepository
         self.inventoryItemRepository = inventoryItemRepository
+        self.distributionCenterService = None
 
     # PAGE METHODS
     def productsPage(self, querySettings: dict) -> dict:
@@ -21,6 +22,10 @@ class ProductService:
         result["product"] = self.findById(id)
         return result
 
+    # returns newly added products id
+    def addProductPage(self, product: dict) -> int:
+        return  self.productRepository.addProduct(product)
+
     # SERVICE METHODS
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
@@ -33,3 +38,10 @@ class ProductService:
 
     def getCategories(self) -> [str]:
         return [c[0] for c in self.productRepository.getCategories()]
+
+    # returns array of DistributionCenter data transfer objects
+    def getDistributionCenters(self, settings : dict ) -> [str]:
+        return self.distributionCenterService.getAll(settings) 
+
+    def getBrandNames(self) -> [str]:
+        return [b[0] for b in self.productRepository.getBrandNames()]    

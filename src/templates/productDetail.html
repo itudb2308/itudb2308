@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}Product Detail{% endblock %}
 {% block body %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+
     <h1> {{ product.name }} </h1>
     <ul>
         <li><strong>ID:</strong> {{ product.id }}</li>

@@ -40,7 +40,7 @@ class DistributionCenterRepository(BaseRepository):
                 kwargs["order_direction"] = "Ascending"
     
             ascOrDesc = "ASC" if kwargs["order_direction"] == "Ascending" else "DESC"
-            queryArguments["order_by"] = f" ORDER BY P.{columnName} {ascOrDesc}"
+            queryArguments["order_by"] = f" ORDER BY D.{columnName} {ascOrDesc}"
 
         # I'm not sure if this will be used, but I'm leaving it here just in case
         if "latitude" in kwargs.keys() and kwargs["latitude"] != "":

@@ -105,3 +105,28 @@ class ProductRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         self.cursor.execute(query)
         return self.cursor.fetchall()
+    
+    # returns the id of the newly added product
+    def addProduct(self, product: dict):
+        queryFileName = self._constants.SQL_FILES.PRODUCTS_ADD_PRODUCT
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(**product)
+        try:
+            self.cursor.execute(query, product)
+            self.connection.commit()
+        except Exception as e:
+            print(f" query: {query}")
+            print(e)
+            self.connection.rollback()
+            raise e
+
+        product_id = self.cursor.fetchone()[0]
+        return product_id
+
+    
+    def getBrandNames(self):
+        queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+    
