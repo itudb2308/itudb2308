@@ -6,3 +6,5 @@ WEEK 7:
 Created get all endpoint for orders, and created related queries, methods etc.
 WEEK 8:
 Created filter and detail pages for orders.
+WEEK 9:
+implemented blueprint, service, repository architecture
