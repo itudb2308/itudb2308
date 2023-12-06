@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS products
     brand                  VARCHAR(50),
     retail_price           DOUBLE PRECISION,
     department             VARCHAR(5),
-    sku                    VARCHAR(50),
+    sku                    CHAR(32),
     distribution_center_id BIGINT REFERENCES distribution_centers ON DELETE CASCADE ON UPDATE CASCADE
 );
 
