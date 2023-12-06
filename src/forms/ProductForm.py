@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, IntegerField, FloatField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired, NumberRange, ValidationError, Optional, Length, Regexp
 
 class ProductForm(FlaskForm):
-    def __init__(self, service, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
+    def __init__(self, service, data=None):
+        super(ProductForm, self).__init__(data=data)
 
         # Get choices for form fields from the database
         distribution_centers_choices = service.getDistributionCenters({"order_by_columnName": "name", "order_by_direction": "asc"})
@@ -20,22 +20,16 @@ class ProductForm(FlaskForm):
         self.distribution_center_id.choices = distribution_centers_choices
         self.category.choices = category_choices
         self.brand.choices = brand_choices
-
-        # If there's additional data to process (e.g., from a failed submission)
-        if kwargs.get('data'):
-            if 'cost' in kwargs['data']:
-                kwargs['data']['cost'] = float(kwargs['data']['cost'])
-            if 'retail_price' in kwargs['data']:
-                kwargs['data']['retail_price'] = float(kwargs['data']['retail_price'])
-                 
-            self.process(data=kwargs['data'])
+        
 
     name = StringField("Name", validators=[DataRequired()])
     cost = FloatField("Cost", validators=[DataRequired(), NumberRange(min=0)])
     category = SelectField("Category", validators=[DataRequired()])
     brand = SelectField("Brand", validators=[DataRequired()])
-    retail_price = FloatField("Retail Price", validators=[DataRequired(), NumberRange(min=0)])
+    retail_price = FloatField("Retail Price", validators=[DataRequired(), NumberRange(min=0) ])
     department = SelectField("Department", validators=[DataRequired()], choices=["Men", "Women"])
     sku = StringField("SKU", validators=[DataRequired()])
     distribution_center_id = SelectField("Distribution Center", validators=[DataRequired()])
     submit = SubmitField("Add Product")
+    
+

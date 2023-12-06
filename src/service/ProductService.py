@@ -34,7 +34,7 @@ class ProductService:
             result["submitted_and_valid"] = False
             result["form"] = AddProductForm(self)
         else :
-            form = AddProductForm(self, data=form.to_dict())
+            form = AddProductForm(self, form)
 
             if form.validate_on_submit():
                 product = form.data
@@ -47,10 +47,10 @@ class ProductService:
 
             else :
                 result["submitted_and_valid"] = False
-                result["flash"].append = ("Form data is invalid", "danger")
+                result["flash"].append(("Form data is invalid", "danger"))
                 for fieldName, errorMessages in form.errors.items():
                     for err in errorMessages:
-                        result["flash"].append(f"{fieldName}: {err}", "danger")
+                        result["flash"].append((f"{fieldName}: {err}", "danger"))
                 result["form"] = form
         return result
     
@@ -64,9 +64,9 @@ class ProductService:
         if method == "GET":
             product = self.findById(id).toDict()
             
-            result["form"] = UpdateProductForm(self,data=product)
+            result["form"] = UpdateProductForm(self,product)
         else :
-            form = UpdateProductForm(self, data = form.to_dict()) 
+            form = UpdateProductForm(self, form) 
 
             if form.validate_on_submit():
                 product = form.data
