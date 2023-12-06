@@ -110,6 +110,7 @@ class ProductRepository(BaseRepository):
     def addProduct(self, product: dict):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_ADD_PRODUCT
         query = self._getSqlQueryFromFile(queryFileName)
+        self.replaceDoubleApostrophes(product)
         query = query.format(**product)
         try:
             self.cursor.execute(query, product)
@@ -126,6 +127,7 @@ class ProductRepository(BaseRepository):
     def updateProduct(self, product: dict):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_UPDATE_PRODUCT
         query = self._getSqlQueryFromFile(queryFileName)
+        self.replaceDoubleApostrophes(product)
         query = query.format(**product)
         try:
             self.cursor.execute(query, product)

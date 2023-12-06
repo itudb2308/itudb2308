@@ -2,6 +2,9 @@ from dto.Product import Product
 from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
 
+from forms.AddProductForm import AddProductForm
+from forms.UpdateProductForm import UpdateProductForm
+
 class ProductService:
     def __init__(self, productRepository: ProductRepository,
                  inventoryItemRepository: InventoryItemRepository) -> None:
@@ -23,12 +26,64 @@ class ProductService:
         return result
 
     # returns newly added products id
-    def addProductPage(self, product: dict) -> int:
+    def addProductPage(self, method, form ) -> int:
+        # flash holds tuples of (message, category)
+        result = { "submitted_and_valid" : False, "flash" :[] , "form" : None}
+
+        if method == "GET":            
+            result["submitted_and_valid"] = False
+            result["form"] = AddProductForm(self)
+        else :
+            form = AddProductForm(self, data=form.to_dict())
+
+            if form.validate_on_submit():
+                product = form.data
+                # add product to database
+                result["submitted_and_valid"] = True
+                result["id"] = self.addProduct(product)
+                # redirect to product detail page of the newly added product
+                # add flash messages to this message ("Product added successfully", "success")
+                result["flash"].append(("Product added successfully", "success"))
+
+            else :
+                result["submitted_and_valid"] = False
+                result["flash"].append = ("Form data is invalid", "danger")
+                for fieldName, errorMessages in form.errors.items():
+                    for err in errorMessages:
+                        result["flash"].append(f"{fieldName}: {err}", "danger")
+                result["form"] = form
+        return result
+    
+    # returns the id of the added product
+    def addProduct(self, product: dict) -> int:
         return  self.productRepository.addProduct(product)
+    
+    def updateProductPage(self, method, form, id) -> int:
+        result = { "submitted_and_valid" : False, "flash" : [] , "form" : None}
+        
+        if method == "GET":
+            product = self.findById(id).toDict()
+            
+            result["form"] = UpdateProductForm(self,data=product)
+        else :
+            form = UpdateProductForm(self, data = form.to_dict()) 
 
-    def updateProductPage(self, product: dict) -> int:
-        return  self.productRepository.updateProduct(product)
+            if form.validate_on_submit():
+                product = form.data
+                # add id to product such that repository can use it to update the product
+                product["id"] = id
+                # update product on database
+                id = self.productRepository.updateProduct(product)
+                result["submitted_and_valid"] = True
+                result["flash"].append(("Product added successfully", "success"))
 
+            else :
+                result["flash"].append(("Form data is invalid", "danger"))
+                for fieldName, errorMessages in form.errors.items():
+                    for err in errorMessages:
+                        result["flash"].append((f"{fieldName}: {err}", "danger"))
+                result["form"] = form
+        return result   
 
     # SERVICE METHODS
     def findById(self, id: int) -> Product:
