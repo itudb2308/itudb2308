@@ -85,6 +85,12 @@ class ProductService:
                 result["form"] = form
         return result   
 
+    def deleteProductPage(self, id: int) -> dict:
+        result = dict()
+        result["id"] = self.deleteProduct(id)
+        result["flash"] = [("Product deleted successfully", "success")]
+        return result
+    
     # SERVICE METHODS
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
@@ -104,3 +110,6 @@ class ProductService:
 
     def getBrandNames(self) -> [str]:
         return [b[0] for b in self.productRepository.getBrandNames()]    
+    
+    def deleteProduct(self, id: int) -> int:
+        return self.productRepository.deleteProductById(id)

@@ -55,10 +55,17 @@ def ProductsBlueprint(name: str, importName: str, service):
             showFlashMessages(result["flash"])
             return render_template('updateProduct.html', form = result["form"], id=id )
         
+    @bp.route('/delete_product/<int:id>', methods = ["GET"])
+    def deleteProductPage(id):
+        result = service.deleteProductPage(id)
+        showFlashMessages(result["flash"])
+        return redirect(url_for('admin.products.productsPage'))
+    
     def showFlashMessages(flashMessages):
         if flashMessages != None:
             for flashMessage in flashMessages:
                 flash(flashMessage[0], flashMessage[1])
+
     return bp
 
     
