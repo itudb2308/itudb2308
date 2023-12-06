@@ -75,7 +75,7 @@ class ProductService:
                 # update product on database
                 id = self.productRepository.updateProduct(product)
                 result["submitted_and_valid"] = True
-                result["flash"].append(("Product added successfully", "success"))
+                result["flash"].append(("Product updated successfully", "success"))
 
             else :
                 result["flash"].append(("Form data is invalid", "danger"))
