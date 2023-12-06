@@ -19,8 +19,16 @@ Fixed desync with the sql file names.
 Moved handleWhereStatement to BaseRepository to get rid of the redundant code.
 Created users page where you can apply the filtering and get the results for the user search.
 Created specific user page where u click at one of the results of the query from
-    user search and it redirects you to that specific users page. 
+user search and it redirects you to that specific users page. 
 
 ------
+
+WEEK 9:
+i forgot to update this and now i dont remember what i did in this week
+
+------
+
+WEEK 10:
+
 
 

@@ -10,11 +10,11 @@
     <h1> {{ product.name }} </h1>
     <ul>
         <li><strong>ID:</strong> {{ product.id }}</li>
-        <li><strong>Cost:</strong> {{ product.cost }}</li>
+        <li><strong>Cost:</strong> {{ '%.2f' | format(product.cost) }}</li>
         <li><strong>Category:</strong> {{ product.category }}</li>
         <li><strong>Name:</strong> {{ product.name }}</li>
         <li><strong>Brand:</strong> {{ product.brand }}</li>
-        <li><strong>Retail Price:</strong> {{ product.retail_price }}</li>
+        <li><strong>Retail Price:</strong> {{ '%.2f' | format(product.retail_price) }}</li>
         <li><strong>Department:</strong> {{ product.department }}</li>
         <li><strong>SKU:</strong> {{ product.sku }}</li>
         <li><strong> <a href = "{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = product.distribution_center_id)}}" > Distribution Center ID:</strong> {{ product.distribution_center_id }} </a></li>

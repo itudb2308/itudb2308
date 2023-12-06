@@ -3,6 +3,13 @@
     margin-top: 25px;
 }
 
+
+#log {
+    position:absolute;
+    right: 50px;
+    width: 10px;
+}
+
 .distributionCenter-detail-container {
     max-width: 800px;
     margin: auto;

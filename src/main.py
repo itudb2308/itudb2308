@@ -40,9 +40,5 @@ app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="
 
 app.config['SECRET_KEY'] = '048275bd7538e006d38094a22bf5e730'
 
-@app.route('/', methods = ['GET'])
-def homePage():
-    return render_template('index.html')
-
 if __name__ == "__main__":
     app.run(debug=True)
