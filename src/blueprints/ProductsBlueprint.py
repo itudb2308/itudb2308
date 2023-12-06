@@ -2,6 +2,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for
 from service.ProductService import ProductService
 
 from forms.AddProductForm import AddProductForm
+from forms.UpdateProductForm import UpdateProductForm
 
 def ProductsBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
@@ -24,7 +25,7 @@ def ProductsBlueprint(name: str, importName: str, service):
             return render_template('addProduct.html', form=form)
         else :
             form = AddProductForm(service, data=request.form.to_dict())
-            
+
             if form.validate_on_submit():
                 product = form.data
                 # add product to database
@@ -45,16 +46,12 @@ def ProductsBlueprint(name: str, importName: str, service):
         if request.method == "GET":
             product = service.findById(id)
             product = product.__dict__
-
-            # change buttons text to "Update Product" instead of "Add Product"
-            form = AddProductForm(service,data=product)
-            form.submit.label.text = "Update Product"
-
+            
+            form = UpdateProductForm(service,data=product)
+            
             return render_template('updateProduct.html', form=form, id=id)
         else :
-            form = AddProductForm(service, data = request.form.to_dict()) 
-            form.submit.label.text = "Update Product"
-
+            form = UpdateProductForm(service, data = request.form.to_dict()) 
 
             if form.validate_on_submit():
                 product = form.data
