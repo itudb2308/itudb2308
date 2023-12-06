@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block body  %}
+    <h1>Add Product</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form action = "{{ url_for( 'admin.products.addProductPage' )}}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token() }}
+
+        <div class="form-group">
+            {{ form.name.label( class="form-control-label" ) }}
+            {% if form.name.errors %}
+                {{ form.name( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.name.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.name( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.category.label( class="form-control-label" ) }}
+            {% if form.category.errors %}
+                {{ form.category( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.category.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.category( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.cost.label( class="form-control-label" ) }}
+            {% if form.cost.errors %}
+                {{ form.cost( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.cost.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.cost( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.retail_price.label( class="form-control-label" ) }}
+            {% if form.retail_price.errors %}
+                {{ form.retail_price( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.retail_price.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.retail_price( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.department.label( class="form-control-label" ) }}
+            {% if form.department.errors %}
+                {{ form.department( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.department.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.department( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.brand.label( class="form-control-label" ) }}
+            {% if form.brand.errors %}
+                {{ form.brand( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.brand.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.brand( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.department.label( class="form-control-label" ) }}
+            {% if form.department.errors %}
+                {{ form.department( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.department.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.department( class="form-control form-control-lg" ) }}
+            {% endif %}
+
+        </div>
+
+
+        
+        <div class="form-group">
+            {{ form.sku.label( class="form-control-label" ) }}
+            {% if form.sku.errors %}
+                {{ form.sku( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.sku.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.sku( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        
+
+        <div class="form-group">
+            {{ form.distribution_center_id.label( class="form-control-label" ) }}
+            {% if form.distribution_center_id.errors %}
+                {{ form.distribution_center_id( class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.distribution_center_id.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.distribution_center_id( class="form-control form-control-lg" ) }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit( class="btn btn-outline-info" ) }}
+        </div>
+
+    </form>
+{% endblock %}

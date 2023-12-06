@@ -33,10 +33,12 @@ services = {
 # REFER BETWEEN SERVICES
 services["order"].userService = services["user"]
 services["user"].orderService = services["order"]
+services["product"].distributionCenterService = services["distributionCenter"]
 
 app = Flask(__name__)
 app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="/admin")
-app.secret_key = "OPFSUJIOFWQNDMSAZVB23098I12OPDJKASDJ"
+
+app.config['SECRET_KEY'] = '048275bd7538e006d38094a22bf5e730'
 
 if __name__ == "__main__":
     app.run(debug=True)

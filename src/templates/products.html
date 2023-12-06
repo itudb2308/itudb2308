@@ -97,6 +97,11 @@
 
             <button class="btn btn-success" type="submit">Filter</button>
             <button class="btn btn-primary" type="reset">Reset</button>
+            <br>
+            <br>    
+            <a href = "{{ url_for('admin.products.addProductPage') }}" class="btn btn-info">Add Product</a>
+
+            
         </form>
     </div>
     <div class="col-md-8">
@@ -137,7 +142,7 @@
             <h1>No products found...</h1>
         {% endif %}
     </div>
-</div>
+
 {% endblock %}
 
 

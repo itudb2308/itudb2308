@@ -34,3 +34,8 @@ class BaseRepository:
         query = query.format(ids = ",".join(map(str, ids)))
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def replaceDoubleApostrophes (self, arguments: dict) :
+        for key, value in arguments.items():
+            if isinstance(value, str):
+                arguments[key] = value.replace("'", "''")
