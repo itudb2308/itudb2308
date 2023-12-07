@@ -1,7 +1,7 @@
 from repository.DistributionCenterRepository import DistributionCenterRepository
 from dto.DistributionCenter import DistributionCenter
 
-from forms.DistributionCenterForm import DistributionCenterForm
+from forms.DistributionCenterForm import DistributionCenterForm , UpdateDistributionCenterForm
 
 class DistributionCenterService:
     def __init__(self, distributionCenterRepository: DistributionCenterRepository):
@@ -31,8 +31,6 @@ class DistributionCenterService:
                 # add product to database
                 result["submitted_and_valid"] = True
                 result["id"] = self.distributionCenterRepository.addDistributionCenter(distributionCenter)
-                # redirect to product detail page of the newly added product
-                # add flash messages to this message ("Product added successfully", "success")
                 result["flash"].append(("Distribution Center added successfully", "success"))
 
             else :
@@ -45,7 +43,42 @@ class DistributionCenterService:
 
         return result
     
-    
+    def updateDistributionCenter(self, id: int, method: str, form) -> dict:
+        result = { "submitted_and_valid" : False, "flash" : [] , "form" : None, "id" : id}
+        print(f" method : {method} , form : {form}")
+        if method == "GET":
+            distributionCenter = self.findById(id)
+            formData = {"id" : distributionCenter.id, "name" : distributionCenter.name, "latitude" : distributionCenter.latitude, "longitude" : distributionCenter.longitude}
+            
+            form = UpdateDistributionCenterForm(formData)
+            result["form"] = form
+            result["submitted_and_valid"] = False
+            
+        else :
+            form = UpdateDistributionCenterForm(form)
+
+            if form.validate_on_submit():
+                print("Form is valid")
+                distributionCenter = form.data
+                distributionCenter["id"] = id
+                print(f"form data: {distributionCenter}")
+                # add product to database
+                result["submitted_and_valid"] = True
+                result["id"] = self.distributionCenterRepository.updateDistributionCenter(distributionCenter)
+                result["flash"].append(("Distribution Center updated successfully", "success"))
+            else :
+                result["submitted_and_valid"] = False
+                result["flash"].append(("Form data is invalid", "danger"))
+                for fieldName, errorMessages in form.errors.items():
+                    for err in errorMessages:
+                        result["flash"].append((f"{fieldName}: {err}", "danger"))
+                result["form"] = form
+
+        return result
+
+    # may be success or failure message depending on the result of the delete operation can be returned
+    def deleteDistributionCenter(self, id: int) : 
+        return self.distributionCenterRepository.deleteDistributionCenter(id)
 
 
     # SERVICE METHODS

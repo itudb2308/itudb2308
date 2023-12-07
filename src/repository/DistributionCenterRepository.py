@@ -7,8 +7,9 @@ class DistributionCenterRepository(BaseRepository):
         self.defaultArguments = {
             "where": "",
             "order_by": "ORDER BY D.id ASC",
-            "limit": 20,
-            "offset": 0
+            # Removing the limit and offset because they are not used for now!!
+            #"limit": 100,
+            #"offset": 0
         }
 
     def findById(self, id: int):
@@ -62,6 +63,32 @@ class DistributionCenterRepository(BaseRepository):
             "name": distributionCenter["name"],
             "latitude": distributionCenter["latitude"],
             "longitude": distributionCenter["longitude"]
+        }
+        query = query.format(**queryArguments)
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.cursor.fetchone()[0]
+    
+    # returns the id of the newly added distribution center
+    def updateDistributionCenter(self, distributionCenter : dict):
+        queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_UPDATE_DISTRIBUTION_CENTER
+        query = self._getSqlQueryFromFile(queryFileName)
+        queryArguments = {
+            "id": distributionCenter["id"],
+            "name": distributionCenter["name"],
+            "latitude": distributionCenter["latitude"],
+            "longitude": distributionCenter["longitude"]
+        }
+        query = query.format(**queryArguments)
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.cursor.fetchone()[0]
+    
+    def deleteDistributionCenter(self, id: int):
+        queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_DELETE_DISTRIBUTION_CENTER
+        query = self._getSqlQueryFromFile(queryFileName)
+        queryArguments = {
+            "id": id
         }
         query = query.format(**queryArguments)
         self.cursor.execute(query)

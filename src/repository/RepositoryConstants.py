@@ -23,6 +23,8 @@ class RepositoryConstants:
         DISTRIBUTION_CENTERS_FIND_BY_IDS = "distribution_centers_find_by_ids.sql"
         DISTRIBUTION_CENTERS_GET_ALL = "distribution_centers_get_all.sql"
         DISTRIBUTION_CENTERS_ADD_DISTRIBUTION_CENTER = "distribution_centers_add_distribution_center.sql"
+        DISTRIBUTION_CENTERS_UPDATE_DISTRIBUTION_CENTER = "distribution_centers_update_distribution_center.sql"
+        DISTRIBUTION_CENTERS_DELETE_DISTRIBUTION_CENTER = "distribution_centers_delete_distribution_center.sql"
         INVENTORY_ITEMS_FIND_BY_ID = "inventory_items_find_by_id.sql"
         INVENTORY_ITEMS_FIND_BY_IDS = "inventory_items_find_by_ids.sql"
         PRODUCTS_FIND_BY_ID = "products_find_by_id.sql" 

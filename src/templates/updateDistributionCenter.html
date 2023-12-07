@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %} Add Distribution Center {% endblock %}
+{% block title %} Update Distribution Center {% endblock %}
 
 {% block body %}
-    <h1> Add Distribution Center</h1>
+    <h1> Update Distribution Center</h1>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -14,7 +15,7 @@
         {% endif %}
     {% endwith %}
 
-    <form action = "{{ url_for( 'admin.distributionCenters.addDistributionCenterPage' )}}" method="POST">
+    <form action = "{{ url_for( 'admin.distributionCenters.updateDistributionCenterPage',id = id )}}" method="POST">
         {{ form.hidden_tag() }}
         {{ form.csrf_token() }}
 
@@ -65,7 +66,5 @@
         <div class="form-group">
             {{ form.submit( class="btn btn-outline-info" ) }}
         </div>
-        
-
 
 {% endblock %}

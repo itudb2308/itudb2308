@@ -9,3 +9,13 @@ class DistributionCenterForm(FlaskForm):
     latitude = FloatField("Latitude", validators=[DataRequired()])
     longitude = FloatField("Longitude", validators=[DataRequired()])
     submit = SubmitField("Add Distribution Center")
+
+class UpdateDistributionCenterForm(FlaskForm):
+    def __init__(self, data=None)  :
+        super().__init__(data=data)
+        
+    id = IntegerField("ID")
+    name = StringField("Name", validators=[DataRequired()])
+    latitude = FloatField("Latitude", validators=[DataRequired()])
+    longitude = FloatField("Longitude", validators=[DataRequired()])
+    submit = SubmitField("Update Distribution Center")

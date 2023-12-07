@@ -25,5 +25,14 @@
                 src="https://www.google.com/maps?q={{ distributionCenter.latitude|string }},{{ distributionCenter.longitude|string }}&hl=es;z=14&amp;output=embed">
             </iframe>
         </div>
+        <div class="distributionCenter-title">
+
+            <a href="{{url_for('admin.distributionCenters.updateDistributionCenterPage', id=distributionCenter.id)}}" class="btn btn-primary">Update</a>
+            <a href="{{url_for('admin.distributionCenters.deleteDistributionCenter', id=distributionCenter.id)}}" class="btn btn-danger">Delete</a>
+
+        </div>
+        
     </div>
+
+   
 {% endblock %}
