@@ -53,3 +53,17 @@ class DistributionCenterRepository(BaseRepository):
         query = query.format(**queryArguments)
         self.cursor.execute(query)
         return self.cursor.fetchall()
+    
+    # returns the id of the newly added distribution center
+    def addDistributionCenter(self, distributionCenter : dict) -> int:
+        queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_ADD_DISTRIBUTION_CENTER
+        query = self._getSqlQueryFromFile(queryFileName)
+        queryArguments = {
+            "name": distributionCenter["name"],
+            "latitude": distributionCenter["latitude"],
+            "longitude": distributionCenter["longitude"]
+        }
+        query = query.format(**queryArguments)
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.cursor.fetchone()[0]

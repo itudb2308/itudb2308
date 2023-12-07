@@ -38,5 +38,7 @@
             <h1>No distribution center found...</h1>
         {% endif %}
     </div>
+
+    <a href="{{ url_for('admin.distributionCenters.addDistributionCenterPage') }}" class="btn btn-info">Add Distribution Center</a> 
 </div>
 {% endblock %}

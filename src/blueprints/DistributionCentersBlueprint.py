@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, session, redirect, url_for
+from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from service.DistributionCenterService import DistributionCenterService
 from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
 
@@ -23,5 +23,25 @@ def DistributionCentersBlueprint(name: str, importName: str, service):
     def distributionCenterDetailPage(id):
         result = service.distributionCenterDetailPage(id)
         return render_template('distributionCenterDetail.html', **result)
+
+    @bp.route('/add', methods = ["POST","GET"])
+    def addDistributionCenterPage():
+        method = request.method
+        form = request.form
+
+        result = service.addDistributionCenterPage(method, form)
+
+        if result["submitted_and_valid"]:
+            showFlashMessages(result["flash"])
+            return redirect(url_for('admin.distributionCenters.distributionCenterDetailPage', id = result['id']))
+        else:
+            showFlashMessages(result["flash"])
+            return render_template('addDistributionCenter.html', **result)
+        
+    def showFlashMessages(flashMessages):
+        if flashMessages != None:
+            for flashMessage in flashMessages:
+                flash(flashMessage[0], flashMessage[1])
+
 
     return bp

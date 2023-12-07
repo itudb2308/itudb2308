@@ -3,6 +3,11 @@
 {% block title %} Distribution Center Details {% endblock %}
 
 {% block body %}
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+
+
     <div class="distributionCenter-detail-container">
         <h1 class="distributionCenter-title"> <strong> {{ distributionCenter.name }} </strong> Distribution Center </h1>
         <h2 class="distributionCenter-id"> ID : {{ distributionCenter.id }} </h2>
