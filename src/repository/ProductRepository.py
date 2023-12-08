@@ -139,7 +139,14 @@ class ProductRepository(BaseRepository):
         product_id = self.cursor.fetchone()[0]
         return product_id
     
-    
+    def deleteProductById(self, id: int):
+        queryFileName = self._constants.SQL_FILES.PRODUCTS_DELETE_PRODUCT_BY_ID
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(id=id)
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.cursor.fetchone()[0]
+
     def getBrandNames(self):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES
         query = self._getSqlQueryFromFile(queryFileName)

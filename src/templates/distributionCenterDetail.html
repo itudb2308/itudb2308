@@ -3,6 +3,11 @@
 {% block title %} Distribution Center Details {% endblock %}
 
 {% block body %}
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+
+
     <div class="distributionCenter-detail-container">
         <h1 class="distributionCenter-title"> <strong> {{ distributionCenter.name }} </strong> Distribution Center </h1>
         <h2 class="distributionCenter-id"> ID : {{ distributionCenter.id }} </h2>
@@ -20,5 +25,14 @@
                 src="https://www.google.com/maps?q={{ distributionCenter.latitude|string }},{{ distributionCenter.longitude|string }}&hl=es;z=14&amp;output=embed">
             </iframe>
         </div>
+        <div class="distributionCenter-title">
+
+            <a href="{{url_for('admin.distributionCenters.updateDistributionCenterPage', id=distributionCenter.id)}}" class="btn btn-primary">Update</a>
+            <a href="{{url_for('admin.distributionCenters.deleteDistributionCenter', id=distributionCenter.id)}}" class="btn btn-danger">Delete</a>
+
+        </div>
+        
     </div>
+
+   
 {% endblock %}

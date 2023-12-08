@@ -5,6 +5,14 @@
 {% block body %}
 <div class="row">
     <div class="col-10">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         {% if distributionCenters %}
             <table class="table table-striped">
                 <thead>
@@ -38,5 +46,7 @@
             <h1>No distribution center found...</h1>
         {% endif %}
     </div>
+
+    <a href="{{ url_for('admin.distributionCenters.addDistributionCenterPage') }}" class="btn btn-info">Add Distribution Center</a> 
 </div>
 {% endblock %}

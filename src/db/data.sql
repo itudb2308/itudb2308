@@ -42566,3 +42566,43 @@ values (91, 65, 47, 9953, 253, 'Complete', '2022-03-04 02:29:56.000000 UTC', '20
         '2023-11-03 05:59:00.000000 UTC', '2023-11-07 00:21:00.000000 UTC', null, 84.6500015258789),
        (180754, 124525, 99982, 910, 488355, 'Complete', '2023-11-01 03:33:56.000000 UTC',
         '2023-11-03 05:59:00.000000 UTC', '2023-11-07 00:21:00.000000 UTC', null, 159);
+
+DO $$
+DECLARE
+    max_id bigint;
+BEGIN
+    SELECT MAX(id) INTO max_id FROM distribution_centers;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE distribution_centers_id_seq RESTART WITH ' || (max_id + 1);
+
+    -- For the users table
+    SELECT MAX(id) INTO max_id FROM users;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE users_id_seq RESTART WITH ' || (max_id + 1);
+
+    -- For the events table
+    SELECT MAX(id) INTO max_id FROM events;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE events_id_seq RESTART WITH ' || (max_id + 1);
+
+
+    -- for products table
+    SELECT MAX(id) INTO max_id FROM products;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE products_id_seq RESTART WITH ' || (max_id + 1);
+    
+    -- for inventory_items
+    SELECT MAX(id) INTO max_id FROM inventory_items;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE inventory_items_id_seq RESTART WITH ' || (max_id + 1);    
+    -- for orders
+    SELECT MAX(id) INTO max_id FROM orders;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE orders_id_seq RESTART WITH ' || (max_id + 1);
+
+    -- for order_items
+    SELECT MAX(id) INTO max_id FROM order_items;
+    IF max_id IS NULL THEN max_id := 0; END IF;
+    EXECUTE 'ALTER SEQUENCE order_items_id_seq RESTART WITH ' || (max_id + 1);
+
+END $$;
