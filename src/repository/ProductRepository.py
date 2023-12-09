@@ -112,15 +112,9 @@ class ProductRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         self.replaceDoubleApostrophes(product)
         query = query.format(**product)
-        try:
-            self.cursor.execute(query, product)
-            self.connection.commit()
-        except Exception as e:
-            print(f" query: {query}")
-            print(e)
-            self.connection.rollback()
-            raise e
 
+        self.cursor.execute(query)
+        self.connection.commit()
         product_id = self.cursor.fetchone()[0]
         return product_id
 
