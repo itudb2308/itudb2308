@@ -4,6 +4,7 @@ from repository.InventoryItemRepository import InventoryItemRepository
 
 from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
+from service.Common import getPaginationObject, handleLimitAndOffset
 
 class ProductService:
     def __init__(self, productRepository: ProductRepository,
@@ -15,7 +16,9 @@ class ProductService:
     # PAGE METHODS
     def productsPage(self, querySettings: dict) -> dict:
         result = dict()
-        result["products"] = self.getAll(querySettings)
+        products, count = self.getAllAndCount(querySettings)
+        result["products"] = products
+        result["pagination"] = getPaginationObject(count, querySettings)
         result["columnNames"] = self.getColumnNames()
         result["categories"] = self.getCategories()
         return result
@@ -95,8 +98,12 @@ class ProductService:
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
 
-    def getAll(self, settings: dict) -> [Product]:
-        return [Product(p) for p in self.productRepository.getAll(**settings)]
+    def getAllAndCount(self, settings: dict) -> ([Product], int):
+        settings = handleLimitAndOffset(settings)
+        data = self.productRepository.getAllAndCount(**settings)
+        products = [Product(p) for p in data]
+        count = data[0][-1] if len(data) > 1 else 0
+        return products, count
 
     def getColumnNames(self) -> [str]:
         return [cn[0] for cn in self.productRepository.getColumnNames()]

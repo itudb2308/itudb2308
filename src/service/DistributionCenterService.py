@@ -45,7 +45,6 @@ class DistributionCenterService:
     
     def updateDistributionCenter(self, id: int, method: str, form) -> dict:
         result = { "submitted_and_valid" : False, "flash" : [] , "form" : None, "id" : id}
-        print(f" method : {method} , form : {form}")
         if method == "GET":
             distributionCenter = self.findById(id)
             formData = {"id" : distributionCenter.id, "name" : distributionCenter.name, "latitude" : distributionCenter.latitude, "longitude" : distributionCenter.longitude}
@@ -58,10 +57,8 @@ class DistributionCenterService:
             form = UpdateDistributionCenterForm(form)
 
             if form.validate_on_submit():
-                print("Form is valid")
                 distributionCenter = form.data
                 distributionCenter["id"] = id
-                print(f"form data: {distributionCenter}")
                 # add product to database
                 result["submitted_and_valid"] = True
                 result["id"] = self.distributionCenterRepository.updateDistributionCenter(distributionCenter)

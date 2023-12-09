@@ -18,7 +18,7 @@ class OrderRepository(BaseRepository):
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.ORDER_FIND_BY_IDS)
 
-    def getAll(self, **kwargs):
+    def getAllAndCount(self, **kwargs):
         queryFileName = self._constants.SQL_FILES.ORDER_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -50,7 +50,6 @@ class OrderRepository(BaseRepository):
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
             settings["order_by"] = f"ORDER BY o.{field} {ascOrDesc}"
         query = query.format(**settings)
-
         self.cursor.execute(query)
         return self.cursor.fetchall()
 

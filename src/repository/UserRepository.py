@@ -18,7 +18,7 @@ class UserRepository(BaseRepository):
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.USERS_FIND_BY_IDS)
 
-    def getAll(self, **kwargs):
+    def getAllAndCount(self, **kwargs):
         queryFileName = self._constants.SQL_FILES.USERS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -52,7 +52,6 @@ class UserRepository(BaseRepository):
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] +f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
-
         self.cursor.execute(query)
         return self.cursor.fetchall()
 

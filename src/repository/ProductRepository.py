@@ -17,7 +17,7 @@ class ProductRepository(BaseRepository):
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS)
 
-    def getAll(self, **kwargs) : 
+    def getAllAndCount(self, **kwargs) : 
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
         
@@ -116,8 +116,6 @@ class ProductRepository(BaseRepository):
             self.cursor.execute(query, product)
             self.connection.commit()
         except Exception as e:
-            print(f" query: {query}")
-            print(e)
             self.connection.rollback()
             raise e
 
