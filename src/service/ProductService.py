@@ -6,6 +6,7 @@ from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+
 class ProductService:
     def __init__(self, productRepository: ProductRepository,
                  inventoryItemRepository: InventoryItemRepository) -> None:
@@ -29,14 +30,14 @@ class ProductService:
         return result
 
     # returns newly added products id
-    def addProductPage(self, method, form ) -> int:
+    def addProductPage(self, method, form) -> int:
         # flash holds tuples of (message, category)
-        result = { "submitted_and_valid" : False, "flash" :[] , "form" : None}
+        result = {"submitted_and_valid": False, "flash": [], "form": None}
 
-        if method == "GET":            
+        if method == "GET":
             result["submitted_and_valid"] = False
             result["form"] = AddProductForm(self)
-        else :
+        else:
             form = AddProductForm(self, form)
 
             if form.validate_on_submit():
@@ -48,7 +49,7 @@ class ProductService:
                 # add flash messages to this message ("Product added successfully", "success")
                 result["flash"].append(("Product added successfully", "success"))
 
-            else :
+            else:
                 result["submitted_and_valid"] = False
                 result["flash"].append(("Form data is invalid", "danger"))
                 for fieldName, errorMessages in form.errors.items():
@@ -56,20 +57,20 @@ class ProductService:
                         result["flash"].append((f"{fieldName}: {err}", "danger"))
                 result["form"] = form
         return result
-    
+
     # returns the id of the added product
     def addProduct(self, product: dict) -> int:
-        return  self.productRepository.addProduct(product)
-    
+        return self.productRepository.addProduct(product)
+
     def updateProductPage(self, method, form, id) -> int:
-        result = { "submitted_and_valid" : False, "flash" : [] , "form" : None}
-        
+        result = {"submitted_and_valid": False, "flash": [], "form": None}
+
         if method == "GET":
             product = self.findById(id).toDict()
-            
-            result["form"] = UpdateProductForm(self,product)
-        else :
-            form = UpdateProductForm(self, form) 
+
+            result["form"] = UpdateProductForm(self, product)
+        else:
+            form = UpdateProductForm(self, form)
 
             if form.validate_on_submit():
                 product = form.data
@@ -80,20 +81,20 @@ class ProductService:
                 result["submitted_and_valid"] = True
                 result["flash"].append(("Product updated successfully", "success"))
 
-            else :
+            else:
                 result["flash"].append(("Form data is invalid", "danger"))
                 for fieldName, errorMessages in form.errors.items():
                     for err in errorMessages:
                         result["flash"].append((f"{fieldName}: {err}", "danger"))
                 result["form"] = form
-        return result   
+        return result
 
     def deleteProductPage(self, id: int) -> dict:
         result = dict()
         result["id"] = self.deleteProduct(id)
         result["flash"] = [("Product deleted successfully", "success")]
         return result
-    
+
     # SERVICE METHODS
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
@@ -112,11 +113,11 @@ class ProductService:
         return [c[0] for c in self.productRepository.getCategories()]
 
     # returns array of DistributionCenter data transfer objects
-    def getDistributionCenters(self, settings : dict ) -> [str]:
-        return self.distributionCenterService.getAll(settings) 
+    def getDistributionCenters(self, settings: dict) -> [str]:
+        return self.distributionCenterService.getAll(settings)
 
     def getBrandNames(self) -> [str]:
-        return [b[0] for b in self.productRepository.getBrandNames()]    
-    
+        return [b[0] for b in self.productRepository.getBrandNames()]
+
     def deleteProduct(self, id: int) -> int:
         return self.productRepository.deleteProductById(id)

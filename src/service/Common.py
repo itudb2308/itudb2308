@@ -1,5 +1,6 @@
 from math import ceil
 
+
 def getPaginationObject(count: int, settings: dict) -> dict:
     result = {
         "count": count,
@@ -8,6 +9,7 @@ def getPaginationObject(count: int, settings: dict) -> dict:
     }
     result["maxPage"] = ceil(result["count"] / result["limit"])
     return result
+
 
 def handleLimitAndOffset(settings: dict) -> dict:
     if "limit" not in settings:

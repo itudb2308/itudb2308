@@ -4,6 +4,7 @@ from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+
 class UserService:
     def __init__(self, userRepository: UserRepository,
                  eventRepository: EventRepository) -> None:
@@ -24,8 +25,8 @@ class UserService:
     def userDetailPage(self, id: int) -> dict:
         result = dict()
         result["user"] = self.findById(id)
-        result["orders"], _ = self.orderService.getAllAndCount({"user_id" : id})
-        result["events"] = self.getAllEvents({"user_id" : id})
+        result["orders"], _ = self.orderService.getAllAndCount({"user_id": id})
+        result["events"] = self.getAllEvents({"user_id": id})
         return result
 
     def eventDetailPage(self, id: int) -> dict:
@@ -37,7 +38,7 @@ class UserService:
     def findById(self, id: int) -> User:
         return User(self.userRepository.findById(id))
 
-    def eventsFindById(self, id : int) -> Event:
+    def eventsFindById(self, id: int) -> Event:
         return Event(self.eventRepository.findById(id))
 
     def getAllAndCount(self, settings: dict) -> ([User], int):

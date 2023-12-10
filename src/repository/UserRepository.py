@@ -7,6 +7,7 @@ getAllSettings = {
     "offset": 0
 }
 
+
 class UserRepository(BaseRepository):
 
     def __init__(self, connection):
@@ -50,7 +51,7 @@ class UserRepository(BaseRepository):
             settings["where"] = settings["where"] + f"u.gender = '{kwargs['gender']}'"
         if "country" in kwargs.keys() and kwargs["country"] != "":
             self.handleWhereStatement(settings)
-            settings["where"] = settings["where"] +f"u.country = '{kwargs['country']}'"
+            settings["where"] = settings["where"] + f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
         self.cursor.execute(query)
         return self.cursor.fetchall()

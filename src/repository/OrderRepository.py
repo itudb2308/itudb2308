@@ -7,6 +7,7 @@ getAllSettings = {
     "offset": 0
 }
 
+
 class OrderRepository(BaseRepository):
 
     def __init__(self, connection):

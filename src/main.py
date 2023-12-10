@@ -5,10 +5,10 @@ from repository import DistributionCenterRepository, EventRepository, InventoryI
 from service import DistributionCenterService, OrderService, ProductService, UserService
 
 connection = psycopg2.connect(
-    host = "localhost",
-    database = "postgres",
-    user = "postgres",
-    password = "postgres"
+    host="localhost",
+    database="postgres",
+    user="postgres",
+    password="postgres"
 )
 
 # CREATE REPOSITORIES

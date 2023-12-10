@@ -1,5 +1,6 @@
 ADMIN_NOT_AUTHORIZED = "Not authorized"
 
+
 def adminAuth(session: dict):
     user = session.get("user")
     if user != "admin":
