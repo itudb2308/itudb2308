@@ -1,5 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
+
 class InventoryItemRepository(BaseRepository):
 
     def __init__(self, connection):

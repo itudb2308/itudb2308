@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class User:
     def __init__(self, data):
         self.id = data[0]
@@ -18,4 +19,3 @@ class User:
         self.traffic_source = data[13]
         self.created_at = data[14].strftime("%d %B %Y")
         self.fullAddress = self.street_address + ", " + self.city + ", " + self.state + ", " + self.country + ", " + self.postal_code
-

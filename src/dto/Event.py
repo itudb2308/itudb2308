@@ -1,5 +1,5 @@
 class Event:
-    def __init__(self,data):
+    def __init__(self, data):
         self.id = data[0]
         self.user_id = data[1]
         self.sequence_number = data[2]
@@ -13,4 +13,3 @@ class Event:
         self.traffic_source = data[10]
         self.uri = data[11]
         self.event_type = data[12]
-

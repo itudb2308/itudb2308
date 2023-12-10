@@ -32,6 +32,11 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="form-group">
+                <label for="limit">Limit:</label>
+                <input id="limit" type="number" class="form-control" name="limit" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["limit"] %}{{ querySettings["limit"] }}{% endif %}">
+            </div>
             <button class="btn btn-success" type="submit">Filter</button>
             <button class="btn btn-primary" type="reset">Reset</button>
         </form>
@@ -73,4 +78,5 @@
         {% endif %}
     </div>
 </div>
+{% include "pagination.html" %}
 {% endblock %}

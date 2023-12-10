@@ -24,18 +24,18 @@ class BaseRepository:
     # Generic Find By Id Method
     def _findById(self, id: int, queryFileName):
         query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id = id)
+        query = query.format(id=id)
         self.cursor.execute(query)
         return self.cursor.fetchone()
 
     # Generic Find By Ids Method
     def _findByIds(self, ids: [int], queryFileName):
         query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(ids = ",".join(map(str, ids)))
+        query = query.format(ids=",".join(map(str, ids)))
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
-    def replaceDoubleApostrophes (self, arguments: dict) :
+    def replaceDoubleApostrophes(self, arguments: dict):
         for key, value in arguments.items():
             if isinstance(value, str):
                 arguments[key] = value.replace("'", "''")

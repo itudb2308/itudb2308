@@ -1,5 +1,6 @@
 from repository.BaseRepository import BaseRepository
 
+
 class DistributionCenterRepository(BaseRepository):
 
     def __init__(self, connection):
@@ -8,8 +9,8 @@ class DistributionCenterRepository(BaseRepository):
             "where": "",
             "order_by": "ORDER BY D.id ASC",
             # Removing the limit and offset because they are not used for now!!
-            #"limit": 100,
-            #"offset": 0
+            # "limit": 100,
+            # "offset": 0
         }
 
     def findById(self, id: int):
@@ -18,7 +19,7 @@ class DistributionCenterRepository(BaseRepository):
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.DISTRIBUTION_CENTERS_FIND_BY_IDS)
 
-    def getAll(self,**kwargs):
+    def getAll(self, **kwargs):
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
         queryArguments = self.defaultArguments.copy()
@@ -39,7 +40,7 @@ class DistributionCenterRepository(BaseRepository):
             # set default order direction is ascending
             if "order_direction" not in kwargs.keys() or kwargs["order_direction"] == "":
                 kwargs["order_direction"] = "Ascending"
-    
+
             ascOrDesc = "ASC" if kwargs["order_direction"] == "Ascending" else "DESC"
             queryArguments["order_by"] = f" ORDER BY D.{columnName} {ascOrDesc}"
 
@@ -54,9 +55,9 @@ class DistributionCenterRepository(BaseRepository):
         query = query.format(**queryArguments)
         self.cursor.execute(query)
         return self.cursor.fetchall()
-    
+
     # returns the id of the newly added distribution center
-    def addDistributionCenter(self, distributionCenter : dict) -> int:
+    def addDistributionCenter(self, distributionCenter: dict) -> int:
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_ADD_DISTRIBUTION_CENTER
         query = self._getSqlQueryFromFile(queryFileName)
         queryArguments = {
@@ -68,9 +69,9 @@ class DistributionCenterRepository(BaseRepository):
         self.cursor.execute(query)
         self.connection.commit()
         return self.cursor.fetchone()[0]
-    
+
     # returns the id of the newly added distribution center
-    def updateDistributionCenter(self, distributionCenter : dict):
+    def updateDistributionCenter(self, distributionCenter: dict):
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_UPDATE_DISTRIBUTION_CENTER
         query = self._getSqlQueryFromFile(queryFileName)
         queryArguments = {
@@ -83,7 +84,7 @@ class DistributionCenterRepository(BaseRepository):
         self.cursor.execute(query)
         self.connection.commit()
         return self.cursor.fetchone()[0]
-    
+
     def deleteDistributionCenter(self, id: int):
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_DELETE_DISTRIBUTION_CENTER
         query = self._getSqlQueryFromFile(queryFileName)
