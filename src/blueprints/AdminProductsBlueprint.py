@@ -6,7 +6,7 @@ from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
 
 
-def ProductsBlueprint(name: str, importName: str, service):
+def AdminProductsBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
 
     @bp.before_request

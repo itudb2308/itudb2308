@@ -3,7 +3,7 @@ from service.DistributionCenterService import DistributionCenterService
 from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
 
 
-def DistributionCentersBlueprint(name: str, importName: str, service):
+def AdminDistributionCentersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
 
     @bp.before_request

@@ -3,7 +3,7 @@ from service.UserService import UserService
 from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
 
 
-def UsersBlueprint(name: str, importName: str, service: UserService):
+def AdminUsersBlueprint(name: str, importName: str, service: UserService):
     bp = Blueprint(name, importName)
 
     @bp.before_request
