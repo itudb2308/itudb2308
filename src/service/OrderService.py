@@ -1,7 +1,9 @@
 from repository.OrderRepository import OrderRepository
 from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
-from dto.User import User
+from dto.OrderItem import OrderItem
+from dto.Product import Product
+from dto.DistributionCenter import DistributionCenter
 from service.Common import getPaginationObject, handleLimitAndOffset
 
 
@@ -26,6 +28,7 @@ class OrderService:
     def orderDetailPage(self, id: int):
         result = dict()
         result["order"] = self.findById(id)
+        result["orderItems"] = self.getItemDetailsByOrderId(id)
         user_id = result["order"].user_id
         result["user"] = self.userService.findById(user_id)
         return result
@@ -46,3 +49,11 @@ class OrderService:
 
     def getDistinctGender(self) -> [str]:
         return [g[0] for g in self.orderRepository.getDistinctGender()]
+
+    def getItemDetailsByOrderId(self, orderId: int) -> [OrderItem]:
+        data = self.orderItemRepository.getItemDetailsByOrderId(orderId)
+        orderItems = [OrderItem(d[:11]) for d in data]
+        for index, oi in enumerate(orderItems):
+            oi.product = Product(data[index][11:20])
+            oi.distributionCenter = DistributionCenter(data[index][20:])
+        return orderItems

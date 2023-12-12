@@ -13,11 +13,44 @@
             </a>
         </div>
         <div><strong>Number of Items: </strong>{{ order.num_of_items }}</div>
-        <div><strong>Ordered At: </strong>{{ order.created_at }}</div>
-        <div><strong>Shipped At: </strong>{{ order.shipped_at }}</div>
-        <div><strong>Delivered At: </strong>{{ order.delivered_at }}</div>
-        <div><strong>Returned At: </strong>{{ order.returned_at }}</div>
-    {% endif %}
-    {% if orderItems %}
+        <div><strong>Status: </strong>{{ order.statusText }}</div>
+        {% if orderItems %}
+            <br>
+            <h2>Ordered Products</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Distribution Center</th>
+                    </tr>
+                </thead>
+                {% for orderItem in orderItems %}
+                    <tr>
+                        <td>
+                            {{ orderItem.product.brand }}
+                        </td>
+                        <td>
+                            {{ orderItem.product.category }}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.products.productDetailPage', id = orderItem.product.id)}}">
+                                {{ orderItem.product.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ orderItem.sale_price }}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = orderItem.distributionCenter.id) }}">
+                                {{ orderItem.distributionCenter.name }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     {% endif %}
 {% endblock %}
