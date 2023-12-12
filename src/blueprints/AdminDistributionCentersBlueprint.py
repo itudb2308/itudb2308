@@ -1,9 +1,9 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from service.DistributionCenterService import DistributionCenterService
-from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
+from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 
-def DistributionCentersBlueprint(name: str, importName: str, service):
+def AdminDistributionCentersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
 
     @bp.before_request
@@ -11,7 +11,7 @@ def DistributionCentersBlueprint(name: str, importName: str, service):
         try:
             adminAuth(session)
         except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHORIZED:
+            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
                 return redirect(url_for('admin.loginPage'))
 
     @bp.route('/', methods=["POST", "GET"])

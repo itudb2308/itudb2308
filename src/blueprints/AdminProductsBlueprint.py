@@ -1,12 +1,12 @@
 from flask import Blueprint, request, render_template, session, flash, redirect, url_for
 from service.ProductService import ProductService
-from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
+from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
 
 
-def ProductsBlueprint(name: str, importName: str, service):
+def AdminProductsBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
 
     @bp.before_request
@@ -14,7 +14,7 @@ def ProductsBlueprint(name: str, importName: str, service):
         try:
             adminAuth(session)
         except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHORIZED:
+            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
                 return redirect(url_for('admin.loginPage'))
 
     @bp.route('/', methods=["GET"])

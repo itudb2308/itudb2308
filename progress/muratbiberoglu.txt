@@ -11,3 +11,5 @@ implemented blueprint, service, repository architecture
 WEEK 10:
 implemented pagination view for products, users & orders
 added formatter for python files
+WEEK 11:
+Created customer blueprints & auth for customers
