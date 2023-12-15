@@ -40,16 +40,10 @@ class InventoryItemRepository(BaseRepository):
         self.connection.commit()
         return self.cursor.fetchone()[0]
 
-    def getTotalStock(self, product_id: int, distribution_center_id: int):
-        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_TOTAL_STOCK
+    def getTotalStockAndSold(self, product_id: int, distribution_center_id: int):
+        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_TOTAL_STOCK_AND_SOLD
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=product_id, distribution_center_id=distribution_center_id)
         self.cursor.execute(query)
-        return self.cursor.fetchone()[0]
+        return self.cursor.fetchall()
 
-    def getTotalSold(self, product_id: int, distribution_center_id: int):
-        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_TOTAL_SOLD
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(product_id=product_id, distribution_center_id=distribution_center_id)
-        self.cursor.execute(query)
-        return self.cursor.fetchone()[0]
