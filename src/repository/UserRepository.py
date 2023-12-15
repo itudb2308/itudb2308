@@ -63,6 +63,29 @@ class UserRepository(BaseRepository):
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
+    def addUser(self, user: dict):
+        queryFileName = self._constants.SQL_FILES.USERS_ADD_USER
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.replaceDoubleApostrophes(user)
+        query = query.format(**user)
+        try:
+            self.cursor.execute(query, user)
+            self.connection.commit()
+        except Exception as e:
+            self.connection.rollback()
+            raise e
+
+        user_id = self.cursor.fetchone()[0]
+        return user_id
+
+    def deleteUserById(self, id: int):
+        queryFileName = self._constants.SQL_FILES.USERS_DELETE_USER_BY_ID
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(id=id)
+        self.cursor.execute(query)
+        self.connection.commit()
+        return self.cursor.fetchone()[0]
+
     def getDistinctCountry(self):
         queryFileName = self._constants.SQL_FILES.GET_DISTINCT_COUNTRY
         query = self._getSqlQueryFromFile(queryFileName)
