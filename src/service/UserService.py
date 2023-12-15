@@ -1,8 +1,11 @@
 from dto.User import User
 from dto.Event import Event
+from dto.NoneUser import NoneUser
 from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
 from service.Common import getPaginationObject, handleLimitAndOffset
+import string
+import random
 
 
 class UserService:
@@ -58,3 +61,20 @@ class UserService:
             p = int(settings["p"])
             settings["offset"] = (p - 1) * settings["limit"]
         return [Event(e) for e in self.eventRepository.getAll(**settings)]
+    
+    def findByEmail(self, mail) -> [User]: 
+    # If email doesnt exists in the database
+    # DTO makes the app crash. Because this function returns None.
+        if self.userRepository.findByEmail(mail) == None:
+            return NoneUser()
+        else:
+            return User(self.userRepository.findByEmail(mail))
+
+    def sessionIdGenerator(self,chars= string.ascii_lowercase + string.digits) -> str:
+        # 8 - 4 - 4 - 1
+        first = ''.join(random.choice(chars) for _ in range(8))
+        second = ''.join(random.choice(chars) for _ in range(4))
+        third = ''.join(random.choice(chars) for _ in range(4))
+        last = ''.join(random.choice(chars) for _ in range(1))
+        return first + '-' + second + '-' + third + '-' + last
+

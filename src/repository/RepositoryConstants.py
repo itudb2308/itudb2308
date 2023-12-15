@@ -16,6 +16,7 @@ class RepositoryConstants:
         USERS_FIND_BY_ID = "users_find_by_id.sql"
         USERS_FIND_BY_IDS = "users_find_by_ids.sql"
         USERS_GET_ALL = "users_get_all.sql"
+        USERS_FIND_BY_EMAIL = "users_find_by_email.sql"
         EVENTS_FIND_BY_ID = "events_find_by_id.sql"
         EVENTS_FIND_BY_IDS = "events_find_by_ids.sql"
         EVENTS_GET_ALL = "events_get_all.sql"

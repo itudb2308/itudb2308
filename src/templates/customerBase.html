@@ -17,21 +17,17 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">ITU DB 2308</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('admin.homePage')}}">Home</a>
-                <a class="nav-link" href="{{ url_for('admin.users.usersPage') }}">Users</a>
-                <a class="nav-link" href="{{ url_for('admin.products.productsPage') }}">Products</a>
-                <a class="nav-link" href="{{ url_for('admin.orders.ordersPage') }}">Orders</a>
-                <a class="nav-link" href="{{ url_for('admin.distributionCenters.distributionCentersPage') }}">Distribution Centers</a>
-                    {% if session["admin_logged_in"] %}
-                        <a class="nav-link ml-auto" id="log" href="{{ url_for('admin.logoutPage') }}">Logout</a>
+                <a class="nav-link active" aria-current="page" href="{{ url_for('customer.homePage')}}">Home</a>
+                <a class="nav-link" href="{{ url_for('customer.users.usersPage') }}">Users</a>
+                <a class="nav-link" href="{{ url_for('customer.products.productsPage') }}">Products</a>
+                <a class="nav-link" href="{{ url_for('customer.orders.ordersPage') }}">Orders</a>
+                <a class="nav-link" href="{{ url_for('customer.distributionCenters.distributionCentersPage') }}">Distribution Centers</a>
+                    {% if session["logged_in"] %}
+                        <a class="nav-link ml-auto" id="log" href="{{ url_for('customer.logoutPage') }}">Logout</a>
                     {% else %}
-                        <a class="nav-link ml-auto" id="log" href="{{ url_for('admin.loginPage') }}">Login</a>
+                        <a class="nav-link ml-auto" id="log" href="{{ url_for('customer.loginPage') }}">Login</a>
                     {% endif %}
             </div>
         </div>
