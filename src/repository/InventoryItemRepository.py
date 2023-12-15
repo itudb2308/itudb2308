@@ -11,3 +11,11 @@ class InventoryItemRepository(BaseRepository):
 
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_IDS)
+    
+    def getTotalStock(self, product_id: int, distribution_center_id: int):
+        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_TOTAL_STOCK
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(product_id=product_id, distribution_center_id = distribution_center_id )
+        self.cursor.execute(query)
+        return self.cursor.fetchone()[0]
+        
