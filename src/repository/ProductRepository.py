@@ -1,5 +1,6 @@
 from repository.BaseRepository import BaseRepository
-import hashlib # for generating sku
+import hashlib  # for generating sku
+
 
 class ProductRepository(BaseRepository):
 
@@ -12,18 +13,17 @@ class ProductRepository(BaseRepository):
             "offset": 0
         }
 
-    def abbreviate(self,text):
+    def abbreviate(self, text):
         return text[:3].upper()
 
-    def encode_number(self,number):
-        return format(int(number), 'X')  
+    def encode_number(self, number):
+        return format(int(number), 'X')
 
     def generateSku(self, product: dict):
-        
+
         category = product['category']
         brand = product['brand']
         department = product['department']
-
 
         category_abbr = self.abbreviate(category)
         brand_abbr = self.abbreviate(brand)
@@ -40,7 +40,6 @@ class ProductRepository(BaseRepository):
         sku_hash = hashlib.sha256(combined.encode()).hexdigest()[:32]
 
         return sku_hash.upper()
-
 
     def findById(self, id: int):
         return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID)
@@ -143,7 +142,7 @@ class ProductRepository(BaseRepository):
 
         # generate sku for the product from products atrributes
         product['sku'] = self.generateSku(product)
-        
+
         query = query.format(**product)
         try:
             self.cursor.execute(query, product)

@@ -27,8 +27,8 @@ class ProductService:
     def productDetailPage(self, id: int) -> dict:
         result = dict()
         result["product"] = self.findById(id)
-        result["totalStock"] = self.inventoryItemRepository.getTotalStock(id, result["product"].distribution_center_id )
-        result["totalSold"] = self.inventoryItemRepository.getTotalSold(id, result["product"].distribution_center_id )
+        result["totalStock"] = self.inventoryItemRepository.getTotalStock(id, result["product"].distribution_center_id)
+        result["totalSold"] = self.inventoryItemRepository.getTotalSold(id, result["product"].distribution_center_id)
         return result
 
     # returns newly added products id
@@ -97,7 +97,19 @@ class ProductService:
         result["flash"] = [("Product deleted successfully", "success")]
         return result
 
+    # Function to add stock to a product that is specified with id.
+    def addStockToInventory(self, id, quantity):
+        # get the stocks information
+
+        product = self.productRepository.findById(id)
+
+        for i in range(quantity):
+            self.inventoryItemRepository.addInventoryItem(product)
+
+        return
+
     # SERVICE METHODS
+
     def findById(self, id: int) -> Product:
         return Product(self.productRepository.findById(id))
 

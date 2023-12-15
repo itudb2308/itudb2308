@@ -62,6 +62,14 @@ def AdminProductsBlueprint(name: str, importName: str, service):
         showFlashMessages(result["flash"])
         return redirect(url_for('admin.products.productsPage'))
 
+    @bp.route('/add_stock_to_inventory/<int:id>', methods=["POST"])
+    def addStockToInventory(id):
+        quantity = int(request.form["quantity"])
+
+        service.addStockToInventory(id, quantity)
+        flash(f"{quantity} new product added to inventory ")
+        return redirect(url_for('admin.products.productDetailPage', id=id))
+
     def showFlashMessages(flashMessages):
         if flashMessages != None:
             for flashMessage in flashMessages:
