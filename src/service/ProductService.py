@@ -28,6 +28,7 @@ class ProductService:
         result = dict()
         result["product"] = self.findById(id)
         result["totalStock"] = self.inventoryItemRepository.getTotalStock(id, result["product"].distribution_center_id )
+        result["totalSold"] = self.inventoryItemRepository.getTotalSold(id, result["product"].distribution_center_id )
         return result
 
     # returns newly added products id
