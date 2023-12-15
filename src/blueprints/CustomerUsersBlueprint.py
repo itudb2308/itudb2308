@@ -13,7 +13,10 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
             customerAuth(session)
         except Exception as e:
             if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
-                return redirect(url_for('customer.loginPage'))
+                if request.url == 'http://localhost:5000/signup':
+                    pass
+                else:
+                    return redirect(url_for('customer.loginPage'))
 
     @bp.route('/profile/<int:id>', methods=["GET", "POST"])
     def userPage(id:int):
