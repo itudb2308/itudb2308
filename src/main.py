@@ -1,14 +1,15 @@
 import psycopg2
-from flask import Flask, render_template
+from flask import Flask
 from blueprints.AdminBlueprint import AdminBlueprint
+from blueprints.CustomerBlueprint import CustomerBlueprint
 from repository import DistributionCenterRepository, EventRepository, InventoryItemRepository, OrderItemRepository, OrderRepository, ProductRepository, UserRepository
 from service import DistributionCenterService, OrderService, ProductService, UserService
 
 connection = psycopg2.connect(
-    host = "localhost",
-    database = "postgres",
-    user = "postgres",
-    password = "postgres"
+    host="localhost",
+    database="postgres",
+    user="postgres",
+    password="postgres"
 )
 
 # CREATE REPOSITORIES
@@ -37,6 +38,7 @@ services["product"].distributionCenterService = services["distributionCenter"]
 
 app = Flask(__name__)
 app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="/admin")
+app.register_blueprint(CustomerBlueprint("customer", __name__, services), url_prefix="")
 
 app.config['SECRET_KEY'] = '048275bd7538e006d38094a22bf5e730'
 

@@ -1,8 +1,9 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for
 from service.OrderService import OrderService
-from validation.auth import adminAuth, ADMIN_NOT_AUTHORIZED
+from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
-def OrdersBlueprint(name: str, importName: str, service):
+
+def AdminOrdersBlueprint(name: str, importName: str, service):
     bp = Blueprint(name, importName)
 
     @bp.before_request
@@ -10,16 +11,16 @@ def OrdersBlueprint(name: str, importName: str, service):
         try:
             adminAuth(session)
         except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHORIZED:
+            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
                 return redirect(url_for('admin.loginPage'))
 
-    @bp.route('/', methods = ["GET"])
+    @bp.route('/', methods=["GET"])
     def ordersPage():
         querySettings = request.args.to_dict()
         result = service.ordersPage(querySettings)
         return render_template("orders.html", querySettings=querySettings, **result)
 
-    @bp.route("/<int:id>", methods = ["GET"])
+    @bp.route("/<int:id>", methods=["GET"])
     def orderDetailPage(id: str):
         result = service.orderDetailPage(id)
         return render_template("orderDetail.html", **result)

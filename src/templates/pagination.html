@@ -1,0 +1,35 @@
+<nav>
+    <ul class="pagination justify-content-center">
+        {% set page = pagination["p"]|int %}
+        {% set maxPage = pagination["maxPage"]|int %}
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a id="page-{{ page - 1 }}" p={{ page - 1 }} class="page-link" onclick="paginationOnClick(this.id)">Previous</a>
+        </li>
+        {% if page == maxPage and page > 2 %}
+            <li class="page-item">
+                <a id="page-{{ page - 2 }}" p={{ page - 2 }} class="page-link" onclick="paginationOnClick(this.id)">{{ page - 2 }}</a>
+            </li>
+        {% endif %}
+        {% if page > 1 %}
+            <li class="page-item">
+                <a id="page-{{ page - 1 }}" p={{ page - 1 }} class="page-link" onclick="paginationOnClick(this.id)">{{ page - 1 }}</a>
+            </li>
+        {% endif %}
+        <li class="page-item active">
+            <a id="page-{{ page }}" p={{page}} class="page-link" onclick="paginationOnClick(this.id)">{{ page }}</a>
+        </li>
+        {% if page < maxPage|int %}
+            <li class="page-item">
+                <a id="page-{{ page + 1 }}" p={{ page + 1 }} class="page-link" onclick="paginationOnClick(this.id)">{{ page + 1 }}</a>
+            </li>
+        {% endif %}
+        {% if page == 1 and page + 1 < maxPage %}
+            <li class="page-item">
+                <a id="page-{{ page + 2 }}" p={{ page + 2 }} class="page-link" onclick="paginationOnClick(this.id)">{{ page + 2 }}</a>
+            </li>
+        {% endif %}
+        <li class="page-item {% if page == maxPage|int %}disabled{% endif %}">
+            <a id="page-{{ page + 1 }}" p={{ page + 1 }} class="page-link" onclick="paginationOnClick(this.id)">Next</a>
+        </li>
+    </ul>
+</nav>
