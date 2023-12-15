@@ -30,5 +30,19 @@ i forgot to update this and now i dont remember what i did in this week
 
 WEEK 10:
 
+Created login and logout pages for admins.
+Added orders and events of the user, to users detail.
+Created event detail page.
 
+------
+
+WEEK 11:
+
+Created login-logout-sign up pages for customers
+Created profile page for the customer.
+Implemented basic navbar.
+Implemented user delete and user create functionalities to the project.
+Implemented User Auth
+
+------
 
