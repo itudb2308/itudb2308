@@ -14,3 +14,4 @@ added formatter for python files
 WEEK 11:
 Created customer blueprints & auth for customers
 Order detail page improved
+Implemented order change status
