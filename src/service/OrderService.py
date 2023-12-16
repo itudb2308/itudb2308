@@ -1,3 +1,4 @@
+import typing
 from repository.OrderRepository import OrderRepository
 from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
@@ -6,13 +7,15 @@ from dto.Product import Product
 from dto.DistributionCenter import DistributionCenter
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+if typing.TYPE_CHECKING:
+    from service.UserService import UserService
+
 
 class OrderService:
-    def __init__(self, orderRepository: OrderRepository,
-                 orderItemRepository: OrderItemRepository) -> None:
-        self.orderRepository = orderRepository
-        self.orderItemRepository = orderItemRepository
-        self.userService = None
+    def __init__(self, repositories: dict) -> None:
+        self.orderRepository: OrderRepository = repositories["order"]
+        self.orderItemRepository: OrderItemRepository = repositories["orderItem"]
+        self.userService: UserService = None
 
     # PAGE METHODS
     def ordersPage(self, querySettings: dict) -> dict:

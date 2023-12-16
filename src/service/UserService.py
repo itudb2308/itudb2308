@@ -1,11 +1,10 @@
+import typing
+
 from dto.User import User
 from dto.Event import Event
-
 from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
-
 from forms.AddUserForm import AddUserForm
-
 from service.Common import getPaginationObject, handleLimitAndOffset
 
 import string
@@ -13,13 +12,15 @@ import random
 import datetime
 import subprocess
 
+if typing.TYPE_CHECKING:
+    from service.OrderService import OrderService
+
 
 class UserService:
-    def __init__(self, userRepository: UserRepository,
-                 eventRepository: EventRepository) -> None:
-        self.userRepository = userRepository
-        self.eventRepository = eventRepository
-        self.orderService = None
+    def __init__(self, repositories: dict) -> None:
+        self.userRepository: UserRepository = repositories["user"]
+        self.eventRepository: EventRepository = repositories["event"]
+        self.orderService: OrderService = None
 
     # PAGE METHODS
     def usersPage(self, settings: dict) -> dict:

@@ -1,18 +1,19 @@
+import typing
 from dto.Product import Product, UserProduct
 from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
-
 from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+if typing.TYPE_CHECKING:
+    from service.DistributionCenterService import DistributionCenterService
 
 class ProductService:
-    def __init__(self, productRepository: ProductRepository,
-                 inventoryItemRepository: InventoryItemRepository) -> None:
-        self.productRepository = productRepository
-        self.inventoryItemRepository = inventoryItemRepository
-        self.distributionCenterService = None
+    def __init__(self, repositories: dict) -> None:
+        self.productRepository: ProductRepository = repositories["product"]
+        self.inventoryItemRepository: InventoryItemRepository = repositories["inventoryItem"]
+        self.distributionCenterService: DistributionCenterService = None
 
     # PAGE METHODS
     def productsPage(self, querySettings: dict) -> dict:

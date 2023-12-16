@@ -5,8 +5,8 @@ from forms.DistributionCenterForm import DistributionCenterForm, UpdateDistribut
 
 
 class DistributionCenterService:
-    def __init__(self, distributionCenterRepository: DistributionCenterRepository):
-        self.distributionCenterRepository = distributionCenterRepository
+    def __init__(self, repositories: dict):
+        self.distributionCenterRepository: DistributionCenterRepository = repositories["distributionCenter"]
 
     # PAGE METHODS
     def distributionCentersPage(self, querySettings: dict) -> dict:
