@@ -1,4 +1,4 @@
-from dto.Product import Product
+from dto.Product import Product, UserProduct
 from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
 
@@ -108,6 +108,10 @@ class ProductService:
             self.inventoryItemRepository.addInventoryItem(product)
 
         return
+
+    def getUserProductDetail(self, id: int) -> UserProduct:
+        # return the product information with given id
+        return UserProduct(self.getUserProductDetail(id))
 
     # SERVICE METHODS
 

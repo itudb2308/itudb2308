@@ -14,4 +14,10 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
             if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                 return redirect(url_for('customer.loginPage'))
 
+    # only GET method for now
+    @bp.route('/<int:id>' , methods=["GET"] ) 
+    def productDetailPage(id):
+        print("productDetailPage")
+        product = service.getUserProductDetail(id)
+        return render_template('customerProductDetail.html', product=product)
     return bp

@@ -46,3 +46,10 @@ class InventoryItemRepository(BaseRepository):
         query = query.format(product_id=product_id, distribution_center_id=distribution_center_id)
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def getInventoryItemsByProductId(self, product_id: int):
+        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_INVENTORY_ITEMS_BY_PRODUCT_ID
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(product_id=product_id)
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
