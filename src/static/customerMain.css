@@ -1,0 +1,35 @@
+#content {
+    margin-left: 25px;
+    margin-top: 25px;
+}
+
+#login {
+    position:absolute;
+    right: 120px;
+    width: 10px;
+}
+#logout {
+    position:absolute;
+    right: 60px;
+    width: 10px;
+}
+
+#profile{
+    position:absolute;
+    right: 100px;
+    width: 10x;
+}
+
+#signup {
+    position:absolute;
+    right: 60px;
+    width: 10px;
+    white-space: nowrap
+}
+
+body {
+    padding-top: 5rem;
+}
+.navbar {
+    margin-bottom: 20px;
+}

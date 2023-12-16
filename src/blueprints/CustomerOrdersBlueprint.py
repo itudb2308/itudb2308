@@ -14,4 +14,10 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                 return redirect(url_for('customer.loginPage'))
 
+    @bp.route("/<int:id>", methods=["GET"])
+    def orderDetailPage(id: str):
+        result = service.orderDetailPage(id)
+        return render_template("customerOrderDetail.html", **result)
+
     return bp
+

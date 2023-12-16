@@ -1,12 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'customerBase.html' %}
 
-{% block title %}User Detail Page{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block body %}
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-
     {% if user %}
         <h1>{{ user.first_name + " " + user.last_name }}</h1>
         <div><strong>Mail : </strong><a href = {{ "mailto:" + user.email }}>{{ user.email }}</a></div>
@@ -22,7 +18,7 @@
             <strong>Member Since : </strong>
                 {{ user.created_at }}
         </div>
-        <a href = "{{ url_for('admin.users.deleteUserPage', id = user.id) }}" class="btn btn-danger">Delete</a>
+
             {% if orders %}
                 <table class="table table-striped">
                     <thead>
@@ -34,7 +30,7 @@
                     {% for order in orders %}
                         <tr>
                             <td>
-                                <a href="{{ url_for('admin.orders.orderDetailPage', id = order.id)}}">
+                                <a href="{{ url_for('customer.orders.orderDetailPage', id = order.id)}}">
                                     Order #{{ order.id }}
                                 </a>
                             </td>
@@ -46,32 +42,6 @@
                 </table>
             {% else %}
                 <h1>No orders found...</h1>
-            {% endif %}
-
-            
-            {% if events %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Event Number</th>
-                            <th scope="col">Created At</th>
-                        </tr>
-                    </thead>
-                    {% for event in events %}
-                        <tr>
-                            <td>
-                                <a href="{{ url_for('admin.users.eventDetailPage', id = event.id)}}">
-                                    Event #{{ event.id }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ event.created_at }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <h1>No events found...</h1>
             {% endif %}
     {% endif %}
 {% endblock %}
