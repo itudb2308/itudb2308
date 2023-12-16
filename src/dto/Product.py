@@ -22,3 +22,13 @@ class Product:
             "sku": self.sku,
             "distribution_center_id": self.distribution_center_id
         }
+
+class UserProduct:
+    def __init__(self, data):
+        self.id = data[0]
+        self.name = data[1]
+        self.brand = data[2]
+        self.category = data[3]
+        self.department = data[4]
+        self.price = data[5]
+        self.total_stock = data[6]
