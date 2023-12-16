@@ -55,7 +55,7 @@ class UserService:
             if form.validate_on_submit():
                 user = form.data
                 missing = self.generatorForForms()
-                for i,j in missing.items():
+                for i, j in missing.items():
                     user[i] = j
                 result["submitted_and_valid"] = True
                 result["id"] = self.addUser(user)
@@ -78,7 +78,7 @@ class UserService:
         result["id"] = self.deleteUser(id)
         result["flash"] = [("User deleted successfully", "success")]
         return result
-    
+
     # SERVICE METHODS
     def findById(self, id: int) -> User:
         return User(self.userRepository.findById(id))
@@ -103,7 +103,7 @@ class UserService:
             p = int(settings["p"])
             settings["offset"] = (p - 1) * settings["limit"]
         return [Event(e) for e in self.eventRepository.getAll(**settings)]
-    
+
     def findByEmail(self, mail) -> User:
         if self.userRepository.findByEmail(mail) == None:
             raise Exception("User not found")
@@ -113,26 +113,25 @@ class UserService:
     def deleteUser(self, id: int) -> int:
         return self.userRepository.deleteUserById(id)
 
-    def sessionIdGenerator(self,chars= string.ascii_lowercase + string.digits) -> str:
+    def sessionIdGenerator(self, chars=string.ascii_lowercase + string.digits) -> str:
         # 8 - 4 - 4 - 1
         first = ''.join(random.choice(chars) for _ in range(8))
         second = ''.join(random.choice(chars) for _ in range(4))
         third = ''.join(random.choice(chars) for _ in range(4))
         last = ''.join(random.choice(chars) for _ in range(1))
         return first + '-' + second + '-' + third + '-' + last
-    
+
     def generatorForForms(self) -> dict:
-        location = subprocess.run(args = ["curl", "ipinfo.io/loc"], universal_newlines=False, stdout=subprocess.PIPE)
+        location = subprocess.run(args=["curl", "ipinfo.io/loc"], universal_newlines=False, stdout=subprocess.PIPE)
         output = location.stdout.decode('utf-8')
-        loc = [output[0:7],output[8:15]]
-        sources = ["Search","Display","Facebook","Email"]
+        loc = [output[0:7], output[8:15]]
+        sources = ["Search", "Display", "Facebook", "Email"]
         latitude = loc[0]
         longitude = loc[1]
         traffic_source = random.choice(sources)
         created_at = datetime.datetime.now()
-        missing = {"latitude" : latitude,
-                   "longitude" : longitude,
-                   "traffic_source" : traffic_source,
-                   "created_at" : str(created_at)}
+        missing = {"latitude": latitude,
+                   "longitude": longitude,
+                   "traffic_source": traffic_source,
+                   "created_at": str(created_at)}
         return missing
-

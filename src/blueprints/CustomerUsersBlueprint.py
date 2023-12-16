@@ -19,7 +19,7 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
                     return redirect(url_for('customer.loginPage'))
 
     @bp.route('/profile/<int:id>', methods=["GET", "POST"])
-    def userPage(id:int):
+    def userPage(id: int):
         if request.method == "GET":
             result = service.userDetailPage(id)
             return render_template('customerUserDetail.html', **result)

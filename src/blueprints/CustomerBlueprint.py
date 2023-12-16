@@ -48,5 +48,5 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
         session["name"] = user.first_name + " " + user.last_name
         session["user_logged_in"] = True
         session["id"] = services["user"].sessionIdGenerator()
-        return session 
+        return session
     return bp

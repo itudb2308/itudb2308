@@ -5,19 +5,57 @@
 
 {% block body %}
     {% if order %}
-        <h1>Order #{{ order.id }}</h1>
-        <div>
+        <h1><strong>Order #{{ order.id }}</strong></h1>
+        <h2>
             <strong>Customer : </strong>
             <a href = "{{ url_for('admin.users.userDetailPage', id = user.id) }}">
                 {{ user.first_name + " " + user.last_name }}
             </a>
-        </div>
-        <div><strong>Number of Items: </strong>{{ order.num_of_items }}</div>
-        <div><strong>Ordered At: </strong>{{ order.created_at }}</div>
-        <div><strong>Shipped At: </strong>{{ order.shipped_at }}</div>
-        <div><strong>Delivered At: </strong>{{ order.delivered_at }}</div>
-        <div><strong>Returned At: </strong>{{ order.returned_at }}</div>
-    {% endif %}
-    {% if orderItems %}
+        </h2>
+        <hr>
+        <h3><strong>Status: </strong>{{ order.statusText }}</h3>
+        {% for nextStatus in order.adminNextStatus %}
+            <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" type="submit" onclick="orderChangeStatus('{{ order.id }}', '{{ nextStatus }}')">
+                Set Status {{ nextStatus }}
+            </button>
+        {% endfor %}
+        {% if orderItems %}
+            <hr>
+            <h2>Ordered Products</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Distribution Center</th>
+                    </tr>
+                </thead>
+                {% for orderItem in orderItems %}
+                    <tr>
+                        <td>
+                            {{ orderItem.product.brand }}
+                        </td>
+                        <td>
+                            {{ orderItem.product.category }}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.products.productDetailPage', id = orderItem.product.id)}}">
+                                {{ orderItem.product.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ '%.2f' | format(orderItem.sale_price) }}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = orderItem.distributionCenter.id) }}">
+                                {{ orderItem.distributionCenter.name }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     {% endif %}
 {% endblock %}
