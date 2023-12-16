@@ -79,7 +79,7 @@ class OrderService:
             querySettings["timestamp_column_name"] = "delivered_at"
         elif orderStatus == "Returned":
             querySettings["update_timestamp"] = True
-            querySettings["timestamp_column_name"] = "delivered_at"
+            querySettings["timestamp_column_name"] = "returned_at"
 
         querySettings["update_timestamp"] = "" if querySettings["update_timestamp"] else "--"
 

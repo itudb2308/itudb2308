@@ -15,7 +15,7 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
                 return redirect(url_for('customer.loginPage'))
 
     # only GET method for now
-    @bp.route('/<int:id>' , methods=["GET"] ) 
+    @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
         print("productDetailPage")
         product = service.getUserProductDetail(id)

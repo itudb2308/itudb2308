@@ -34,7 +34,7 @@ class RepositoryConstants:
         INVENTORY_ITEMS_FIND_BY_IDS = "inventory_items_find_by_ids.sql"
         INVENTORY_ITEMS_GET_TOTAL_STOCK_AND_SOLD = "inventory_items_get_total_stock_and_sold.sql"
         INVENTORY_ITEMS_ADD_INVENTORY_ITEM = "inventory_items_add_inventory_item.sql"
-        INVENTORY_ITEMS_GET_INVENTORY_ITEMS_BY_PRODUCT_ID = "inventory_items_get_inventory_items_by_product_id.sql" 
+        INVENTORY_ITEMS_GET_INVENTORY_ITEMS_BY_PRODUCT_ID = "inventory_items_get_inventory_items_by_product_id.sql"
         INVENTORY_ITEMS_SELL_INVENTORY_ITEMS = "inventory_items_sell_inventory_items.sql"
         PRODUCTS_FIND_BY_ID = "products_find_by_id.sql"
         PRODUCTS_FIND_BY_IDS = "products_find_by_ids.sql"
