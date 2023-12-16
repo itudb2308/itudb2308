@@ -27,15 +27,26 @@ function paginationOnClick(id) {
     window.location.replace(path + "?" + urlParams.toString());
 }
 
+function handleIncrementDecrement(id, value) {
+    const e = document.getElementById(id);
+    value = parseInt(value);
+    const quantity = parseInt(e.value);
+    if (value === -1 && quantity === 1)
+        return;
+    e.value = quantity + value;
+}
 
-document.getElementById('increment').addEventListener('click', function() {
-    let quantity = document.getElementById('quantity');
-    quantity.value = parseInt(quantity.value) + 1;
-});
+function orderChangeStatus(id, status) {
+    const formdata = new FormData();
+    formdata.append("order_status", status);
 
-document.getElementById('decrement').addEventListener('click', function() {
-    let quantity = document.getElementById('quantity');
-    if(quantity.value > 1) {
-        quantity.value = parseInt(quantity.value) - 1;
-    }
-});
+    const requestOptions = {
+        method: 'PUT',
+        body: formdata,
+        redirect: 'follow'
+    };
+
+    fetch(id, requestOptions)
+        .catch(error => console.log('error', error));
+    window.location.replace(id)
+}

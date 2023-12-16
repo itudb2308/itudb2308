@@ -20,4 +20,3 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
         return render_template("customerOrderDetail.html", **result)
 
     return bp
-

@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template, flash, session, redirect, url_for
 from service.UserService import UserService
 from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
-from forms.AddUserForm import AddUserForm
 
 
 def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
@@ -19,9 +18,11 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
                     return redirect(url_for('customer.loginPage'))
 
     @bp.route('/profile/<int:id>', methods=["GET", "POST"])
-    def userPage(id:int):
+    def userPage(id: int):
         if request.method == "GET":
             result = service.userDetailPage(id)
+            if result["user"] == None:
+                return render_template("404.html")
             return render_template('customerUserDetail.html', **result)
         else:
             pass

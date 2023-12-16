@@ -65,3 +65,10 @@ class OrderRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         self.cursor.execute(query)
         return self.cursor.fetchall()
+
+    def setOrderStatus(self, settings: dict):
+        queryFileName = self._constants.SQL_FILES.ORDER_SET_STATUS
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(**settings)
+        self.cursor.execute(query)
+        self.connection.commit()

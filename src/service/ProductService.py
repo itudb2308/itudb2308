@@ -117,12 +117,11 @@ class ProductService:
         return UserProduct(data)
 
     # Given dictionary of product ids and quantities, makes the sold_at field of the inventory item current time
-    def sellProducts(self, products: dict) : 
+    def sellProducts(self, products: dict):
         # sell products and update the database
-        for product_id,quantity in products:
-            self.inventoryItemRepository.sellInventoryItem(product_id,quantity)
+        for product_id, quantity in products:
+            self.inventoryItemRepository.sellInventoryItem(product_id, quantity)
         return
-
 
     # SERVICE METHODS
 

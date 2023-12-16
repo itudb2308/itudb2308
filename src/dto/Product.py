@@ -23,6 +23,7 @@ class Product:
             "distribution_center_id": self.distribution_center_id
         }
 
+
 class UserProduct:
     def __init__(self, data):
         self.id = data[0]
