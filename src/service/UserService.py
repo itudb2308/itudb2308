@@ -18,9 +18,12 @@ if typing.TYPE_CHECKING:
 
 class UserService:
     def __init__(self, repositories: dict) -> None:
-        self.userRepository: UserRepository = repositories["user"]
-        self.eventRepository: EventRepository = repositories["event"]
-        self.orderService: OrderService = None
+        self._userRepository: UserRepository = repositories["user"]
+        self._eventRepository: EventRepository = repositories["event"]
+        self._orderService: OrderService = None
+
+    def setOrderService(self, orderService: OrderService):
+        self._orderService = orderService
 
     # PAGE METHODS
     def usersPage(self, settings: dict) -> dict:
@@ -35,7 +38,7 @@ class UserService:
     def userDetailPage(self, id: int) -> dict:
         result = dict()
         result["user"] = self.findById(id)
-        result["orders"], _ = self.orderService.getAllAndCount({"user_id": id})
+        result["orders"], _ = self._orderService.getAllAndCount({"user_id": id})
         result["events"] = self.getAllEvents({"user_id": id})
         return result
 
@@ -72,7 +75,7 @@ class UserService:
         return result
 
     def addUser(self, user: dict) -> int:
-        return self.userRepository.addUser(user)
+        return self._userRepository.addUser(user)
 
     def deleteUserPage(self, id: int) -> dict:
         result = dict()
@@ -82,20 +85,20 @@ class UserService:
 
     # SERVICE METHODS
     def findById(self, id: int) -> User:
-        return User(self.userRepository.findById(id))
+        return User(self._userRepository.findById(id))
 
     def eventsFindById(self, id: int) -> Event:
-        return Event(self.eventRepository.findById(id))
+        return Event(self._eventRepository.findById(id))
 
     def getAllAndCount(self, settings: dict) -> ([User], int):
         settings = handleLimitAndOffset(settings)
-        data = self.userRepository.getAllAndCount(**settings)
+        data = self._userRepository.getAllAndCount(**settings)
         users = [User(u) for u in data]
         count = data[0][-1] if len(data) > 1 else 0
         return users, count
 
     def getDistinctCountry(self) -> [str]:
-        return [c[0] for c in self.userRepository.getDistinctCountry()]
+        return [c[0] for c in self._userRepository.getDistinctCountry()]
 
     def getAllEvents(self, settings: dict) -> [Event]:
         if "limit" not in settings:
@@ -103,16 +106,16 @@ class UserService:
         if "p" in settings:
             p = int(settings["p"])
             settings["offset"] = (p - 1) * settings["limit"]
-        return [Event(e) for e in self.eventRepository.getAll(**settings)]
+        return [Event(e) for e in self._eventRepository.getAll(**settings)]
 
     def findByEmail(self, mail) -> User:
-        if self.userRepository.findByEmail(mail) == None:
+        if self._userRepository.findByEmail(mail) is None:
             raise Exception("User not found")
         else:
-            return User(self.userRepository.findByEmail(mail))
+            return User(self._userRepository.findByEmail(mail))
 
     def deleteUser(self, id: int) -> int:
-        return self.userRepository.deleteUserById(id)
+        return self._userRepository.deleteUserById(id)
 
     def sessionIdGenerator(self, chars=string.ascii_lowercase + string.digits) -> str:
         # 8 - 4 - 4 - 1

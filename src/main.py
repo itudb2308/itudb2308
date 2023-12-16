@@ -41,9 +41,9 @@ services = {
 }
 
 # REFER BETWEEN SERVICES
-services["order"].userService = services["user"]
-services["user"].orderService = services["order"]
-services["product"].distributionCenterService = services["distributionCenter"]
+services["order"].setUserService(services["user"])
+services["user"].setOrderService(services["order"])
+services["product"].setDistributionCenterService(services["distributionCenter"])
 
 app = Flask(__name__)
 app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="/admin")
