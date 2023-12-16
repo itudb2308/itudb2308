@@ -22,4 +22,18 @@
 
     <a href = "{{ url_for('admin.products.updateProductPage', id = product.id) }}" class="btn btn-primary">Update</a>
     <a href = "{{ url_for('admin.products.deleteProductPage', id = product.id) }}" class="btn btn-danger">Delete</a>
+
+    <div class="col-md-8" style="padding: 20px;">
+        <form id="add-stock-form" action="{{url_for( 'admin.products.addStockToInventory', id = product.id )}}" method="post">
+            <button class="btn btn-warning" type="button" id="increment">+</button>
+            <input class="product-quantity-input" type="number" id="quantity" name="quantity" value="1" min="1">
+            <button class="btn btn-danger" type="button" id="decrement">-</button>
+            <button type="submit">Add Stock</button>
+        </form>
+        
+    </div>
+    
+
+    <h4>Total Stock : {{ totalStock }} </h4>
+    <h4>Total Sold  : {{ totalSold }} </h4>
 {% endblock %}
