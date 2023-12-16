@@ -1,3 +1,4 @@
+from dto.Transaction import Transaction
 from repository.BaseRepository import BaseRepository
 import hashlib  # for generating sku
 
@@ -41,13 +42,13 @@ class ProductRepository(BaseRepository):
 
         return sku_hash.upper()
 
-    def findById(self, id: int):
-        return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID)
+    def findById(self, transaction: Transaction, id: int):
+        return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID, transaction)
 
-    def findByIds(self, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS)
+    def findByIds(self, transaction: Transaction, ids: [int]):
+        return self._findByIds(ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS, transaction)
 
-    def getAllAndCount(self, **kwargs):
+    def getAllAndCount(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -119,23 +120,23 @@ class ProductRepository(BaseRepository):
 
         query = query.format(**queryArguments)
 
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def getColumnNames(self):
+    def getColumnNames(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_COLUMN_NAMES
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def getCategories(self):
+    def getCategories(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_CATEGORIES
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
     # returns the id of the newly added product
-    def addProduct(self, product: dict):
+    def addProduct(self, transaction: Transaction, product: dict):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_ADD_PRODUCT
         query = self._getSqlQueryFromFile(queryFileName)
         self.replaceDoubleApostrophes(product)
@@ -144,41 +145,30 @@ class ProductRepository(BaseRepository):
         product['sku'] = self.generateSku(product)
 
         query = query.format(**product)
-        try:
-            self.cursor.execute(query, product)
-            self.connection.commit()
-        except Exception as e:
-            self.connection.rollback()
-            raise e
 
-        product_id = self.cursor.fetchone()[0]
+        transaction.cursor.execute(query, product)
+        product_id = transaction.cursor.fetchone()[0]
         return product_id
 
-    def updateProduct(self, product: dict):
+    def updateProduct(self, transaction: Transaction, product: dict):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_UPDATE_PRODUCT
         query = self._getSqlQueryFromFile(queryFileName)
         self.replaceDoubleApostrophes(product)
         query = query.format(**product)
-        try:
-            self.cursor.execute(query, product)
-            self.connection.commit()
-        except Exception as e:
-            self.connection.rollback()
-            raise e
 
-        product_id = self.cursor.fetchone()[0]
+        transaction.cursor.execute(query, product)
+        product_id = transaction.cursor.fetchone()[0]
         return product_id
 
-    def deleteProductById(self, id: int):
+    def deleteProductById(self, transaction: Transaction, id: int):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_DELETE_PRODUCT_BY_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
-        self.cursor.execute(query)
-        self.connection.commit()
-        return self.cursor.fetchone()[0]
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()[0]
 
-    def getBrandNames(self):
+    def getBrandNames(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()

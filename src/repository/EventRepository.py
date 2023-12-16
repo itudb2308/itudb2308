@@ -1,3 +1,4 @@
+from dto.Transaction import Transaction
 from repository.BaseRepository import BaseRepository
 
 getAllSettings = {
@@ -13,13 +14,13 @@ class EventRepository(BaseRepository):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def findById(self, id: int):
-        return self._findById(id, self._constants.SQL_FILES.EVENTS_FIND_BY_ID)
+    def findById(self, transaction: Transaction, id: int):
+        return self._findById(id, self._constants.SQL_FILES.EVENTS_FIND_BY_ID, transaction)
 
-    def findByIds(self, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.EVENTS_FIND_BY_IDS)
+    def findByIds(self, transaction: Transaction, ids: [int]):
+        return self._findByIds(ids, self._constants.SQL_FILES.EVENTS_FIND_BY_IDS, transaction)
 
-    def getAll(self, **kwargs):
+    def getAll(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.EVENTS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -47,5 +48,5 @@ class EventRepository(BaseRepository):
             settings["order_by"] = f"ORDER BY o.{field} {ascOrDesc}"
         query = query.format(**settings)
 
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()

@@ -1,3 +1,4 @@
+from dto.Transaction import Transaction
 from repository.BaseRepository import BaseRepository
 
 getAllSettings = {
@@ -13,13 +14,13 @@ class OrderRepository(BaseRepository):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def findById(self, id: int):
-        return self._findById(id, self._constants.SQL_FILES.ORDER_FIND_BY_ID)
+    def findById(self, transaction: Transaction, id: int):
+        return self._findById(id, self._constants.SQL_FILES.ORDER_FIND_BY_ID, transaction)
 
-    def findByIds(self, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.ORDER_FIND_BY_IDS)
+    def findByIds(self, transaction: Transaction, ids: [int]):
+        return self._findByIds(ids, self._constants.SQL_FILES.ORDER_FIND_BY_IDS, transaction)
 
-    def getAllAndCount(self, **kwargs):
+    def getAllAndCount(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.ORDER_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -51,24 +52,23 @@ class OrderRepository(BaseRepository):
             ascOrDesc = "ASC" if kwargs["order_by"]["ascending"] else "DESC"
             settings["order_by"] = f"ORDER BY o.{field} {ascOrDesc}"
         query = query.format(**settings)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def getDistinctStatus(self):
+    def getDistinctStatus(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.ORDER_GET_DISTINCT_STATUS
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def getDistinctGender(self):
+    def getDistinctGender(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.ORDER_GET_DISTINCT_GENDER
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def setOrderStatus(self, settings: dict):
+    def setOrderStatus(self, transaction: Transaction, settings: dict):
         queryFileName = self._constants.SQL_FILES.ORDER_SET_STATUS
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(**settings)
-        self.cursor.execute(query)
-        self.connection.commit()
+        transaction.cursor.execute(query)

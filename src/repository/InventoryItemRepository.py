@@ -1,3 +1,4 @@
+from dto.Transaction import Transaction
 from repository.BaseRepository import BaseRepository
 import time
 
@@ -7,15 +8,15 @@ class InventoryItemRepository(BaseRepository):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def findById(self, id: int):
-        return self._findById(id, self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_ID)
+    def findById(self, transaction: Transaction, id: int):
+        return self._findById(id, self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_ID, transaction)
 
-    def findByIds(self, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_IDS)
+    def findByIds(self, transaction: Transaction, ids: [int]):
+        return self._findByIds(ids, self._constants.SQL_FILES.INVENTORY_ITEMS_FIND_BY_IDS, transaction)
 
     # Function to add inventory item for product specified by dictionary .
     # Returns the id of the added inventory item.
-    def addInventoryItem(self, data: dict) -> int:
+    def addInventoryItem(self, transaction: Transaction, data: dict) -> int:
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_ADD_INVENTORY_ITEM
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -36,32 +37,30 @@ class InventoryItemRepository(BaseRepository):
         self.replaceDoubleApostrophes(argument)
         query = query.format(**argument)
 
-        self.cursor.execute(query)
-        self.connection.commit()
-        return self.cursor.fetchone()[0]
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()[0]
 
-    def getTotalStockAndSold(self, product_id: int, distribution_center_id: int):
+    def getTotalStockAndSold(self, transaction: Transaction, product_id: int, distribution_center_id: int):
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_TOTAL_STOCK_AND_SOLD
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=product_id, distribution_center_id=distribution_center_id)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def getInventoryItemsByProductId(self, product_id: int):
+    def getInventoryItemsByProductId(self, transaction: Transaction, product_id: int):
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_INVENTORY_ITEMS_BY_PRODUCT_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=product_id)
-        self.cursor.execute(query)
-        return self.cursor.fetchone()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()
 
     # Function to update the sold_at field of an inventory item.
     # Here there is an issue with quantity
     # We rely on the frontend to make sure that the quantity is not more than the stock
     # TODO : Double check quanttity is less than or equal to stock.
-    def sellInventoryItem(self, id: int, quantity: int):
+    def sellInventoryItem(self, transaction: Transaction, id: int, quantity: int):
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_SELL_INVENTORY_ITEMS
         query = self._getSqlQueryFromFile(queryFileName)
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
         query = query.format(product_id=id, current_time=timestamp, quantity=quantity)
-        self.cursor.execute(query)
-        self.connection.commit()
+        transaction.cursor.execute(query)

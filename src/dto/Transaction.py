@@ -1,6 +1,7 @@
 from psycopg2._psycopg import connection
 
-class TransactionManager:
+
+class Transaction:
     def __init__(self, dbConnection: connection):
         self.connection = dbConnection
         self.cursor = self.connection.cursor()

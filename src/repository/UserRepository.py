@@ -1,3 +1,4 @@
+from dto.Transaction import Transaction
 from repository.BaseRepository import BaseRepository
 
 getAllSettings = {
@@ -13,20 +14,20 @@ class UserRepository(BaseRepository):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def findById(self, id: int):
-        return self._findById(id, self._constants.SQL_FILES.USERS_FIND_BY_ID)
+    def findById(self, transaction: Transaction, id: int):
+        return self._findById(id, self._constants.SQL_FILES.USERS_FIND_BY_ID, transaction)
 
-    def findByIds(self, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.USERS_FIND_BY_IDS)
+    def findByIds(self, transaction: Transaction, ids: [int]):
+        return self._findByIds(ids, self._constants.SQL_FILES.USERS_FIND_BY_IDS, transaction)
 
-    def findByEmail(self, email):
+    def findByEmail(self, transaction: Transaction, email):
         queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_EMAIL
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(email=email)
-        self.cursor.execute(query)
-        return self.cursor.fetchone()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()
 
-    def getAllAndCount(self, **kwargs):
+    def getAllAndCount(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.USERS_GET_ALL
         query = self._getSqlQueryFromFile(queryFileName)
 
@@ -60,34 +61,27 @@ class UserRepository(BaseRepository):
             self.handleWhereStatement(settings)
             settings["where"] = settings["where"] + f"u.country = '{kwargs['country']}'"
         query = query.format(**settings)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
-    def addUser(self, user: dict):
+    def addUser(self, transaction: Transaction, user: dict):
         queryFileName = self._constants.SQL_FILES.USERS_ADD_USER
         query = self._getSqlQueryFromFile(queryFileName)
         self.replaceDoubleApostrophes(user)
         query = query.format(**user)
-        try:
-            self.cursor.execute(query, user)
-            self.connection.commit()
-        except Exception as e:
-            self.connection.rollback()
-            raise e
-
-        user_id = self.cursor.fetchone()[0]
+        transaction.cursor.execute(query, user)
+        user_id = transaction.cursor.fetchone()[0]
         return user_id
 
-    def deleteUserById(self, id: int):
+    def deleteUserById(self, transaction: Transaction, id: int):
         queryFileName = self._constants.SQL_FILES.USERS_DELETE_USER_BY_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
-        self.cursor.execute(query)
-        self.connection.commit()
-        return self.cursor.fetchone()[0]
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()[0]
 
-    def getDistinctCountry(self):
+    def getDistinctCountry(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.GET_DISTINCT_COUNTRY
         query = self._getSqlQueryFromFile(queryFileName)
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
