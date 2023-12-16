@@ -1,4 +1,4 @@
-from dto.Product import Product
+from dto.Product import Product, UserProduct
 from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
 
@@ -108,6 +108,21 @@ class ProductService:
             self.inventoryItemRepository.addInventoryItem(product)
 
         return
+
+    def getUserProductDetail(self, id: int) -> UserProduct:
+        # return the product information with given id
+        data = self.inventoryItemRepository.getInventoryItemsByProductId(id)
+        if data is None:
+            return None
+        return UserProduct(data)
+
+    # Given dictionary of product ids and quantities, makes the sold_at field of the inventory item current time
+    def sellProducts(self, products: dict) : 
+        # sell products and update the database
+        for product_id,quantity in products:
+            self.inventoryItemRepository.sellInventoryItem(product_id,quantity)
+        return
+
 
     # SERVICE METHODS
 

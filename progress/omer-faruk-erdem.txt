@@ -10,3 +10,23 @@ Created products blueprint, implemented get all query for products and implement
 _______________________________________________________________________
 WEEK 8 :
 Created products and productsDetails pages.
+_______________________________________________________________________
+WEEK 9 :
+Added new desing for base.html and products.html.
+Formatted filtering form fixed floating issue.
+Distribution centers blueprint created and related pages implemented.
+_______________________________________________________________________
+WEEK 10 :
+Embedded map frame to distribution centers page.
+Edited schema.sql, added ON DELETE and ON UPDATE constraints.
+Created add product page. Took and validate the input using flask-wtforms. 
+Created related form. Implemented add, delete and update queries for products.
+_______________________________________________________________________
+WEEK 11 :
+Fixed the issue in the add product form.
+Added addDistributionCenterPage, updated data.sql by starting serial id with maximum+1 of last id.
+Added update and delete feature for distribution centers.
+Created related wtforms for distribution centers.
+Updated schema.sql, fixed reference issue.
+Added addStockToInventory endpoint.
+Added total sold and stock information to product detail page. Implementefd related queries.
