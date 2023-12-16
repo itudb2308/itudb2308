@@ -46,4 +46,3 @@ class InventoryItemRepository(BaseRepository):
         query = query.format(product_id=product_id, distribution_center_id=distribution_center_id)
         self.cursor.execute(query)
         return self.cursor.fetchall()
-

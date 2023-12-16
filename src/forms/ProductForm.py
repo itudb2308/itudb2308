@@ -28,6 +28,5 @@ class ProductForm(FlaskForm):
     brand = SelectField("Brand", validators=[DataRequired()])
     retail_price = FloatField("Retail Price", validators=[DataRequired(), NumberRange(min=0)])
     department = SelectField("Department", validators=[DataRequired()], choices=["Men", "Women"])
-    sku = StringField("SKU")
     distribution_center_id = SelectField("Distribution Center", validators=[DataRequired()])
     submit = SubmitField("Add Product")
