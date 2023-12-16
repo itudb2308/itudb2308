@@ -25,12 +25,8 @@ def handleLimitAndOffset(settings: dict) -> dict:
 
 def transactional(func):
     def wrapper(*args, **kwargs):
-        # Code to be executed before the original function is called
-        print("\nExecuting code before the function")
-
-        print(args, kwargs)
-        if "transaction" not in kwargs:
-            kwargs["transaction"]: Transaction = args[0].createNewTransaction()
+        if "transaction" not in kwargs.keys():
+            kwargs["transaction"] = args[0].createNewTransaction()
 
         result = None
         try:
@@ -38,11 +34,9 @@ def transactional(func):
         except Exception as e:
             print(e.args[0])
             kwargs["transaction"].rollback()
+            raise e
         finally:
             kwargs["transaction"].commit()
-
-        # Code to be executed after the original function is called
-        print("Executing code after the function\n")
 
         return result
 

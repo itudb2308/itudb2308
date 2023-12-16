@@ -43,10 +43,10 @@ class ProductRepository(BaseRepository):
         return sku_hash.upper()
 
     def findById(self, transaction: Transaction, id: int):
-        return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID, transaction)
+        return self._findById(transaction, id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID)
 
     def findByIds(self, transaction: Transaction, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS, transaction)
+        return self._findByIds(transaction, ids, self._constants.SQL_FILES.PRODUCTS_FIND_BY_IDS)
 
     def getAllAndCount(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_ALL

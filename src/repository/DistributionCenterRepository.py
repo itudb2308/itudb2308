@@ -15,10 +15,10 @@ class DistributionCenterRepository(BaseRepository):
         }
 
     def findById(self, transaction: Transaction, id: int):
-        return self._findById(id, self._constants.SQL_FILES.DISTRIBUTION_CENTERS_FIND_BY_ID, transaction)
+        return self._findById(transaction, id, self._constants.SQL_FILES.DISTRIBUTION_CENTERS_FIND_BY_ID)
 
     def findByIds(self, transaction: Transaction, ids: [int]):
-        return self._findByIds(ids, self._constants.SQL_FILES.DISTRIBUTION_CENTERS_FIND_BY_IDS, transaction)
+        return self._findByIds(transaction, ids, self._constants.SQL_FILES.DISTRIBUTION_CENTERS_FIND_BY_IDS)
 
     def getAll(self, transaction: Transaction, **kwargs):
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_GET_ALL

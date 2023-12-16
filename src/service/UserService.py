@@ -1,11 +1,14 @@
 import typing
 
+import psycopg2.errorcodes
+
+from dto.Transaction import Transaction
 from dto.User import User
 from dto.Event import Event
 from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
 from forms.AddUserForm import AddUserForm
-from service.Common import getPaginationObject, handleLimitAndOffset
+from service.Common import getPaginationObject, handleLimitAndOffset, transactional
 
 import string
 import random
@@ -22,100 +25,115 @@ class UserService:
         self._eventRepository: EventRepository = repositories["event"]
         self._orderService: OrderService = None
 
-    def setOrderService(self, orderService: OrderService):
+    def setOrderService(self, orderService):
         self._orderService = orderService
 
     # PAGE METHODS
-    def usersPage(self, settings: dict) -> dict:
+    @transactional
+    def usersPage(self, settings: dict, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        users, count = self.getAllAndCount(settings)
+        users, count = self.getAllAndCount(transaction, settings)
         result["users"] = users
         result["pagination"] = getPaginationObject(count, settings)
 
-        result["countryItems"] = self.getDistinctCountry()
+        result["countryItems"] = self.getDistinctCountry(transaction)
         return result
 
-    def userDetailPage(self, id: int) -> dict:
+    @transactional
+    def userDetailPage(self, id: int, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        result["user"] = self.findById(id)
-        result["orders"], _ = self._orderService.getAllAndCount({"user_id": id})
-        result["events"] = self.getAllEvents({"user_id": id})
+        result["user"] = self.findById(transaction, id)
+        result["orders"], _ = self._orderService.getAllAndCount(transaction, {"user_id": id})
+        result["events"] = self.getAllEvents(transaction, {"user_id": id})
         return result
 
-    def eventDetailPage(self, id: int) -> dict:
+    @transactional
+    def eventDetailPage(self, id: int, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        result["event"] = self.eventsFindById(id)
+        result["event"] = self.eventsFindById(transaction, id)
         return result
 
-    def signUpPage(self, method, form) -> int:
+    @transactional
+    def signUpPage(self, method, form, **kwargs) -> int:
+        transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
 
         if method == "GET":
             result["submitted_and_valid"] = False
             result["form"] = AddUserForm(self)
-        else:
+        elif method == "POST":
             form = AddUserForm(self, form)
 
-            if form.validate_on_submit():
+            try:
+                if not form.validate_on_submit():
+                    raise Exception("Form data is invalid")
+
                 user = form.data
                 missing = self.generatorForForms()
                 for i, j in missing.items():
                     user[i] = j
                 result["submitted_and_valid"] = True
-                result["id"] = self.addUser(user)
+                try:
+                    result["id"] = self.addUser(transaction, user)
+                except psycopg2.IntegrityError as e:
+                    raise Exception("User exists with given email")
                 result["flash"].append(("User registered successfully", "success"))
-
-            else:
+            except Exception as e:
                 result["submitted_and_valid"] = False
-                result["flash"].append(("Form data is invalid", "danger"))
+                result["flash"].append((e.args[0], "danger"))
                 for fieldName, errorMessages in form.errors.items():
                     for err in errorMessages:
                         result["flash"].append((f"{fieldName}: {err}", "danger"))
                 result["form"] = form
         return result
 
-    def addUser(self, user: dict) -> int:
-        return self._userRepository.addUser(user)
-
-    def deleteUserPage(self, id: int) -> dict:
+    @transactional
+    def deleteUserPage(self, id: int, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        result["id"] = self.deleteUser(id)
+        result["id"] = self.deleteUser(transaction, id)
         result["flash"] = [("User deleted successfully", "success")]
         return result
 
     # SERVICE METHODS
-    def findById(self, id: int) -> User:
-        return User(self._userRepository.findById(id))
+    def findById(self, transaction: Transaction, id: int) -> User:
+        return User(self._userRepository.findById(transaction, id))
 
-    def eventsFindById(self, id: int) -> Event:
-        return Event(self._eventRepository.findById(id))
+    def eventsFindById(self, transaction: Transaction, id: int) -> Event:
+        return Event(self._eventRepository.findById(transaction, id))
 
-    def getAllAndCount(self, settings: dict) -> ([User], int):
+    def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([User], int):
         settings = handleLimitAndOffset(settings)
-        data = self._userRepository.getAllAndCount(**settings)
+        data = self._userRepository.getAllAndCount(transaction, **settings)
         users = [User(u) for u in data]
         count = data[0][-1] if len(data) > 1 else 0
         return users, count
 
-    def getDistinctCountry(self) -> [str]:
-        return [c[0] for c in self._userRepository.getDistinctCountry()]
+    def getDistinctCountry(self, transaction: Transaction) -> [str]:
+        return [c[0] for c in self._userRepository.getDistinctCountry(transaction)]
 
-    def getAllEvents(self, settings: dict) -> [Event]:
+    def getAllEvents(self, transaction: Transaction, settings: dict) -> [Event]:
         if "limit" not in settings:
             settings["limit"] = 20
         if "p" in settings:
             p = int(settings["p"])
             settings["offset"] = (p - 1) * settings["limit"]
-        return [Event(e) for e in self._eventRepository.getAll(**settings)]
+        return [Event(e) for e in self._eventRepository.getAll(transaction, **settings)]
 
-    def findByEmail(self, mail) -> User:
-        if self._userRepository.findByEmail(mail) is None:
+    def findByEmail(self, transaction: Transaction, mail) -> User:
+        if self._userRepository.findByEmail(transaction, mail) is None:
             raise Exception("User not found")
         else:
-            return User(self._userRepository.findByEmail(mail))
+            return User(self._userRepository.findByEmail(transaction, mail))
 
-    def deleteUser(self, id: int) -> int:
-        return self._userRepository.deleteUserById(id)
+    def deleteUser(self, transaction: Transaction, id: int) -> int:
+        return self._userRepository.deleteUserById(transaction, id)
+
+    def addUser(self, transaction: Transaction, user: dict) -> int:
+        return self._userRepository.addUser(transaction, user)
 
     def sessionIdGenerator(self, chars=string.ascii_lowercase + string.digits) -> str:
         # 8 - 4 - 4 - 1
@@ -139,3 +157,6 @@ class UserService:
                    "traffic_source": traffic_source,
                    "created_at": str(created_at)}
         return missing
+
+    def createNewTransaction(self):
+        return self._userRepository.createNewTransaction()
