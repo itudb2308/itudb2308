@@ -28,7 +28,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             password = request.form["password"]
             user = services["user"].findByEmail(email)
             if user.email != None and password == user.email:
-                handleSession(user)
+                sessionHandleUserLogin(user)
                 return redirect(url_for('customer.homePage'))
             else:
                 return redirect(url_for('customer.loginPage'))
@@ -39,7 +39,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             session.clear()
             return redirect(url_for('customer.homePage'))
 
-    def handleSession(user):
+    def sessionHandleUserLogin(user):
         session["user"] = user.id
         session["name"] = user.first_name + " " + user.last_name
         session["user_logged_in"] = True

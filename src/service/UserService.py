@@ -59,7 +59,6 @@ class UserService:
                 for i,j in missing.items():
                     user[i] = j
                 result["submitted_and_valid"] = True
-                print(user)
                 result["id"] = self.addUser(user)
                 result["flash"].append(("User registered successfully", "success"))
 

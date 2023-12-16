@@ -19,10 +19,10 @@ class UserRepository(BaseRepository):
     def findByIds(self, ids: [int]):
         return self._findByIds(ids, self._constants.SQL_FILES.USERS_FIND_BY_IDS)
 
-    def findByEmail(self, mail):
+    def findByEmail(self, email):
         queryFileName = self._constants.SQL_FILES.USERS_FIND_BY_EMAIL
         query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(email=mail)
+        query = query.format(email=email)
         self.cursor.execute(query)
         return self.cursor.fetchone()
 
