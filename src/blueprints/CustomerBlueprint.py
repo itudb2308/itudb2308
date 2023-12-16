@@ -24,13 +24,18 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
                 session["user_logged_in"] = False
                 return render_template('customerLogin.html')
         elif request.method == "POST":
-            email = request.form['email']
-            password = request.form["password"]
-            user = services["user"].findByEmail(email)
-            if user.email != None and password == user.email:
+            try:
+                email = request.form['email']
+                password = request.form["password"]
+                if email != password:
+                    raise Exception("Email or Password is wrong")
+
+                user = services["user"].findByEmail(email)
                 handleSession(user)
                 return redirect(url_for('customer.homePage'))
-            else:
+            except Exception as e:
+                # TODO: show flash messages such as user logged in, password is wrong etc
+                print(e)
                 return redirect(url_for('customer.loginPage'))
 
     @bp.route('/logout', methods=["GET"])

@@ -1,6 +1,5 @@
 from dto.User import User
 from dto.Event import Event
-from dto.NoneUser import NoneUser
 
 from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
@@ -106,11 +105,9 @@ class UserService:
             settings["offset"] = (p - 1) * settings["limit"]
         return [Event(e) for e in self.eventRepository.getAll(**settings)]
     
-    def findByEmail(self, mail) -> [User]: 
-    # If email doesnt exists in the database
-    # DTO makes the app crash. Because this function returns None.
+    def findByEmail(self, mail) -> User:
         if self.userRepository.findByEmail(mail) == None:
-            return NoneUser()
+            raise Exception("User not found")
         else:
             return User(self.userRepository.findByEmail(mail))
 
