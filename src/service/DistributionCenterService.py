@@ -5,8 +5,8 @@ from forms.DistributionCenterForm import DistributionCenterForm, UpdateDistribut
 
 
 class DistributionCenterService:
-    def __init__(self, distributionCenterRepository: DistributionCenterRepository):
-        self.distributionCenterRepository = distributionCenterRepository
+    def __init__(self, repositories: dict):
+        self._distributionCenterRepository: DistributionCenterRepository = repositories["distributionCenter"]
 
     # PAGE METHODS
     def distributionCentersPage(self, querySettings: dict) -> dict:
@@ -32,7 +32,7 @@ class DistributionCenterService:
                 distributionCenter = form.data
                 # add product to database
                 result["submitted_and_valid"] = True
-                result["id"] = self.distributionCenterRepository.addDistributionCenter(distributionCenter)
+                result["id"] = self._distributionCenterRepository.addDistributionCenter(distributionCenter)
                 result["flash"].append(("Distribution Center added successfully", "success"))
 
             else:
@@ -63,7 +63,7 @@ class DistributionCenterService:
                 distributionCenter["id"] = id
                 # add product to database
                 result["submitted_and_valid"] = True
-                result["id"] = self.distributionCenterRepository.updateDistributionCenter(distributionCenter)
+                result["id"] = self._distributionCenterRepository.updateDistributionCenter(distributionCenter)
                 result["flash"].append(("Distribution Center updated successfully", "success"))
             else:
                 result["submitted_and_valid"] = False
@@ -77,12 +77,12 @@ class DistributionCenterService:
 
     # may be success or failure message depending on the result of the delete operation can be returned
     def deleteDistributionCenter(self, id: int):
-        return self.distributionCenterRepository.deleteDistributionCenter(id)
+        return self._distributionCenterRepository.deleteDistributionCenter(id)
 
     # SERVICE METHODS
 
     def findById(self, id: int) -> DistributionCenter:
-        return DistributionCenter(self.distributionCenterRepository.findById(id))
+        return DistributionCenter(self._distributionCenterRepository.findById(id))
 
     def getAll(self, settings: dict) -> [DistributionCenter]:
-        return [DistributionCenter(dc) for dc in self.distributionCenterRepository.getAll(**settings)]
+        return [DistributionCenter(dc) for dc in self._distributionCenterRepository.getAll(**settings)]

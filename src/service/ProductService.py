@@ -1,18 +1,22 @@
+import typing
 from dto.Product import Product, UserProduct
 from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
-
 from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+if typing.TYPE_CHECKING:
+    from service.DistributionCenterService import DistributionCenterService
 
 class ProductService:
-    def __init__(self, productRepository: ProductRepository,
-                 inventoryItemRepository: InventoryItemRepository) -> None:
-        self.productRepository = productRepository
-        self.inventoryItemRepository = inventoryItemRepository
-        self.distributionCenterService = None
+    def __init__(self, repositories: dict) -> None:
+        self._productRepository: ProductRepository = repositories["product"]
+        self._inventoryItemRepository: InventoryItemRepository = repositories["inventoryItem"]
+        self._distributionCenterService: DistributionCenterService = None
+
+    def setDistributionCenterService(self, distributionCenterService: DistributionCenterService):
+        self._distributionCenterService = distributionCenterService
 
     # PAGE METHODS
     def productsPage(self, querySettings: dict) -> dict:
@@ -27,7 +31,7 @@ class ProductService:
     def productDetailPage(self, id: int) -> dict:
         result = dict()
         result["product"] = self.findById(id)
-        stockAndSold = self.inventoryItemRepository.getTotalStockAndSold(id, result["product"].distribution_center_id)
+        stockAndSold = self._inventoryItemRepository.getTotalStockAndSold(id, result["product"].distribution_center_id)
         result["totalStock"] = stockAndSold[0][0]
         result["totalSold"] = stockAndSold[0][1]
         return result
@@ -63,7 +67,7 @@ class ProductService:
 
     # returns the id of the added product
     def addProduct(self, product: dict) -> int:
-        return self.productRepository.addProduct(product)
+        return self._productRepository.addProduct(product)
 
     def updateProductPage(self, method, form, id) -> int:
         result = {"submitted_and_valid": False, "flash": [], "form": None}
@@ -80,7 +84,7 @@ class ProductService:
                 # add id to product such that repository can use it to update the product
                 product["id"] = id
                 # update product on database
-                id = self.productRepository.updateProduct(product)
+                id = self._productRepository.updateProduct(product)
                 result["submitted_and_valid"] = True
                 result["flash"].append(("Product updated successfully", "success"))
 
@@ -102,16 +106,16 @@ class ProductService:
     def addStockToInventory(self, id, quantity):
         # get the stocks information
 
-        product = self.productRepository.findById(id)
+        product = self._productRepository.findById(id)
 
         for i in range(quantity):
-            self.inventoryItemRepository.addInventoryItem(product)
+            self._inventoryItemRepository.addInventoryItem(product)
 
         return
 
     def getUserProductDetail(self, id: int) -> UserProduct:
         # return the product information with given id
-        data = self.inventoryItemRepository.getInventoryItemsByProductId(id)
+        data = self._inventoryItemRepository.getInventoryItemsByProductId(id)
         if data is None:
             return None
         return UserProduct(data)
@@ -120,33 +124,33 @@ class ProductService:
     def sellProducts(self, products: dict):
         # sell products and update the database
         for product_id, quantity in products:
-            self.inventoryItemRepository.sellInventoryItem(product_id, quantity)
+            self._inventoryItemRepository.sellInventoryItem(product_id, quantity)
         return
 
     # SERVICE METHODS
 
     def findById(self, id: int) -> Product:
-        return Product(self.productRepository.findById(id))
+        return Product(self._productRepository.findById(id))
 
     def getAllAndCount(self, settings: dict) -> ([Product], int):
         settings = handleLimitAndOffset(settings)
-        data = self.productRepository.getAllAndCount(**settings)
+        data = self._productRepository.getAllAndCount(**settings)
         products = [Product(p) for p in data]
         count = data[0][-1] if len(data) > 1 else 0
         return products, count
 
     def getColumnNames(self) -> [str]:
-        return [cn[0] for cn in self.productRepository.getColumnNames()]
+        return [cn[0] for cn in self._productRepository.getColumnNames()]
 
     def getCategories(self) -> [str]:
-        return [c[0] for c in self.productRepository.getCategories()]
+        return [c[0] for c in self._productRepository.getCategories()]
 
     # returns array of DistributionCenter data transfer objects
     def getDistributionCenters(self, settings: dict) -> [str]:
-        return self.distributionCenterService.getAll(settings)
+        return self._distributionCenterService.getAll(settings)
 
     def getBrandNames(self) -> [str]:
-        return [b[0] for b in self.productRepository.getBrandNames()]
+        return [b[0] for b in self._productRepository.getBrandNames()]
 
     def deleteProduct(self, id: int) -> int:
-        return self.productRepository.deleteProductById(id)
+        return self._productRepository.deleteProductById(id)

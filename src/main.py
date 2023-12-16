@@ -2,8 +2,17 @@ import psycopg2
 from flask import Flask
 from blueprints.AdminBlueprint import AdminBlueprint
 from blueprints.CustomerBlueprint import CustomerBlueprint
-from repository import DistributionCenterRepository, EventRepository, InventoryItemRepository, OrderItemRepository, OrderRepository, ProductRepository, UserRepository
-from service import DistributionCenterService, OrderService, ProductService, UserService
+from repository.DistributionCenterRepository import DistributionCenterRepository
+from repository.EventRepository import EventRepository
+from repository.InventoryItemRepository import InventoryItemRepository
+from repository.OrderItemRepository import OrderItemRepository
+from repository.OrderRepository import OrderRepository
+from repository.ProductRepository import ProductRepository
+from repository.UserRepository import UserRepository
+from service.DistributionCenterService import DistributionCenterService
+from service.OrderService import OrderService
+from service.ProductService import ProductService
+from service.UserService import UserService
 
 connection = psycopg2.connect(
     host="localhost",
@@ -14,27 +23,27 @@ connection = psycopg2.connect(
 
 # CREATE REPOSITORIES
 repositories = {
-    "distributionCenter": DistributionCenterRepository.DistributionCenterRepository(connection),
-    "event": EventRepository.EventRepository(connection),
-    "inventoryItem": InventoryItemRepository.InventoryItemRepository(connection),
-    "orderItem": OrderItemRepository.OrderItemRepository(connection),
-    "order": OrderRepository.OrderRepository(connection),
-    "product": ProductRepository.ProductRepository(connection),
-    "user": UserRepository.UserRepository(connection),
+    "distributionCenter": DistributionCenterRepository(connection),
+    "event": EventRepository(connection),
+    "inventoryItem": InventoryItemRepository(connection),
+    "orderItem": OrderItemRepository(connection),
+    "order": OrderRepository(connection),
+    "product": ProductRepository(connection),
+    "user": UserRepository(connection),
 }
 
 # CREATE SERVICES
 services = {
-    "distributionCenter": DistributionCenterService.DistributionCenterService(repositories["distributionCenter"]),
-    "order": OrderService.OrderService(repositories["order"], repositories["orderItem"]),
-    "product": ProductService.ProductService(repositories["product"], repositories["inventoryItem"]),
-    "user": UserService.UserService(repositories["user"], repositories["event"]),
+    "distributionCenter": DistributionCenterService(repositories),
+    "order": OrderService(repositories),
+    "product": ProductService(repositories),
+    "user": UserService(repositories),
 }
 
 # REFER BETWEEN SERVICES
-services["order"].userService = services["user"]
-services["user"].orderService = services["order"]
-services["product"].distributionCenterService = services["distributionCenter"]
+services["order"].setUserService(services["user"])
+services["user"].setOrderService(services["order"])
+services["product"].setDistributionCenterService(services["distributionCenter"])
 
 app = Flask(__name__)
 app.register_blueprint(AdminBlueprint("admin", __name__, services), url_prefix="/admin")

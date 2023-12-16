@@ -1,3 +1,4 @@
+import typing
 from repository.OrderRepository import OrderRepository
 from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
@@ -6,13 +7,18 @@ from dto.Product import Product
 from dto.DistributionCenter import DistributionCenter
 from service.Common import getPaginationObject, handleLimitAndOffset
 
+if typing.TYPE_CHECKING:
+    from service.UserService import UserService
+
 
 class OrderService:
-    def __init__(self, orderRepository: OrderRepository,
-                 orderItemRepository: OrderItemRepository) -> None:
-        self.orderRepository = orderRepository
-        self.orderItemRepository = orderItemRepository
-        self.userService = None
+    def __init__(self, repositories: dict) -> None:
+        self._orderRepository: OrderRepository = repositories["order"]
+        self._orderItemRepository: OrderItemRepository = repositories["orderItem"]
+        self._userService: UserService = None
+
+    def setUserService(self, userService: UserService):
+        self._userService = userService
 
     # PAGE METHODS
     def ordersPage(self, querySettings: dict) -> dict:
@@ -30,28 +36,28 @@ class OrderService:
         result["order"] = self.findById(id)
         result["orderItems"] = self.getItemDetailsByOrderId(id)
         user_id = result["order"].user_id
-        result["user"] = self.userService.findById(user_id)
+        result["user"] = self._userService.findById(user_id)
         return result
 
     # SERVICE METHODS
     def getAllAndCount(self, settings: dict) -> ([Order], int):
         settings = handleLimitAndOffset(settings)
-        data = self.orderRepository.getAllAndCount(**settings)
+        data = self._orderRepository.getAllAndCount(**settings)
         orders = [Order(o) for o in data]
         count = data[0][-1] if len(data) > 1 else 0
         return orders, count
 
     def findById(self, id: int) -> Order:
-        return Order(self.orderRepository.findById(id))
+        return Order(self._orderRepository.findById(id))
 
     def getDistinctStatus(self) -> [str]:
-        return [s[0] for s in self.orderRepository.getDistinctStatus()]
+        return [s[0] for s in self._orderRepository.getDistinctStatus()]
 
     def getDistinctGender(self) -> [str]:
-        return [g[0] for g in self.orderRepository.getDistinctGender()]
+        return [g[0] for g in self._orderRepository.getDistinctGender()]
 
     def getItemDetailsByOrderId(self, orderId: int) -> [OrderItem]:
-        data = self.orderItemRepository.getItemDetailsByOrderId(orderId)
+        data = self._orderItemRepository.getItemDetailsByOrderId(orderId)
         orderItems = [OrderItem(d[:11]) for d in data]
         for index, oi in enumerate(orderItems):
             oi.product = Product(data[index][11:20])
@@ -83,4 +89,4 @@ class OrderService:
 
         querySettings["update_timestamp"] = "" if querySettings["update_timestamp"] else "--"
 
-        self.orderRepository.setOrderStatus(querySettings)
+        self._orderRepository.setOrderStatus(querySettings)
