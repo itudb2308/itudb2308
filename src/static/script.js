@@ -26,3 +26,18 @@ function paginationOnClick(id) {
 
     window.location.replace(path + "?" + urlParams.toString());
 }
+
+function orderChangeStatus(id, status) {
+    const formdata = new FormData();
+    formdata.append("order_status", status);
+
+    const requestOptions = {
+        method: 'PUT',
+        body: formdata,
+        redirect: 'follow'
+    };
+
+    fetch(id, requestOptions)
+        .catch(error => console.log('error', error));
+    window.location.replace(id)
+}

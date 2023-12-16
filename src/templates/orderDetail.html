@@ -5,17 +5,22 @@
 
 {% block body %}
     {% if order %}
-        <h1>Order #{{ order.id }}</h1>
-        <div>
+        <h1><strong>Order #{{ order.id }}</strong></h1>
+        <h2>
             <strong>Customer : </strong>
             <a href = "{{ url_for('admin.users.userDetailPage', id = user.id) }}">
                 {{ user.first_name + " " + user.last_name }}
             </a>
-        </div>
-        <div><strong>Number of Items: </strong>{{ order.num_of_items }}</div>
-        <div><strong>Status: </strong>{{ order.statusText }}</div>
+        </h2>
+        <hr>
+        <h3><strong>Status: </strong>{{ order.statusText }}</h3>
+        {% for nextStatus in order.adminNextStatus %}
+            <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" type="submit" onclick="orderChangeStatus('{{ order.id }}', '{{ nextStatus }}')">
+                Set Status {{ nextStatus }}
+            </button>
+        {% endfor %}
         {% if orderItems %}
-            <br>
+            <hr>
             <h2>Ordered Products</h2>
             <table class="table table-striped">
                 <thead>
@@ -41,7 +46,7 @@
                             </a>
                         </td>
                         <td>
-                            {{ orderItem.sale_price }}
+                            {{ '%.2f' | format(orderItem.sale_price) }}
                         </td>
                         <td>
                             <a href="{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = orderItem.distributionCenter.id) }}">

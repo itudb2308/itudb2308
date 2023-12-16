@@ -57,3 +57,30 @@ class OrderService:
             oi.product = Product(data[index][11:20])
             oi.distributionCenter = DistributionCenter(data[index][20:])
         return orderItems
+
+    def setOrderStatus(self, id: int, orderStatus: str):
+        distinctStatus = self.getDistinctStatus()
+        if orderStatus not in distinctStatus:
+            print("Invalid Order Status")
+            raise Exception("Invalid Order Status")
+
+        querySettings = {
+            "order_id": id,
+            "order_status": orderStatus,
+            "update_timestamp": False,
+            "timestamp_column_name": "",
+        }
+
+        if orderStatus == "Shipped":
+            querySettings["update_timestamp"] = True
+            querySettings["timestamp_column_name"] = "shipped_at"
+        elif orderStatus == "Complete":
+            querySettings["update_timestamp"] = True
+            querySettings["timestamp_column_name"] = "delivered_at"
+        elif orderStatus == "Returned":
+            querySettings["update_timestamp"] = True
+            querySettings["timestamp_column_name"] = "delivered_at"
+
+        querySettings["update_timestamp"] = "" if querySettings["update_timestamp"] else "--"
+
+        self.orderRepository.setOrderStatus(querySettings)

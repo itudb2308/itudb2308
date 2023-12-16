@@ -13,6 +13,7 @@ class Order:
             self.customer_name = data[9]
 
         self.statusText = self._setStatusText()
+        self.adminNextStatus = self._getNextStatus()
 
     def _setStatusText(self) -> str:
         def formatDate(date) -> str:
@@ -28,3 +29,11 @@ class Order:
                 return f"Created at {formatDate(self.created_at)}"
             else:
                 return "Canceled"
+
+    def _getNextStatus(self) -> [str]:
+        if self.status == "Processing":
+            return ["Cancelled", "Shipped"]
+        elif self.status == "Shipped":
+            return ["Complete"]
+        else:
+            return []
