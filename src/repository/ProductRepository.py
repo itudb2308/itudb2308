@@ -1,5 +1,5 @@
 from repository.BaseRepository import BaseRepository
-
+import hashlib # for generating sku
 
 class ProductRepository(BaseRepository):
 
@@ -11,6 +11,36 @@ class ProductRepository(BaseRepository):
             "limit": 20,
             "offset": 0
         }
+
+    def abbreviate(self,text):
+        return text[:3].upper()
+
+    def encode_number(self,number):
+        return format(int(number), 'X')  
+
+    def generateSku(self, product: dict):
+        
+        category = product['category']
+        brand = product['brand']
+        department = product['department']
+
+
+        category_abbr = self.abbreviate(category)
+        brand_abbr = self.abbreviate(brand)
+        department_abbr = self.abbreviate(department)
+
+        # Encode numeric fields
+        cost_encoded = self.encode_number(product['cost'])
+        retail_price_encoded = self.encode_number(product['retail_price'])
+
+        # Combine fields
+        combined = f"{category_abbr}{brand_abbr}{department_abbr}{cost_encoded}{retail_price_encoded}{product['name']}"
+
+        # Hash the combined string and take the first 32 characters
+        sku_hash = hashlib.sha256(combined.encode()).hexdigest()[:32]
+
+        return sku_hash.upper()
+
 
     def findById(self, id: int):
         return self._findById(id, self._constants.SQL_FILES.PRODUCTS_FIND_BY_ID)
@@ -110,6 +140,10 @@ class ProductRepository(BaseRepository):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_ADD_PRODUCT
         query = self._getSqlQueryFromFile(queryFileName)
         self.replaceDoubleApostrophes(product)
+
+        # generate sku for the product from products atrributes
+        product['sku'] = self.generateSku(product)
+        
         query = query.format(**product)
         try:
             self.cursor.execute(query, product)
