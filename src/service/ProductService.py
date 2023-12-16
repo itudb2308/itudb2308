@@ -111,7 +111,10 @@ class ProductService:
 
     def getUserProductDetail(self, id: int) -> UserProduct:
         # return the product information with given id
-        return UserProduct(self.getUserProductDetail(id))
+        data = self.inventoryItemRepository.getInventoryItemsByProductId(id)
+        if data is None:
+            return None
+        return UserProduct(data)
 
     # SERVICE METHODS
 

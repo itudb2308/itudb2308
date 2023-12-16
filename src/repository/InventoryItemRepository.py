@@ -52,4 +52,4 @@ class InventoryItemRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=product_id)
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        return self.cursor.fetchone()
