@@ -1,7 +1,9 @@
+from dto.Transaction import Transaction
 from repository.DistributionCenterRepository import DistributionCenterRepository
 from dto.DistributionCenter import DistributionCenter
 
 from forms.DistributionCenterForm import DistributionCenterForm, UpdateDistributionCenterForm
+from service.Common import transactional
 
 
 class DistributionCenterService:
@@ -9,17 +11,23 @@ class DistributionCenterService:
         self._distributionCenterRepository: DistributionCenterRepository = repositories["distributionCenter"]
 
     # PAGE METHODS
-    def distributionCentersPage(self, querySettings: dict) -> dict:
+    @transactional
+    def distributionCentersPage(self, querySettings: dict, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        result["distributionCenters"] = self.getAll(querySettings)
+        result["distributionCenters"] = self.getAll(transaction, querySettings)
         return result
 
-    def distributionCenterDetailPage(self, id: int) -> dict:
+    @transactional
+    def distributionCenterDetailPage(self, id: int, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        result["distributionCenter"] = self.findById(id)
+        result["distributionCenter"] = self.findById(transaction, id)
         return result
 
-    def addDistributionCenterPage(self, method: str, form: dict) -> dict:
+    @transactional
+    def addDistributionCenterPage(self, method: str, form: dict, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
 
         if method == "GET":
@@ -32,7 +40,7 @@ class DistributionCenterService:
                 distributionCenter = form.data
                 # add product to database
                 result["submitted_and_valid"] = True
-                result["id"] = self._distributionCenterRepository.addDistributionCenter(distributionCenter)
+                result["id"] = self._distributionCenterRepository.addDistributionCenter(transaction, distributionCenter)
                 result["flash"].append(("Distribution Center added successfully", "success"))
 
             else:
@@ -45,10 +53,12 @@ class DistributionCenterService:
 
         return result
 
-    def updateDistributionCenter(self, id: int, method: str, form) -> dict:
+    @transactional
+    def updateDistributionCenterPage(self, id: int, method: str, form, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None, "id": id}
         if method == "GET":
-            distributionCenter = self.findById(id)
+            distributionCenter = self.findById(transaction, id)
             formData = {"id": distributionCenter.id, "name": distributionCenter.name, "latitude": distributionCenter.latitude, "longitude": distributionCenter.longitude}
 
             form = UpdateDistributionCenterForm(formData)
@@ -63,7 +73,7 @@ class DistributionCenterService:
                 distributionCenter["id"] = id
                 # add product to database
                 result["submitted_and_valid"] = True
-                result["id"] = self._distributionCenterRepository.updateDistributionCenter(distributionCenter)
+                result["id"] = self._distributionCenterRepository.updateDistributionCenter(transaction, distributionCenter)
                 result["flash"].append(("Distribution Center updated successfully", "success"))
             else:
                 result["submitted_and_valid"] = False
@@ -76,13 +86,18 @@ class DistributionCenterService:
         return result
 
     # may be success or failure message depending on the result of the delete operation can be returned
-    def deleteDistributionCenter(self, id: int):
-        return self._distributionCenterRepository.deleteDistributionCenter(id)
+    @transactional
+    def deleteDistributionCenterPage(self, id: int, **kwargs):
+        transaction = kwargs["transaction"]
+        return self._distributionCenterRepository.deleteDistributionCenter(transaction, id)
 
     # SERVICE METHODS
 
-    def findById(self, id: int) -> DistributionCenter:
-        return DistributionCenter(self._distributionCenterRepository.findById(id))
+    def findById(self, transaction: Transaction, id: int) -> DistributionCenter:
+        return DistributionCenter(self._distributionCenterRepository.findById(transaction, id))
 
-    def getAll(self, settings: dict) -> [DistributionCenter]:
-        return [DistributionCenter(dc) for dc in self._distributionCenterRepository.getAll(**settings)]
+    def getAll(self, transaction: Transaction, settings: dict) -> [DistributionCenter]:
+        return [DistributionCenter(dc) for dc in self._distributionCenterRepository.getAll(transaction, **settings)]
+
+    def createNewTransaction(self):
+        return self._distributionCenterRepository.createNewTransaction()

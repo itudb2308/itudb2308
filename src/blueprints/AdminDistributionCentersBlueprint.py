@@ -3,7 +3,7 @@ from service.DistributionCenterService import DistributionCenterService
 from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 
-def AdminDistributionCentersBlueprint(name: str, importName: str, service):
+def AdminDistributionCentersBlueprint(name: str, importName: str, service: DistributionCenterService):
     bp = Blueprint(name, importName)
 
     @bp.before_request
@@ -44,7 +44,7 @@ def AdminDistributionCentersBlueprint(name: str, importName: str, service):
         method = request.method
         form = request.form
 
-        result = service.updateDistributionCenter(id, method, form)
+        result = service.updateDistributionCenterPage(id, method, form)
 
         if result["submitted_and_valid"]:
             showFlashMessages(result["flash"])
@@ -55,7 +55,7 @@ def AdminDistributionCentersBlueprint(name: str, importName: str, service):
 
     @bp.route('/delete/<int:id>', methods=["GET", "POST"])
     def deleteDistributionCenter(id):
-        service.deleteDistributionCenter(id)
+        service.deleteDistributionCenterPage(id)
         flash(f"Distribution Center with id {id} deleted successfully", "success")
         return redirect(url_for('admin.distributionCenters.distributionCentersPage'))
 

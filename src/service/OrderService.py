@@ -1,11 +1,13 @@
 import typing
+
+from dto.Transaction import Transaction
 from repository.OrderRepository import OrderRepository
 from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
 from dto.OrderItem import OrderItem
 from dto.Product import Product
 from dto.DistributionCenter import DistributionCenter
-from service.Common import getPaginationObject, handleLimitAndOffset
+from service.Common import getPaginationObject, handleLimitAndOffset, transactional
 
 if typing.TYPE_CHECKING:
     from service.UserService import UserService
@@ -17,55 +19,59 @@ class OrderService:
         self._orderItemRepository: OrderItemRepository = repositories["orderItem"]
         self._userService: UserService = None
 
-    def setUserService(self, userService: UserService):
+    def setUserService(self, userService):
         self._userService = userService
 
     # PAGE METHODS
-    def ordersPage(self, querySettings: dict) -> dict:
+    @transactional
+    def ordersPage(self, querySettings: dict, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
         result = dict()
-        orders, count = self.getAllAndCount(querySettings)
+        orders, count = self.getAllAndCount(transaction, querySettings)
         result["orders"] = orders
         result["pagination"] = getPaginationObject(count, querySettings)
 
-        result["statusItems"] = self.getDistinctStatus()
-        result["genderItems"] = self.getDistinctGender()
+        result["statusItems"] = self.getDistinctStatus(transaction)
+        result["genderItems"] = self.getDistinctGender(transaction)
         return result
 
-    def orderDetailPage(self, id: int):
+    @transactional
+    def orderDetailPage(self, id: int, **kwargs):
+        transaction = kwargs["transaction"]
         result = dict()
-        result["order"] = self.findById(id)
-        result["orderItems"] = self.getItemDetailsByOrderId(id)
+        result["order"] = self.findById(transaction, id)
+        result["orderItems"] = self.getItemDetailsByOrderId(transaction, id)
         user_id = result["order"].user_id
-        result["user"] = self._userService.findById(user_id)
+        result["user"] = self._userService.findById(transaction, user_id)
         return result
 
     # SERVICE METHODS
-    def getAllAndCount(self, settings: dict) -> ([Order], int):
+    def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):
         settings = handleLimitAndOffset(settings)
-        data = self._orderRepository.getAllAndCount(**settings)
+        data = self._orderRepository.getAllAndCount(transaction, **settings)
         orders = [Order(o) for o in data]
         count = data[0][-1] if len(data) > 1 else 0
         return orders, count
 
-    def findById(self, id: int) -> Order:
-        return Order(self._orderRepository.findById(id))
+    def findById(self, transaction: Transaction, id: int) -> Order:
+        return Order(self._orderRepository.findById(transaction, id))
 
-    def getDistinctStatus(self) -> [str]:
-        return [s[0] for s in self._orderRepository.getDistinctStatus()]
+    def getDistinctStatus(self, transaction: Transaction) -> [str]:
+        return [s[0] for s in self._orderRepository.getDistinctStatus(transaction)]
 
-    def getDistinctGender(self) -> [str]:
-        return [g[0] for g in self._orderRepository.getDistinctGender()]
+    def getDistinctGender(self, transaction: Transaction) -> [str]:
+        return [g[0] for g in self._orderRepository.getDistinctGender(transaction)]
 
-    def getItemDetailsByOrderId(self, orderId: int) -> [OrderItem]:
-        data = self._orderItemRepository.getItemDetailsByOrderId(orderId)
+    def getItemDetailsByOrderId(self, transaction: Transaction, orderId: int) -> [OrderItem]:
+        data = self._orderItemRepository.getItemDetailsByOrderId(transaction, orderId)
         orderItems = [OrderItem(d[:11]) for d in data]
         for index, oi in enumerate(orderItems):
             oi.product = Product(data[index][11:20])
             oi.distributionCenter = DistributionCenter(data[index][20:])
         return orderItems
 
-    def setOrderStatus(self, id: int, orderStatus: str):
-        distinctStatus = self.getDistinctStatus()
+    def setOrderStatus(self, transaction: Transaction, id: int, orderStatus: str):
+        distinctStatus = self.getDistinctStatus(transaction)
         if orderStatus not in distinctStatus:
             print("Invalid Order Status")
             raise Exception("Invalid Order Status")
@@ -89,4 +95,7 @@ class OrderService:
 
         querySettings["update_timestamp"] = "" if querySettings["update_timestamp"] else "--"
 
-        self._orderRepository.setOrderStatus(querySettings)
+        self._orderRepository.setOrderStatus(transaction, querySettings)
+
+    def createNewTransaction(self):
+        return self._orderRepository.createNewTransaction()

@@ -1,5 +1,7 @@
 from math import ceil
 
+from dto.Transaction import Transaction
+
 
 def getPaginationObject(count: int, settings: dict) -> dict:
     result = {
@@ -19,3 +21,23 @@ def handleLimitAndOffset(settings: dict) -> dict:
         limit = int(settings["limit"])
         settings["offset"] = (p - 1) * limit
     return settings
+
+
+def transactional(func):
+    def wrapper(*args, **kwargs):
+        if "transaction" not in kwargs.keys():
+            kwargs["transaction"] = args[0].createNewTransaction()
+
+        result = None
+        try:
+            result = func(*args, **kwargs)
+        except Exception as e:
+            print(e.args[0])
+            kwargs["transaction"].rollback()
+            raise e
+        finally:
+            kwargs["transaction"].commit()
+
+        return result
+
+    return wrapper

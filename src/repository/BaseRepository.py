@@ -1,4 +1,6 @@
 from os.path import join as path_join
+
+from dto.Transaction import Transaction
 from repository.RepositoryConstants import RepositoryConstants
 
 
@@ -6,8 +8,7 @@ class BaseRepository:
     _constants = RepositoryConstants
 
     def __init__(self, connection):
-        self.connection = connection
-        self.cursor = self.connection.cursor()
+        self._connection = connection
 
     def handleWhereStatement(self, queryArguments):
         if len(queryArguments["where"]) == 0:
@@ -22,20 +23,24 @@ class BaseRepository:
         return query
 
     # Generic Find By Id Method
-    def _findById(self, id: int, queryFileName):
+    def _findById(self, transaction: Transaction, id: int, queryFileName):
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(id=id)
-        self.cursor.execute(query)
-        return self.cursor.fetchone()
+
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()
 
     # Generic Find By Ids Method
-    def _findByIds(self, ids: [int], queryFileName):
+    def _findByIds(self, transaction: Transaction, ids: [int], queryFileName):
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(ids=",".join(map(str, ids)))
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()
 
     def replaceDoubleApostrophes(self, arguments: dict):
         for key, value in arguments.items():
             if isinstance(value, str):
                 arguments[key] = value.replace("'", "''")
+
+    def createNewTransaction(self) -> Transaction:
+        return Transaction(self._connection)

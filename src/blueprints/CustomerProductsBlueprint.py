@@ -17,7 +17,6 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
     # only GET method for now
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
-        print("productDetailPage")
         product = service.getUserProductDetail(id)
         if product is None:
             return render_template('404.html')
