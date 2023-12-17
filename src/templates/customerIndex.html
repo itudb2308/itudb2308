@@ -5,7 +5,137 @@
 {% block body %}
 
 <div>
-
+    <div class="row">
+        <div class="col-md-4">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-info">
+                        <ul class="mb-0">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('customer.products.productPage') }}" method="GET" class="form-container">
+                <div class="form-group">
+                    <label for="category">Product Category : </label> 
+                    <select id="category" class="form-control" name="category" onchange="filterOnChange(this.id)">
+                        <option value="" {% if not querySettings["category"] %}selected{% endif %}> Not Selected </option>
+                        {% for category in categories %}
+                            <option {% if querySettings["category"] == category %}selected{% endif %}
+                                value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input id="name" type="text" class="form-control" name="name" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["name"] %}{{ querySettings["name"] }}{% endif %}">
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="minRetailPrice">Minimum Price :</label>
+                        <input id="minRetailPrice" type="number" class="form-control" name="minRetailPrice" onchange="filterOnChange(this.id)"
+                            value="{% if querySettings["minRetailPrice"] %}{{ querySettings["minRetailPrice"] }}{% endif %}">
+                    </div>
+    
+                    <div class="form-group col">
+                        <label for="maxRetailPrice">Maximum Price :</label>
+                        <input id="maxRetailPrice" type="number" class="form-control" name="maxRetailPrice" onchange="filterOnChange(this.id)"
+                            value="{% if querySettings["maxRetailPrice"] %}{{ querySettings["maxRetailPrice"] }}{% endif %}">
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="limit">Products Per Page: </label>
+                        <input id="limit" type="number" class="form-control" name="limit" onchange="filterOnChange(this.id)"
+                            value="{% if querySettings["limit"] %}{{ querySettings["limit"] }}{% endif %}">
+                    </div>
+        
+                    <div class="form-group col">
+                        <label for="order_by_columnName">Order By:</label>
+                        <select id="order_by_columnName" class="form-control" name="order_by_columnName" onchange="filterOnChange(this.id)">
+                            <option value="" {% if not querySettings["order_by_columnName"] %}selected{% endif %}
+                                value="" checked> Not Selected </option>
+                                <option {% if querySettings["order_by_columnName"] == "retail_price" %}selected{% endif %}
+                                    value="retail_price"> Price </option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="department">Department :</label> 
+                        <select id = "department" class="form-control" name="department" onchange="filterOnChange(this.id)">
+                            <option {% if not querySettings["department"] %}selected{% endif %}
+                                value=""> Not Selected </option>
+                            <option {% if querySettings["department"] == "Men" %}selected{% endif %}
+                                value="Men"> Men </option>
+                            <option {% if querySettings["department"] == "Women" %}selected{% endif %}
+                                value="Women"> Women </option>
+                        </select>
+                    </div>
+                </div>    
+                <div class="form-group">
+                    <label>Order Direction:</label>
+                    <div>
+                        <label>
+                            <input type="radio" name="order_direction" value="Ascending" onchange="filterOnChange(this.id)"
+                                {% if not querySettings["order_direction"] or
+                                    querySettings["order_direction"] == "Ascending" %}
+                                    checked {% endif %}>
+                            Ascending
+                        </label>
+                        <label>
+                            <input type="radio" name="order_direction" value="Descending" onchange="filterOnChange(this.id)"
+                                {% if querySettings["order_direction"] == "Descending" %}
+                                    checked {% endif %}>
+                            Descending
+                        </label>
+                    </div>
+                </div>
+    
+                <button class="btn btn-success" type="submit">Filter</button>
+                <button class="btn btn-primary" type="reset">Reset</button>
+                <br>
+                <br>
+            </form>
+        </div>
+        <div class="col-md-8">
+            {% if products %}
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Category </th>
+                            <th scope="col">Name </th>
+                            <th scope="col">Price </th>
+                        </tr>
+                    </thead>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                {{ product.category }}
+                            </td>
+                                <td>
+                                <a href = {{ url_for('customer.products.productDetailPage', id = product.id) }}>{{ product.name }}</a>
+                            </td>
+                            <td>
+                                {{ '%.2f' | format(product.retail_price) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h1>No products found...</h1>
+            {% endif %}
+        </div>
+    </div>
+    {% include "pagination.html" %}
 </div>
 
 {% endblock %}

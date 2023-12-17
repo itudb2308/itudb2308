@@ -74,11 +74,8 @@ class UserRepository(BaseRepository):
         return user_id
 
     def deleteUserById(self, transaction: Transaction, id: int):
-        queryFileName = self._constants.SQL_FILES.USERS_DELETE_USER_BY_ID
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id=id)
-        transaction.cursor.execute(query)
-        return transaction.cursor.fetchone()[0]
+        queryFileName = self._constants.SQL_FILES_USERS_DELETE_USER_BY_ID
+        return self._deleteById(transaction, id, queryFileName)
 
     def getDistinctCountry(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.GET_DISTINCT_COUNTRY

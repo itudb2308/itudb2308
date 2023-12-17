@@ -13,7 +13,11 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
 
     @bp.route('/', methods=['GET'])
     def homePage():
-        return render_template('customerIndex.html', session=session)
+        querySettings = request.args.to_dict()
+        products = services["product"].productsPage(querySettings)
+        if products is None:
+            return render_template('404.html')
+        return render_template('customerIndex.html', querySettings=querySettings, **products)
 
     @bp.route('/login', methods=["GET", "POST"])
     def loginPage():
@@ -30,7 +34,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
                 if email != password:
                     raise Exception("Email or Password is wrong")
 
-                user = services["user"].findByEmail(email)
+                user = services["user"].customerLoginPage(email)
                 sessionHandleUserLogin(user)
                 return redirect(url_for('customer.homePage'))
             except Exception as e:

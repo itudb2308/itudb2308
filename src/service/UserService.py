@@ -57,6 +57,11 @@ class UserService:
         return result
 
     @transactional
+    def customerLoginPage(self, id: int, **kwargs) -> User:
+        transaction = kwargs["transaction"]
+        return self.findByEmail(transaction, id)
+
+    @transactional
     def signUpPage(self, method, form, **kwargs) -> int:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}

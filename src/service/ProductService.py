@@ -111,6 +111,15 @@ class ProductService:
         result["flash"] = [("Product deleted successfully", "success")]
         return result
 
+    @transactional
+    def getUserProductDetailPage(self, id: int, **kwargs) -> UserProduct | None:
+        # return the product information with given id
+        transaction = kwargs["transaction"]
+        data = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, id)
+        if data is None:
+            return None
+        return UserProduct(data)
+
     # SERVICE METHODS
 
     def findById(self, transaction: Transaction, id: int) -> Product:
@@ -153,13 +162,6 @@ class ProductService:
             self._inventoryItemRepository.addInventoryItem(transaction, product)
 
         return
-
-    def getUserProductDetail(self, transaction: Transaction, id: int) -> UserProduct | None:
-        # return the product information with given id
-        data = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, id)
-        if data is None:
-            return None
-        return UserProduct(data)
 
     # Given dictionary of product ids and quantities, makes the sold_at field of the inventory item current time
     def sellProducts(self, transaction: Transaction, products: dict):

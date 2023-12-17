@@ -86,10 +86,4 @@ class DistributionCenterRepository(BaseRepository):
 
     def deleteDistributionCenter(self, transaction: Transaction, id: int):
         queryFileName = self._constants.SQL_FILES.DISTRIBUTION_CENTERS_DELETE_DISTRIBUTION_CENTER
-        query = self._getSqlQueryFromFile(queryFileName)
-        queryArguments = {
-            "id": id
-        }
-        query = query.format(**queryArguments)
-        transaction.cursor.execute(query)
-        return transaction.cursor.fetchone()[0]
+        return self._deleteById(transaction, id, queryFileName)
