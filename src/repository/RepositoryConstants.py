@@ -25,6 +25,8 @@ class RepositoryConstants:
         EVENTS_FIND_BY_ID = "events_find_by_id.sql"
         EVENTS_FIND_BY_IDS = "events_find_by_ids.sql"
         EVENTS_GET_ALL = "events_get_all.sql"
+        EVENTS_ADD_EVENT = "events_add_event.sql"
+        EVENTS_DELETE_EVENT_BY_ID = "events_delete_event_by_id.sql"
         DISTRIBUTION_CENTERS_FIND_BY_ID = "distribution_centers_find_by_id.sql"
         DISTRIBUTION_CENTERS_FIND_BY_IDS = "distribution_centers_find_by_ids.sql"
         DISTRIBUTION_CENTERS_GET_ALL = "distribution_centers_get_all.sql"

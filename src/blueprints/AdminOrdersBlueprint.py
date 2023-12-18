@@ -6,14 +6,6 @@ from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 def AdminOrdersBlueprint(name: str, importName: str, service: OrderService):
     bp = Blueprint(name, importName)
 
-    @bp.before_request
-    def before_request():
-        try:
-            adminAuth(session)
-        except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
-                return redirect(url_for('admin.loginPage'))
-
     @bp.route('/', methods=["GET"])
     def ordersPage():
         querySettings = request.args.to_dict()

@@ -10,6 +10,7 @@ from repository.EventRepository import EventRepository
 from forms.AddUserForm import AddUserForm
 from forms.UpdateUserForm import UpdateUserForm
 from service.Common import getPaginationObject, handleLimitAndOffset, transactional
+from requests import get
 
 import string
 import random
@@ -130,6 +131,17 @@ class UserService:
         result["flash"] = [("User deleted successfully", "success")]
         return result
 
+    @transactional
+    def addEvent(self, session, **kwargs):
+        transaction = kwargs["transaction"]
+        return self._addEvent(transaction, session)
+    
+    @transactional
+    def deleteEventPage(self, id: int, **kwargs):
+        transaction = kwargs["transaction"]
+        self.deleteEvent(transaction, id)
+
+
     # SERVICE METHODS
     def findById(self, transaction: Transaction, id: int) -> User:
         return User(self._userRepository.findById(transaction, id))
@@ -167,6 +179,13 @@ class UserService:
     def addUser(self, transaction: Transaction, user: dict) -> int:
         return self._userRepository.addUser(transaction, user)
 
+    def _addEvent(self, transaction, session, **kwargs):
+        event = self.generatorForEvents(transaction, session)
+        self._eventRepository.addEvent(transaction, event)
+
+    def deleteEvent(self, transaction: Transaction, id: int):
+        return self._eventRepository.deleteEventById(transaction, id)
+
     def sessionIdGenerator(self, chars=string.ascii_lowercase + string.digits) -> str:
         # 8 - 4 - 4 - 1
         first = ''.join(random.choice(chars) for _ in range(8))
@@ -179,7 +198,7 @@ class UserService:
         location = subprocess.run(args=["curl", "ipinfo.io/loc"], universal_newlines=False, stdout=subprocess.PIPE)
         output = location.stdout.decode('utf-8')
         loc = [output[0:7], output[8:15]]
-        sources = ["Search", "Display", "Facebook", "Email"]
+        sources = ["Search", "Display", "Facebook", "Email","Adwords"]
         latitude = loc[0]
         longitude = loc[1]
         traffic_source = random.choice(sources)
@@ -189,6 +208,34 @@ class UserService:
                    "traffic_source": traffic_source,
                    "created_at": str(created_at)}
         return missing
+
+    def generatorForEvents(self, transaction, session) -> Event:
+        created_at = str(datetime.datetime.now())
+        ip = get('https://api.ipify.org').text.strip()
+        sources = ["Search", "Display", "Facebook", "Email","Adwords"]
+        traffic_source = random.choice(sources)
+        browsers = ["IE","Chrome","Safari","Mozilla"]
+        browser = random.choice(browsers)
+        user = self.findById(transaction, session["user_id"])
+        tempUri = session["uri"].split("/")
+        event_type = tempUri[1]
+        print(event_type)
+
+        event = {
+            "user_id": session["user_id"],
+            "sequence_number": session["sequence_number"],
+            "session_id": self.sessionIdGenerator(),
+            "created_at": created_at,
+            "ip_address": ip,
+            "city": user.city,
+            "country": user.country,
+            "postal_code": user.postal_code,
+            "traffic_source": traffic_source,
+            "browser": browser,
+            "uri": session["uri"],
+            "event_type": event_type
+        }
+        return event
 
     def createNewTransaction(self):
         return self._userRepository.createNewTransaction()

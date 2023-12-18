@@ -6,14 +6,6 @@ from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 def CustomerProductsBlueprint(name: str, importName: str, service: ProductService):
     bp = Blueprint(name, importName)
 
-    @bp.before_request
-    def before_request():
-        try:
-            customerAuth(session)
-        except Exception as e:
-            if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
-                return redirect(url_for('customer.loginPage'))
-
     # only GET method for now
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):

@@ -6,14 +6,6 @@ from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 def AdminUsersBlueprint(name: str, importName: str, service: UserService):
     bp = Blueprint(name, importName)
 
-    @bp.before_request
-    def before_request():
-        try:
-            adminAuth(session)
-        except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
-                return redirect(url_for('admin.loginPage'))
-
     @bp.route('/', methods=["GET"])
     def usersPage():
         querySettings = request.args.to_dict()
@@ -32,9 +24,14 @@ def AdminUsersBlueprint(name: str, importName: str, service: UserService):
         return render_template('userDetail.html', **result)
 
     @bp.route('/events/<int:id>', methods=["GET"])
-    def eventDetailPage(id: str):
+    def eventDetailPage(id: int):
         result = service.eventDetailPage(int(id))
         return render_template('eventDetail.html', **result)
+
+    @bp.route('/delete_event/<int:id>', methods=["GET"])
+    def deleteEventPage(id: int):
+        service.deleteEventPage(id)
+        return redirect(url_for('admin.users.usersPage', id = id))
 
     def showFlashMessages(flashMessages):
         if flashMessages != None:

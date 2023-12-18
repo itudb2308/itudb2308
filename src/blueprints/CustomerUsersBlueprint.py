@@ -6,21 +6,10 @@ from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
     bp = Blueprint(name, importName)
 
-    @bp.before_request
-    def before_request():
-        try:
-            customerAuth(session)
-        except Exception as e:
-            if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
-                if request.url == 'http://localhost:5000/signup':
-                    pass
-                else:
-                    return redirect(url_for('customer.loginPage'))
-
     @bp.route('/profile', methods=["GET"])
     def userPage():
         if request.method == "GET":
-            id = session["user"]
+            id = session["user_id"]
             result = service.userDetailPage(id)
             if result["user"] == None:
                 return render_template("404.html")
@@ -30,7 +19,7 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
     def updateUserPage():
         method = request.method
         form = request.form
-        id = session["user"]
+        id = session["user_id"]
         result = service.updateUserPage(method, form, id)
 
         if result["submitted_and_valid"] == True:
@@ -61,10 +50,13 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
                 flash(flashMessage[0], flashMessage[1])
 
     def sessionHandleUserLogin(user):
-        session["user"] = user.id
+        session["user_id"] = user.id
         session["name"] = user.first_name + " " + user.last_name
         session["user_logged_in"] = True
-        session["id"] = service.sessionIdGenerator()
+        session["session_id"] = service.sessionIdGenerator()
+        session["sequence_number"] = 1
         return session
+
+
 
     return bp

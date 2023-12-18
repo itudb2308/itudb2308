@@ -9,14 +9,6 @@ from forms.UpdateProductForm import UpdateProductForm
 def AdminProductsBlueprint(name: str, importName: str, service: ProductService):
     bp = Blueprint(name, importName)
 
-    @bp.before_request
-    def before_request():
-        try:
-            adminAuth(session)
-        except Exception as e:
-            if e.args[0] == ADMIN_NOT_AUTHENTICATED:
-                return redirect(url_for('admin.loginPage'))
-
     @bp.route('/', methods=["GET"])
     def productsPage():
         querySettings = request.args.to_dict()
