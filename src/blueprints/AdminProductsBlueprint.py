@@ -66,7 +66,7 @@ def AdminProductsBlueprint(name: str, importName: str, service: ProductService):
     def addStockToInventory(id):
         quantity = int(request.form["quantity"])
 
-        service.addStockToInventory(id, quantity)
+        service.addStockToInventoryPage(id, quantity)
         flash(f"{quantity} new product added to inventory ")
         return redirect(url_for('admin.products.productDetailPage', id=id))
 

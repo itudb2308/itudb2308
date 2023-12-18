@@ -52,9 +52,9 @@ class ProductService:
 
         if method == "GET":
             result["submitted_and_valid"] = False
-            result["form"] = AddProductForm(self)
+            result["form"] = AddProductForm(self, transaction)
         else:
-            form = AddProductForm(self, form)
+            form = AddProductForm(self, transaction, form)
 
             if form.validate_on_submit():
                 product = form.data
@@ -82,9 +82,9 @@ class ProductService:
         if method == "GET":
             product = self.findById(transaction, id).toDict()
 
-            result["form"] = UpdateProductForm(self, product)
+            result["form"] = UpdateProductForm(self, transaction, product)
         else:
-            form = UpdateProductForm(self, form)
+            form = UpdateProductForm(self, transaction, form)
 
             if form.validate_on_submit():
                 product = form.data
@@ -93,7 +93,7 @@ class ProductService:
                 # update product on database
                 id = self._productRepository.updateProduct(transaction, product)
                 result["submitted_and_valid"] = True
-                result["flash"].append(("Product updated successfully", "success"))
+                result["flash"].append((f"Product with id = {id} updated successfully", "success"))
 
             else:
                 result["flash"].append(("Form data is invalid", "danger"))
@@ -119,6 +119,12 @@ class ProductService:
         if data is None:
             return None
         return UserProduct(data)
+
+    # Function to add stock to a product that is specified with id.
+    @transactional
+    def addStockToInventoryPage(self, id: int, quantity: int, **kwargs):
+        transaction = kwargs["transaction"]
+        self.addStockToInventory(transaction, id, quantity)
 
     # SERVICE METHODS
 
