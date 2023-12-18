@@ -8,6 +8,7 @@ from dto.Event import Event
 from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
 from forms.AddUserForm import AddUserForm
+from forms.UpdateUserForm import UpdateUserForm
 from service.Common import getPaginationObject, handleLimitAndOffset, transactional
 
 import string
@@ -57,9 +58,9 @@ class UserService:
         return result
 
     @transactional
-    def customerLoginPage(self, id: int, **kwargs) -> User:
+    def customerLoginPage(self, mail, **kwargs) -> User:
         transaction = kwargs["transaction"]
-        return self.findByEmail(transaction, id)
+        return self.findByEmail(transaction, mail)
 
     @transactional
     def signUpPage(self, method, form, **kwargs) -> int:
@@ -68,9 +69,9 @@ class UserService:
 
         if method == "GET":
             result["submitted_and_valid"] = False
-            result["form"] = AddUserForm(self)
+            result["form"] = AddUserForm(self, transaction)
         elif method == "POST":
-            form = AddUserForm(self, form)
+            form = AddUserForm(self, transaction, form)
 
             try:
                 if not form.validate_on_submit():
@@ -89,6 +90,32 @@ class UserService:
             except Exception as e:
                 result["submitted_and_valid"] = False
                 result["flash"].append((e.args[0], "danger"))
+                for fieldName, errorMessages in form.errors.items():
+                    for err in errorMessages:
+                        result["flash"].append((f"{fieldName}: {err}", "danger"))
+                result["form"] = form
+        return result
+
+    @transactional
+    def updateUserPage(self, method, form, id, **kwargs) -> int:
+        transaction = kwargs["transaction"]
+        result = {"submitted_and_valid": False, "flash": [], "form": None}
+
+        if method == "GET":
+            user = self.findById(transaction, id).toDict()
+            result["form"] = UpdateUserForm(self, transaction, user)
+        else:
+            form = UpdateUserForm(self, transaction, form)
+
+            if form.validate_on_submit():
+                user = form.data
+                user["id"] = id
+                id = self._userRepository.updateUser(transaction, user)
+                result["submitted_and_valid"] = True
+                result["flash"].append(("User profile updated.", "success"))
+
+            else:
+                result["flash"].append(("Form data is invalid", "danger"))
                 for fieldName, errorMessages in form.errors.items():
                     for err in errorMessages:
                         result["flash"].append((f"{fieldName}: {err}", "danger"))

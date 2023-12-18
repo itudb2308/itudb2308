@@ -8,7 +8,7 @@
         <h1>Order</h1>
         <div>
             <strong>Customer : </strong>
-            <a href = "{{ url_for('customer.users.userPage', id = user.id) }}">
+            <a href = "{{ url_for('customer.users.userPage') }}">
                 {{ user.first_name + " " + user.last_name }}
             </a>
         </div>

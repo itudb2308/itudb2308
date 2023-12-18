@@ -19,3 +19,17 @@ class User:
         self.traffic_source = data[13]
         self.created_at = data[14].strftime("%d %B %Y")
         self.fullAddress = self.street_address + ", " + self.city + ", " + self.state + ", " + self.country + ", " + self.postal_code
+
+    def toDict(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "age": self.age,
+            "gender": self.gender,
+            "state": self.state,
+            "street_address": self.street_address,
+            "postal_code": self.postal_code,
+            "city": self.city,
+            "country": self.country
+        }

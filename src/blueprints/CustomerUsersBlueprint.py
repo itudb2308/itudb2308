@@ -17,15 +17,28 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
                 else:
                     return redirect(url_for('customer.loginPage'))
 
-    @bp.route('/profile/<int:id>', methods=["GET", "POST"])
-    def userPage(id: int):
+    @bp.route('/profile', methods=["GET"])
+    def userPage():
         if request.method == "GET":
+            id = session["user"]
             result = service.userDetailPage(id)
             if result["user"] == None:
                 return render_template("404.html")
             return render_template('customerUserDetail.html', **result)
+
+    @bp.route('/profile/update', methods=["GET", "POST"])
+    def updateUserPage():
+        method = request.method
+        form = request.form
+        id = session["user"]
+        result = service.updateUserPage(method, form, id)
+
+        if result["submitted_and_valid"] == True:
+            showFlashMessages(result["flash"])
+            return redirect(url_for('customer.users.userPage', id=id))
         else:
-            pass
+            showFlashMessages(result["flash"])
+            return render_template('customerUpdate.html', form=result["form"], id=id)
 
     @bp.route('/signup', methods=["GET", "POST"])
     def signUpPage():
@@ -34,7 +47,10 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
         result = service.signUpPage(method, form)
         if result["submitted_and_valid"] == True:
             showFlashMessages(result["flash"])
-            return redirect(url_for('customer.users.userPage', id=result["id"]))
+            email = request.form['email']
+            user = service.customerLoginPage(email)
+            sessionHandleUserLogin(user)
+            return redirect(url_for('customer.homePage'))
         else:
             showFlashMessages(result["flash"])
             return render_template('customerSignUp.html', form=result["form"])
@@ -43,4 +59,12 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
         if flashMessages != None:
             for flashMessage in flashMessages:
                 flash(flashMessage[0], flashMessage[1])
+
+    def sessionHandleUserLogin(user):
+        session["user"] = user.id
+        session["name"] = user.first_name + " " + user.last_name
+        session["user_logged_in"] = True
+        session["id"] = service.sessionIdGenerator()
+        return session
+
     return bp

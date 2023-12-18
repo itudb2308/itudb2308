@@ -4,10 +4,11 @@ from wtforms.validators import DataRequired, NumberRange, ValidationError, Optio
 import subprocess
 import random
 import datetime
+from dto.Transaction import Transaction
 
 
 class UserForm(FlaskForm):
-    def __init__(self, service, data=None):
+    def __init__(self, service, transaction: Transaction, data=None):
         super(UserForm, self).__init__(data=data)
 
     first_name = StringField("First Name", validators=[DataRequired()])
