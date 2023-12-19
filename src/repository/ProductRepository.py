@@ -91,7 +91,15 @@ class ProductRepository(BaseRepository):
         if "retail_price" in kwargs and kwargs["retail_price"] != "":
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"] + f" P.retail_price BETWEEN {kwargs['retail_price']} - {self.floatPrecision} AND {kwargs['retail_price']} + {self.floatPrecision}"
+            queryArguments["where"] = queryArguments["where"] + f" P.retail_price = '{kwargs['retail_price']}'"
+
+        if ("minRetailPrice" in kwargs) or ("maxRetailPrice" in kwargs):
+            if "minRetailPrice" in kwargs.keys() and kwargs["minRetailPrice"] != "":
+                self.handleWhereStatement(queryArguments)
+                queryArguments["where"] = queryArguments["where"] + f" P.retail_price >= {kwargs['minRetailPrice']} "
+            if "maxRetailPrice" in kwargs.keys() and kwargs["maxRetailPrice"] != "":
+                self.handleWhereStatement(queryArguments)
+                queryArguments["where"] = queryArguments["where"] + f" P.retail_price <= {kwargs['maxRetailPrice']} "
 
         if "department" in kwargs and kwargs["department"] != "":
             self.handleWhereStatement(queryArguments)
@@ -162,10 +170,7 @@ class ProductRepository(BaseRepository):
 
     def deleteProductById(self, transaction: Transaction, id: int):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_DELETE_PRODUCT_BY_ID
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id=id)
-        transaction.cursor.execute(query)
-        return transaction.cursor.fetchone()[0]
+        return self._deleteById(transaction, id, queryFileName)
 
     def getBrandNames(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES

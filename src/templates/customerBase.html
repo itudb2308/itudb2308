@@ -17,7 +17,7 @@
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="{{ url_for('customer.homePage')}}">Home</a>
                     {% if session["user_logged_in"] == True %}
-                        <a class="nav-link ml-auto" id="profile" href="{{ url_for('customer.users.userPage', id = session['user']) }}">{{session["name"]}}</a>
+                        <a class="nav-link ml-auto" id="profile" href="{{ url_for('customer.users.userPage') }}">{{session["name"]}}</a>
                         <a class="nav-link ml-auto" id="logout" href="{{ url_for('customer.logoutPage') }}">Logout</a>
                     {% elif session["user_logged_in"] == False%}
                         <a class="nav-link ml-auto" id="login" href="{{ url_for('customer.loginPage') }}">Login</a>

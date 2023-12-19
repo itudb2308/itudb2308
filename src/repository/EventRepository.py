@@ -50,3 +50,14 @@ class EventRepository(BaseRepository):
 
         transaction.cursor.execute(query)
         return transaction.cursor.fetchall()
+
+    def addEvent(self, transaction: Transaction, event: dict):
+        queryFileName = self._constants.SQL_FILES.EVENTS_ADD_EVENT
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.replaceDoubleApostrophes(event)
+        query = query.format(**event)
+        transaction.cursor.execute(query, event)
+
+    def deleteEventById(self, transaction: Transaction, id: int) -> int:
+        queryFileName = self._constants.SQL_FILES.EVENTS_DELETE_EVENT_BY_ID
+        return self._deleteById(transaction, id, queryFileName)

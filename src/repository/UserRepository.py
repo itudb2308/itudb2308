@@ -73,12 +73,18 @@ class UserRepository(BaseRepository):
         user_id = transaction.cursor.fetchone()[0]
         return user_id
 
+    def updateUser(self, transaction: Transaction, user: dict):
+        queryFileName = self._constants.SQL_FILES.USERS_UPDATE_USER_BY_ID
+        query = self._getSqlQueryFromFile(queryFileName)
+        self.replaceDoubleApostrophes(user)
+        query = query.format(**user)
+        transaction.cursor.execute(query, user)
+        user_id = transaction.cursor.fetchone()[0]
+        return user_id
+
     def deleteUserById(self, transaction: Transaction, id: int):
         queryFileName = self._constants.SQL_FILES.USERS_DELETE_USER_BY_ID
-        query = self._getSqlQueryFromFile(queryFileName)
-        query = query.format(id=id)
-        transaction.cursor.execute(query)
-        return transaction.cursor.fetchone()[0]
+        return self._deleteById(transaction, id, queryFileName)
 
     def getDistinctCountry(self, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.GET_DISTINCT_COUNTRY

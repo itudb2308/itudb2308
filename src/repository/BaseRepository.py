@@ -37,6 +37,13 @@ class BaseRepository:
         transaction.cursor.execute(query)
         return transaction.cursor.fetchall()
 
+    # Generic Delete Method
+    def _deleteById(self, transaction: Transaction, id: int, queryFileName):
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(id=id)
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()[0]
+
     def replaceDoubleApostrophes(self, arguments: dict):
         for key, value in arguments.items():
             if isinstance(value, str):

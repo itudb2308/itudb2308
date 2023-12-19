@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, render_template, session, url_fo
 from blueprints.CustomerOrdersBlueprint import CustomerOrdersBlueprint
 from blueprints.CustomerProductsBlueprint import CustomerProductsBlueprint
 from blueprints.CustomerUsersBlueprint import CustomerUsersBlueprint
+from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 
 
 def CustomerBlueprint(name: str, importName: str, services: dict):
@@ -11,9 +12,25 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
     bp.register_blueprint(CustomerProductsBlueprint("products", __name__, services["product"]), url_prefix="/products")
     bp.register_blueprint(CustomerUsersBlueprint("users", __name__, services["user"]), url_prefix="")
 
-    @bp.route('/', methods=['GET'])
+    @bp.before_request
+    def before_request():
+        if request.endpoint != 'customer.loginPage' and request.endpoint != 'customer.users.signUpPage':
+            try:
+                customerAuth(session)
+                session["uri"] = request.path
+                services["user"].addEvent(session)
+                session["sequence_number"] += 1
+            except Exception as e:
+                if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
+                    return redirect(url_for('customer.loginPage'))
+        
+    @bp.route('/home', methods=['GET'])
     def homePage():
-        return render_template('customerIndex.html', session=session)
+        querySettings = request.args.to_dict()
+        products = services["product"].productsPage(querySettings)
+        if products is None:
+            return render_template('404.html')
+        return render_template('customerIndex.html', querySettings=querySettings, **products)
 
     @bp.route('/login', methods=["GET", "POST"])
     def loginPage():
@@ -30,7 +47,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
                 if email != password:
                     raise Exception("Email or Password is wrong")
 
-                user = services["user"].findByEmail(email)
+                user = services["user"].customerLoginPage(email)
                 sessionHandleUserLogin(user)
                 return redirect(url_for('customer.homePage'))
             except Exception as e:
@@ -44,9 +61,11 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             return redirect(url_for('customer.homePage'))
 
     def sessionHandleUserLogin(user):
-        session["user"] = user.id
+        session["user_id"] = user.id
         session["name"] = user.first_name + " " + user.last_name
         session["user_logged_in"] = True
-        session["id"] = services["user"].sessionIdGenerator()
+        session["session_id"] = services["user"].sessionIdGenerator()
+        session["sequence_number"] = 1
         return session
+
     return bp

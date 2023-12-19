@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users
     id             BIGSERIAL PRIMARY KEY,
     first_name     VARCHAR(20),
     last_name      VARCHAR(20),
-    email          VARCHAR(100),
+    email          VARCHAR(100) UNIQUE,
     age            BIGINT,
     gender         CHAR(1),
     state          VARCHAR(20),

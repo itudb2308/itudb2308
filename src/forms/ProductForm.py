@@ -1,20 +1,21 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, IntegerField, FloatField
 from wtforms.validators import DataRequired, NumberRange, ValidationError, Optional, Length, Regexp
+from dto.Transaction import Transaction
 
 
 class ProductForm(FlaskForm):
-    def __init__(self, service, data=None):
+    def __init__(self, service, transaction: Transaction, data=None):
         super(ProductForm, self).__init__(data=data)
 
         # Get choices for form fields from the database
-        distribution_centers_choices = service.getDistributionCenters({"order_by_columnName": "name", "order_by_direction": "asc"})
+        distribution_centers_choices = service.getDistributionCenters(transaction, {"order_by_columnName": "name", "order_by_direction": "asc"})
         distribution_centers_choices = [(dc.id, dc.name) for dc in distribution_centers_choices]
 
-        category_choices = service.getCategories()
+        category_choices = service.getCategories(transaction)
         category_choices = [(c, c) for c in category_choices]
 
-        brand_choices = service.getBrandNames()
+        brand_choices = service.getBrandNames(transaction)
         brand_choices = [(b, b) for b in brand_choices]
 
         # Set choices for form fields
