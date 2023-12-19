@@ -135,14 +135,14 @@ class UserService:
     def addEvent(self, session, **kwargs):
         transaction = kwargs["transaction"]
         return self._addEvent(transaction, session)
-    
+
     @transactional
     def deleteEventPage(self, id: int, **kwargs):
         transaction = kwargs["transaction"]
         self.deleteEvent(transaction, id)
 
-
     # SERVICE METHODS
+
     def findById(self, transaction: Transaction, id: int) -> User:
         return User(self._userRepository.findById(transaction, id))
 
@@ -198,7 +198,7 @@ class UserService:
         location = subprocess.run(args=["curl", "ipinfo.io/loc"], universal_newlines=False, stdout=subprocess.PIPE)
         output = location.stdout.decode('utf-8')
         loc = [output[0:7], output[8:15]]
-        sources = ["Search", "Display", "Facebook", "Email","Adwords"]
+        sources = ["Search", "Display", "Facebook", "Email", "Adwords"]
         latitude = loc[0]
         longitude = loc[1]
         traffic_source = random.choice(sources)
@@ -212,9 +212,9 @@ class UserService:
     def generatorForEvents(self, transaction, session) -> Event:
         created_at = str(datetime.datetime.now())
         ip = get('https://api.ipify.org').text.strip()
-        sources = ["Search", "Display", "Facebook", "Email","Adwords"]
+        sources = ["Search", "Display", "Facebook", "Email", "Adwords"]
         traffic_source = random.choice(sources)
-        browsers = ["IE","Chrome","Safari","Mozilla"]
+        browsers = ["IE", "Chrome", "Safari", "Mozilla"]
         browser = random.choice(browsers)
         user = self.findById(transaction, session["user_id"])
         tempUri = session["uri"].split("/")

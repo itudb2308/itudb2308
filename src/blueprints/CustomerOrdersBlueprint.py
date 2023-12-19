@@ -8,8 +8,8 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
 
     @bp.route("/<int:id>", methods=["GET"])
     def orderDetailPage(id: str):
-        if(not customerAuth(session)):
-            return render_template("403.html") 
+        if (not customerAuth(session)):
+            return render_template("403.html")
 
         result = service.orderDetailPage(id)
         return render_template("customerOrderDetail.html", **result)
