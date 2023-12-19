@@ -23,7 +23,11 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             except Exception as e:
                 if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                     return redirect(url_for('customer.loginPage'))
-        
+
+    @bp.route("/", methods=["GET"])
+    def indexPage():
+        return redirect(url_for('customer.homePage'))
+
     @bp.route('/home', methods=['GET'])
     def homePage():
         querySettings = request.args.to_dict()
@@ -35,7 +39,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
     @bp.route('/login', methods=["GET", "POST"])
     def loginPage():
         if request.method == "GET":
-            if session.get("user_logged_in") == True:
+            if session.get("user_logged_in"):
                 return redirect(url_for('customer.homePage'))
             else:
                 session["user_logged_in"] = False
