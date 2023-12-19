@@ -57,6 +57,4 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
         session["sequence_number"] = 1
         return session
 
-
-
     return bp

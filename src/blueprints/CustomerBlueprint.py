@@ -4,6 +4,8 @@ from blueprints.CustomerProductsBlueprint import CustomerProductsBlueprint
 from blueprints.CustomerUsersBlueprint import CustomerUsersBlueprint
 from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 
+import random
+
 
 def CustomerBlueprint(name: str, importName: str, services: dict):
     bp = Blueprint(name, importName)
@@ -23,7 +25,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             except Exception as e:
                 if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                     return redirect(url_for('customer.loginPage'))
-        
+
     @bp.route('/home', methods=['GET'])
     def homePage():
         querySettings = request.args.to_dict()
@@ -66,6 +68,9 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
         session["user_logged_in"] = True
         session["session_id"] = services["user"].sessionIdGenerator()
         session["sequence_number"] = 1
+        browsers = ["IE", "Chrome", "Safari", "Mozilla"]
+        browser = random.choice(browsers)
+        session["browser"] = browser
         return session
 
     return bp
