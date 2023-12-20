@@ -179,7 +179,7 @@ class ProductRepository(BaseRepository):
         return transaction.cursor.fetchall()
 
     # retrieve all of the brands that has products in the given category and department
-    def getBrandNamesByCategoryDepartment(self, category: str, department: str, transaction: Transaction):
+    def getBrandNamesByCategoryDepartment(self, transaction: Transaction, category: str, department: str):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES_BY_CATEGORY_DEPARTMENT
         query = self._getSqlQueryFromFile(queryFileName)
         queryArguments = {"category": category, "department": department}

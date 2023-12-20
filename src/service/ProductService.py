@@ -182,7 +182,7 @@ class ProductService:
         return [b[0] for b in self._productRepository.getBrandNames(transaction)]
 
     def getBrandNamesByCategoryAndDepartment(self, category: str, department: str, transaction: Transaction) -> [str]:
-        return [b[0] for b in self._productRepository.getBrandNamesByCategoryDepartment(category, department, transaction)]
+        return [b[0] for b in self._productRepository.getBrandNamesByCategoryDepartment(transaction, category, department)]
 
     def deleteProduct(self, transaction: Transaction, id: int) -> int:
         return self._productRepository.deleteProductById(transaction, id)

@@ -6,6 +6,8 @@ from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 def CustomerProductsBlueprint(name: str, importName: str, service: ProductService):
     bp = Blueprint(name, importName)
 
+
+        
     # only GET method for now
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
@@ -22,7 +24,7 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
             return render_template('404.html')
         return render_template('customerIndex.html', querySettings=querySettings, **products)
 
-    @bp.route('/category/<string:category>/department/<string:department>', methods=["GET", "POST"])
+    @bp.route('/department/<string:department>/category/<string:category>', methods=["GET", "POST"])
     def customerCategoryDepartmentPage(category, department):
 
         if request.method == "POST" and request.form.get("brand") is not None:
@@ -37,7 +39,7 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
 
         return render_template('category-department.html', querySettings=querySettings, **result)
 
-    @bp.route('/category/<string:category>/department/<string:department>/brand/<string:brand>', methods=["GET"])
+    @bp.route('department/<string:department>/category/<string:category>/brand/<string:brand>', methods=["GET"])
     def customerCategoryDepartmentBrandPage(category, department, brand):
         querySettings = request.args.to_dict()
 
