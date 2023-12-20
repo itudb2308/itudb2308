@@ -131,6 +131,9 @@ class ProductService:
     def findById(self, transaction: Transaction, id: int) -> Product:
         return Product(self._productRepository.findById(transaction, id))
 
+    def findByIds(self, transaction: Transaction, ids: [int]) -> [Product]:
+        return [Product(p) for p in self._productRepository.findByIds(transaction, ids)]
+
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Product], int):
         settings = handleLimitAndOffset(settings)
         data = self._productRepository.getAllAndCount(transaction, **settings)

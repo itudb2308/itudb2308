@@ -11,6 +11,7 @@ from service.Common import getPaginationObject, handleLimitAndOffset, transactio
 
 if typing.TYPE_CHECKING:
     from service.UserService import UserService
+    from service.ProductService import ProductService
 
 
 class OrderService:
@@ -18,9 +19,13 @@ class OrderService:
         self._orderRepository: OrderRepository = repositories["order"]
         self._orderItemRepository: OrderItemRepository = repositories["orderItem"]
         self._userService: UserService = None
+        self._productService: ProductService = None
 
     def setUserService(self, userService):
         self._userService = userService
+
+    def setProductService(self, productService):
+        self._productService = productService
 
     # PAGE METHODS
     @transactional
@@ -44,6 +49,15 @@ class OrderService:
         user_id = result["order"].user_id
         result["user"] = self._userService.findById(transaction, user_id)
         return result
+    
+    @transactional
+    def cartPage(self, cart: dict, **kwargs):
+        transaction = kwargs["transaction"]
+        productIds = [int(i) for i in cart.keys()]
+        products = self._productService.findByIds(transaction, productIds)
+        return products
+
+
 
     # SERVICE METHODS
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):

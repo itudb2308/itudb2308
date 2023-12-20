@@ -219,7 +219,6 @@ class UserService:
         user = self.findById(transaction, session["user_id"])
         tempUri = session["uri"].split("/")
         event_type = tempUri[1]
-        print(event_type)
 
         event = {
             "user_id": session["user_id"],

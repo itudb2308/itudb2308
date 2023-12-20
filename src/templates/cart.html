@@ -1,0 +1,43 @@
+{% extends 'customerBase.html' %}
+
+{% block title %}My Cart{% endblock %}
+
+{% block body %}
+
+<div>
+    <div class="col-md-8">
+        {% if products %}
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price</th>
+                </tr>
+            </thead>
+            {% for product in products %}
+            <tr>
+                <td>
+                    <a href={{ url_for('customer.products.productDetailPage', id=product.id) }}>{{ product.name }}</a>
+                </td>
+                <td>
+                    {{ '%.2f' | format(product.retail_price) }}
+                </td>
+                <td>
+                    {{cart[product.id | string ]}}
+                </td>
+                <td>
+                    {{ '%.2f' | format(( cart[product.id | string] | float ) * (product.retail_price | float))}}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h1>Your cart is empty!</h1>
+        {% endif %}
+    </div>
+</div>  
+</div>
+
+{% endblock %}
