@@ -30,7 +30,6 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
             return redirect(url_for('customer.products.customerCategoryDepartmentBrandPage', category=category, department=department, brand=brand))
 
         querySettings = request.args.to_dict()
-        print(querySettings)
         querySettings["category"] = category
         querySettings["department"] = department
 
@@ -40,7 +39,13 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
 
     @bp.route('/category/<string:category>/department/<string:department>/brand/<string:brand>', methods=["GET"])
     def customerCategoryDepartmentBrandPage(category, department, brand):
-        result = service.productsPage(querySettings={"category": category, "department": department, "brand": brand})
-        return render_template('category-department-brand.html', **result)
+        querySettings = request.args.to_dict()
+
+        querySettings["category"] = category
+        querySettings["department"] = department
+        querySettings["brand"] = brand
+
+        result = service.productsPage(querySettings=querySettings)
+        return render_template('category-department-brand.html', querySettings=querySettings, **result)
 
     return bp

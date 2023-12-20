@@ -6,6 +6,73 @@
 {% block body %}
 
 <div class="row">
+    
+    <div class="col-md-4">
+        <form action="" method="GET" class="form-container">
+
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input id="name" type="text" class="form-control" name="name" onchange="filterOnChange(this.id)"
+                    value="{% if querySettings["name"] %}{{ querySettings["name"] }}{% endif %}">
+            </div>
+            
+            <div class="row">
+                <div class="form-group col">
+                    <label for="minRetailPrice">Minimum Price :</label>
+                    <input id="minRetailPrice" type="number" class="form-control" name="minRetailPrice" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["minRetailPrice"] %}{{ querySettings["minRetailPrice"] }}{% endif %}">
+                </div>
+
+                <div class="form-group col">
+                    <label for="maxRetailPrice">Maximum Price :</label>
+                    <input id="maxRetailPrice" type="number" class="form-control" name="maxRetailPrice" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["maxRetailPrice"] %}{{ querySettings["maxRetailPrice"] }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col">
+                    <label for="limit">Limit: </label>
+                    <input id="limit" type="number" class="form-control" name="limit" onchange="filterOnChange(this.id)"
+                        value="{% if querySettings["limit"] %}{{ querySettings["limit"] }}{% endif %}">
+                </div>
+    
+                <div class="form-group col">
+                    <label for="order_by_columnName">Order By:</label>
+                    <select id="order_by_columnName" class="form-control" name="order_by_columnName" onchange="filterOnChange(this.id)">
+                        <option value="" {% if not querySettings["order_by_columnName"] %}selected{% endif %}
+                            value="" checked> Not Selected </option>
+                        {% for column in columnNames %}
+                            <option {% if querySettings["order_by_columnName"] == column %}selected{% endif %}
+                                value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Order Direction:</label>
+                <div>
+                    <label>
+                        <input type="radio" name="order_direction" value="Ascending" onchange="filterOnChange(this.id)"
+                            {% if not querySettings["order_direction"] or
+                                querySettings["order_direction"] == "Ascending" %}
+                                checked {% endif %}>
+                        Ascending
+                    </label>
+                    <label>
+                        <input type="radio" name="order_direction" value="Descending" onchange="filterOnChange(this.id)"
+                            {% if querySettings["order_direction"] == "Descending" %}
+                                checked {% endif %}>
+                        Descending
+                    </label>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
     <div class="col-md-8">
 
         {% if products %}
