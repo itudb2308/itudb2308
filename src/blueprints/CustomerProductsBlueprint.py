@@ -30,13 +30,13 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
 
         # list the products
         # put search bar the search among all the brands
-        return render_template('brandPage.html', **result)
+        return render_template('category-department.html', **result)
 
     @bp.route('/category/<string:category>/department/<string:department>/brand/<string:brand>', methods=["GET"])
     def allProducts(category, department, brand):
         print(category, department, brand)
         result = service.productsPage(querySettings={"category": category, "department": department, "brand": brand})
 
-        return render_template('customerAllProducts.html', **result)
+        return render_template('category-department-brand.html', **result)
 
     return bp
