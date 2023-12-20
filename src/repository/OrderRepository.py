@@ -72,3 +72,10 @@ class OrderRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(**settings)
         transaction.cursor.execute(query)
+
+    def createOrder(self, transaction, settings: dict):
+        queryFileName = self._constants.SQL_FILES.ORDER_CREATE_ORDER
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(**settings)
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()[0]

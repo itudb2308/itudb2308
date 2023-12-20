@@ -6,7 +6,7 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
     bp = Blueprint(name, importName)
 
     @bp.route("/<int:id>", methods=["GET"])
-    def orderDetailPage(id: str):
+    def orderDetailPage(id: int):
         # if there occures TypeError, it means that order is None
         try:
             result = service.orderDetailPage(id)
@@ -17,16 +17,18 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             return render_template("403.html")
 
         return render_template("customerOrderDetail.html", **result)
-    
+
     @bp.route('/cart', methods=["GET", "POST"])
     def cartPage():
         if request.method == "POST":
-            #result = service.cartPage(cart)
-            pass
+            user_id = session["user_id"]
+            cart = session["cart"]
+            orderId = service.giveOrderPage(cart, user_id)
+            session["cart"] = {}
+            return redirect(url_for("customer.orders.orderDetailPage", id=orderId))
         cart = session["cart"]
         products = service.cartPage(cart)
-        return render_template("cart.html",cart=cart, products=products)
-
+        return render_template("cart.html", cart=cart, products=products)
 
     @bp.route('/addToCart', methods=["POST"])
     def addToCartPage():
@@ -48,7 +50,6 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
     @bp.route('/emptyCart', methods=["GET"])
     def emptyCartPage():
         session["cart"] = {}
-        cart = session["cart"]
         return redirect(url_for("customer.orders.cartPage"))
 
     return bp
