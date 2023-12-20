@@ -24,18 +24,19 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
 
     @bp.route('/category/<string:category>/department/<string:department>', methods=["GET", "POST"])
     def customerCategoryDepartmentPage(category, department):
-        
+
         if request.method == "POST" and request.form.get("brand") is not None:
             brand = request.form.get("brand")
             return redirect(url_for('customer.products.customerCategoryDepartmentBrandPage', category=category, department=department, brand=brand))
-        
-        # result will contain the products with given category and department
-        # and the list of all brand names
-        result = service.productCategoryDepartmentPage(category, department)
 
-        # list the products ---> DONE   
-        # put search bar the search among all the brands 
-        return render_template('category-department.html', **result)
+        querySettings = request.args.to_dict()
+        print(querySettings)
+        querySettings["category"] = category
+        querySettings["department"] = department
+
+        result = service.productCategoryDepartmentPage(querySettings)
+
+        return render_template('category-department.html', querySettings=querySettings, **result)
 
     @bp.route('/category/<string:category>/department/<string:department>/brand/<string:brand>', methods=["GET"])
     def customerCategoryDepartmentBrandPage(category, department, brand):

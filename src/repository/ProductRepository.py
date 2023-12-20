@@ -179,12 +179,12 @@ class ProductRepository(BaseRepository):
         return transaction.cursor.fetchall()
 
     # retrieve all of the brands that has products in the given category and department
-    def getBrandNamesByCategoryDepartment(self, category:str, department:str, transaction: Transaction):
+    def getBrandNamesByCategoryDepartment(self, category: str, department: str, transaction: Transaction):
         queryFileName = self._constants.SQL_FILES.PRODUCTS_GET_BRAND_NAMES_BY_CATEGORY_DEPARTMENT
         query = self._getSqlQueryFromFile(queryFileName)
         queryArguments = {"category": category, "department": department}
-        
-        self.replaceDoubleApostrophes(queryArguments) # To avoid the Brand'name case. That ' apostrophe char creates error in SQL ---> TEST
+
+        self.replaceDoubleApostrophes(queryArguments)  # To avoid the Brand'name case. That ' apostrophe char creates error in SQL ---> TEST
         query = query.format(**queryArguments)
         transaction.cursor.execute(query)
         return transaction.cursor.fetchall()
