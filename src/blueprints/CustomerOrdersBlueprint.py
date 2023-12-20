@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for
 from service.OrderService import OrderService
-from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 
 
 def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
@@ -34,10 +33,18 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
     def addToCartPage():
         form = request.form
         print(form)
-        if form.get("product_id") in session["cart"]:
-            session["cart"][form.get("product_id")] = int(session["cart"][form.get("product_id")]) + int(form.get("quantity"))
-        else:
-            session["cart"][form.get("product_id")] = int(form.get("quantity"))
-        return redirect(url_for("customer.products.productDetailPage", id = form.get("product_id")))
+
+        product_id = form.get("product_id")
+        oldQuantity = int(session["cart"][product_id]) if product_id in session["cart"] else 0
+        quantity = int(form.get("quantity"))
+
+        userProduct = service.addToCartPage(int(product_id))
+        newQuantity = oldQuantity + quantity
+        newQuantity = newQuantity if newQuantity < userProduct.total_stock else userProduct.total_stock
+        session["cart"][product_id] = newQuantity
+
+        # TODO: return error
+
+        return redirect(url_for("customer.products.productDetailPage", id=product_id))
 
     return bp

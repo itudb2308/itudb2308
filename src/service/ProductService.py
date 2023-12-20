@@ -115,10 +115,7 @@ class ProductService:
     def getUserProductDetailPage(self, id: int, **kwargs) -> UserProduct | None:
         # return the product information with given id
         transaction = kwargs["transaction"]
-        data = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, id)
-        if data is None:
-            return None
-        return UserProduct(data)
+        return self.getUserProductById(transaction, id)
 
     # Function to add stock to a product that is specified with id.
     @transactional
@@ -178,6 +175,13 @@ class ProductService:
         for product_id, quantity in products:
             self._inventoryItemRepository.sellInventoryItem(transaction, product_id, quantity)
         return
+
+    def getUserProductById(self, transaction: Transaction, productId: int) -> UserProduct | None:
+        userProduct = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, productId)
+        # TODO: throw exception instead of returning none
+        if userProduct is None:
+            return None
+        return UserProduct(userProduct)
 
     def createNewTransaction(self):
         return self._productRepository.createNewTransaction()

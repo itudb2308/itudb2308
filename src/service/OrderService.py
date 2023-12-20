@@ -49,15 +49,20 @@ class OrderService:
         user_id = result["order"].user_id
         result["user"] = self._userService.findById(transaction, user_id)
         return result
-    
+
     @transactional
     def cartPage(self, cart: dict, **kwargs):
         transaction = kwargs["transaction"]
         productIds = [int(i) for i in cart.keys()]
+        if len(productIds) == 0:
+            return None
         products = self._productService.findByIds(transaction, productIds)
         return products
 
-
+    @transactional
+    def addToCartPage(self, productId: int, **kwargs):
+        transaction = kwargs["transaction"]
+        return self._productService.getUserProductById(transaction, productId)
 
     # SERVICE METHODS
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):
