@@ -1,0 +1,52 @@
+{% extends 'customerBase.html' %}
+
+
+{% block title %}Products{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-8">
+        <form action="" method="GET" class="form-container">
+            <div class="form-group">
+                <label for="brand>">Brand</label>
+                <input id="brand" type="text" class="form-control" name="name" onchange="filterOnChange(this.id)">
+            </div>
+        </form>
+
+        {% if products %}
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Product ID </th>
+                        <th scope="col">Category </th>
+                        <th scope="col">Name </th>
+                        <th scope="col">Retail Price </th>
+                    </tr>
+                </thead>
+                {% for product in products %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('customer.products.productDetailPage', id = product.id)}}">
+                                Product #{{ product.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ product.category }}
+                        </td>
+                            <td>
+                            {{ product.name }}
+                        </td>
+                        <td>
+                            {{ '%.2f' | format(product.retail_price) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h1>No products found...</h1>
+        {% endif %}
+    </div>
+</div>
+{% include "pagination.html" %}
+{% endblock %}

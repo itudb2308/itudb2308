@@ -42,6 +42,14 @@ class ProductService:
         result["totalSold"] = stockAndSold[0][1]
         return result
 
+    @transactional
+    def brandPage(self, category: str, department: str, **kwargs) -> dict:
+        transaction = kwargs["transaction"]
+        result = dict()
+        result["brands"] = self.getBrandNames(transaction)
+        result["products"] = self.getAllAndCount(transaction, {"category": category, "department": department})
+        return result
+
     # returns newly added products id
     @transactional
     def addProductPage(self, method, form, **kwargs) -> int:
@@ -140,6 +148,11 @@ class ProductService:
 
     def getColumnNames(self, transaction: Transaction) -> [str]:
         return [cn[0] for cn in self._productRepository.getColumnNames(transaction)]
+
+    @transactional
+    def getCategoriesPage(self, **kwargs):
+        transaction = kwargs["transaction"]
+        return self.getCategories(transaction)
 
     def getCategories(self, transaction: Transaction) -> [str]:
         return [c[0] for c in self._productRepository.getCategories(transaction)]
