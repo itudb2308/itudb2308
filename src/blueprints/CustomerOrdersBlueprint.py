@@ -20,19 +20,17 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
     
     @bp.route('/cart', methods=["GET", "POST"])
     def cartPage():
-        if request.method == "GET":
-            cart = session["cart"]
-            products = service.cartPage(cart)
-            return render_template("cart.html", cart=cart, products=products)
-
-        elif request.method == "POST":
+        if request.method == "POST":
             #result = service.cartPage(cart)
             pass
+        cart = session["cart"]
+        products = service.cartPage(cart)
+        return render_template("cart.html",cart=cart, products=products)
+
 
     @bp.route('/addToCart', methods=["POST"])
     def addToCartPage():
         form = request.form
-        print(form)
 
         product_id = form.get("product_id")
         oldQuantity = int(session["cart"][product_id]) if product_id in session["cart"] else 0
@@ -46,5 +44,11 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
         # TODO: return error
 
         return redirect(url_for("customer.products.productDetailPage", id=product_id))
+
+    @bp.route('/emptyCart', methods=["GET"])
+    def emptyCartPage():
+        session["cart"] = {}
+        cart = session["cart"]
+        return redirect(url_for("customer.orders.cartPage"))
 
     return bp

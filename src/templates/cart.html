@@ -33,6 +33,8 @@
             </tr>
             {% endfor %}
         </table>
+        <button type="submit" class="btn btn-primary">Buy</button>
+        <a type="submit" id="emptyCart" class="btn btn-primary" href={{ url_for('customer.orders.emptyCartPage') }}>Empty Cart</a>
         {% else %}
         <h1>Your cart is empty!</h1>
         {% endif %}
