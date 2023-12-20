@@ -43,11 +43,11 @@ class ProductService:
         return result
 
     @transactional
-    def brandPage(self, category: str, department: str, **kwargs) -> dict:
+    def productCategoryDepartmentPage(self, category: str, department: str, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
-        result["brands"] = self.getBrandNames(transaction)
-        result["products"] = self.getAllAndCount(transaction, {"category": category, "department": department})
+        result["brands"] = self.getBrandNamesByCategoryAndDepartment(category, department, transaction)
+        result["products"], buffer = self.getAllAndCount(transaction, {"category": category, "department": department})
         return result
 
     # returns newly added products id
@@ -163,6 +163,9 @@ class ProductService:
 
     def getBrandNames(self, transaction: Transaction) -> [str]:
         return [b[0] for b in self._productRepository.getBrandNames(transaction)]
+
+    def getBrandNamesByCategoryAndDepartment(self,category:str, department:str, transaction: Transaction) -> [str]:
+        return [b[0] for b in self._productRepository.getBrandNamesByCategoryDepartment(category,department,transaction)]
 
     def deleteProduct(self, transaction: Transaction, id: int) -> int:
         return self._productRepository.deleteProductById(transaction, id)

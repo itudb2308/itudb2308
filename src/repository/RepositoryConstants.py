@@ -48,4 +48,5 @@ class RepositoryConstants:
         PRODUCTS_UPDATE_PRODUCT = "products_update_product_by_id.sql"
         PRODUCTS_DELETE_PRODUCT_BY_ID = "products_delete_product_by_id.sql"
         PRODUCTS_GET_BRAND_NAMES = "products_get_brand_names.sql"
+        PRODUCTS_GET_BRAND_NAMES_BY_CATEGORY_DEPARTMENT = "products_get_brand_names_by_category_department.sql"
         GET_DISTINCT_COUNTRY = "get_distinct_country.sql"

@@ -7,18 +7,20 @@
 
 <div class="row">
     <div class="col-md-8">
-        <form action="" method="GET" class="form-container">
+
+        <form action="{{ url_for('customer.products.customerCategoryDepartmentPage',category = products[0].category, department =products[0].department)}}" method="POST" class="form-container">
             <div class="form-group">
-                <label for="brand>">Brand</label>
-                <input id="brand" type="text" class="form-control" name="name" onchange="filterOnChange(this.id)">
+                <label for="brand">Brand</label>
+                <input id="brand" type="text" class="form-control" name="brand" autocomplete="off" required>
+                <div id="suggestion-box" class="suggestion-box"></div>
             </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
         {% if products %}
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        
                         <th scope="col">Category </th>
                         <th scope="col">Department</th>
                         <th scope="col">Name </th>
@@ -51,5 +53,57 @@
         {% endif %}
     </div>
 </div>
-{% include "pagination.html" %}
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var brands = {{ brands | tojson }};
+    var brandInput = document.getElementById('brand');
+    var suggestionBox = document.getElementById('suggestion-box');
+
+    // Function to update suggestions
+    function updateSuggestions(filter = '') {
+        suggestionBox.innerHTML = ''; // Clear previous suggestions
+        var filteredBrands = brands.filter(brand => brand.toLowerCase().includes(filter.toLowerCase()));
+
+        filteredBrands.forEach(function(brand) {
+            var div = document.createElement('div');
+            div.classList.add('suggestion-item');
+            
+            div.textContent = brand;
+            div.onclick = function() {
+                brandInput.value = brand;
+                suggestionBox.style.display = 'none';
+            };
+            suggestionBox.appendChild(div);
+        });
+
+        if(filteredBrands.length === 0){
+            suggestionBox.style.display = 'none';
+        }else{
+            suggestionBox.style.display = 'block';
+        }
+    }
+
+
+    // Event listener for input on brand field
+    brandInput.addEventListener('input', function() {
+        updateSuggestions(this.value);
+    });
+
+    brandInput.addEventListener('focus', function() {
+        updateSuggestions(this.value);
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== brandInput) {
+            suggestionBox.style.display = 'none';
+        }
+    });
+});
+
+</script>
+
 {% endblock %}
