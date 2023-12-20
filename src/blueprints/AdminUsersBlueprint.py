@@ -31,7 +31,7 @@ def AdminUsersBlueprint(name: str, importName: str, service: UserService):
     @bp.route('/delete_event/<int:id>', methods=["GET"])
     def deleteEventPage(id: int):
         service.deleteEventPage(id)
-        return redirect(url_for('admin.users.usersPage', id = id))
+        return redirect(url_for('admin.users.usersPage', id=id))
 
     def showFlashMessages(flashMessages):
         if flashMessages != None:
