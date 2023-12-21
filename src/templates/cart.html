@@ -48,7 +48,7 @@
     </table>
     <div class="row">
         <div class="col">
-            <h2><strong>Total Price: </strong> {{ cartPrice }}</h2>
+            <h2><strong>Total Price: </strong> {{  '%.2f' | format(cartPrice) }}</h2>
         </div>
         <form action="{{ url_for('customer.orders.cartPage') }}" method="POST">
             <button type="submit" class="btn btn-success" style="margin-right: 0.5em;">Buy</button>

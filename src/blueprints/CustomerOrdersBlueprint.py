@@ -29,7 +29,12 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             return redirect(url_for("customer.orders.orderDetailPage", id=orderId))
         cart = session["cart"]
         products = service.cartPage(cart)
-        cartPrice = sum(map(lambda p: p.retail_price * cart[str(p.id)], products))
+
+        if products != None:
+            cartPrice = sum(map(lambda p: p.retail_price * cart[str(p.id)], products))
+        else:
+            cartPrice = 0
+
         return render_template("cart.html", cart=cart, products=products, cartPrice=cartPrice)
 
     @bp.route('/addToCart', methods=["POST"])
@@ -57,7 +62,7 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             showFlashMessages([("Product removed from your cart", "success")])
         else:
             session["cart"] = {}
-            showFlashMessages([("Your cart is empyt", "success")])
+            showFlashMessages([("All of the items in your cart removed!", "success")])
         return redirect(url_for("customer.orders.cartPage"))
 
     def showFlashMessages(flashMessages):
