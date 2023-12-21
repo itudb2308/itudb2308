@@ -10,9 +10,14 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
 
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
-        product = service.getUserProductDetailPage(id)
-        if product is None:
+        # when there is no product with given id database returns None.
+        # DTO constructor raises TypeError when None is passed as argument.
+        # So we catch the TypeError and return 404 Not Found page.
+        try:
+            product = service.getUserProductDetailPage(id)
+        except TypeError:
             return render_template('404.html')
+
         return render_template('customerProductDetail.html', product=product)
 
     @bp.route('/', methods=["GET"])
