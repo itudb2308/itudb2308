@@ -41,6 +41,7 @@ class RepositoryConstants:
         INVENTORY_ITEMS_ADD_INVENTORY_ITEM = "inventory_items_add_inventory_item.sql"
         INVENTORY_ITEMS_GET_PRODUCT_DETAIL_BY_PRODUCT_ID = "inventory_items_get_product_detail_by_product_id.sql"
         INVENTORY_ITEMS_SELL_INVENTORY_ITEMS = "inventory_items_sell_inventory_items.sql"
+        INVENTORY_ITEMS_CANCEL_SALE = "inventory_items_cancel_sale.sql"
         PRODUCTS_FIND_BY_ID = "products_find_by_id.sql"
         PRODUCTS_FIND_BY_IDS = "products_find_by_ids.sql"
         PRODUCTS_GET_ALL = "products_get_all.sql"

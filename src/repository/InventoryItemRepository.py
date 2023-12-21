@@ -65,3 +65,10 @@ class InventoryItemRepository(BaseRepository):
         query = query.format(product_id=productId, quantity=quantity)
         transaction.cursor.execute(query)
         return transaction.cursor.fetchall()
+
+    def cancelSale(self, transaction: Transaction, inventory_item_id: int):
+        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_CANCEL_SALE
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(inventory_item_id=inventory_item_id)
+        transaction.cursor.execute(query)
+        return transaction.cursor.fetchone()
