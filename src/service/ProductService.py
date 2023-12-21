@@ -218,7 +218,7 @@ class ProductService:
         return result
 
     def getUserProductById(self, transaction: Transaction, productId: int) -> UserProduct | None:
-        userProduct = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, productId)
+        userProduct = self._inventoryItemRepository.getProductDetailByProductId(transaction, productId)
         # TODO: throw exception instead of returning none
         if userProduct is None:
             return None
