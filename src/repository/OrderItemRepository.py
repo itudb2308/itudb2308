@@ -32,3 +32,10 @@ class OrderItemRepository(BaseRepository):
 
         query = query.format(values=",\n".join(records))
         transaction.cursor.execute(query)
+
+    def getInventoryItemIdsByOrderId(self, transaction: Transaction, order_id: int):
+        queryFileName = self._constants.SQL_FILES.ORDER_ITEM_GET_ALL_INVENTORY_ITEM_IDS_BY_ORDER_ID
+        query = self._getSqlQueryFromFile(queryFileName)
+        query = query.format(order_id=order_id)
+        transaction.cursor.execute(query)
+        return list(map(lambda x: x[0], transaction.cursor.fetchall()))

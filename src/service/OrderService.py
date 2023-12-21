@@ -49,6 +49,7 @@ class OrderService:
         result["orderItems"] = self.getItemDetailsByOrderId(transaction, id)
         user_id = result["order"].user_id
         result["user"] = self._userService.findById(transaction, user_id)
+        result["totalOrderPrice"] = sum(map(lambda oi: oi.quantity * oi.price, result["orderItems"]))
         return result
 
     @transactional
@@ -76,8 +77,11 @@ class OrderService:
     @transactional
     def setOrderStatusPage(self, id: int, orderStatus: str, **kwargs):
         transaction = kwargs["transaction"]
-        print(orderStatus, id)
         self.setOrderStatus(transaction, id, orderStatus)
+        if "cancelSale" in kwargs and kwargs["cancelSale"]:
+            ids = self._orderItemRepository.getInventoryItemIdsByOrderId(transaction, id)
+            print(ids)
+            self._productService.cancelSale(transaction, ids)
 
     # SERVICE METHODS
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):
@@ -98,11 +102,7 @@ class OrderService:
 
     def getItemDetailsByOrderId(self, transaction: Transaction, orderId: int) -> [OrderItem]:
         data = self._orderItemRepository.getItemDetailsByOrderId(transaction, orderId)
-        orderItems = [OrderItem(d[:11]) for d in data]
-        for index, oi in enumerate(orderItems):
-            oi.product = Product(data[index][11:20])
-            oi.distributionCenter = DistributionCenter(data[index][20:])
-        return orderItems
+        return [OrderItem(d) for d in data]
 
     def setOrderStatus(self, transaction: Transaction, id: int, orderStatus: str):
         print("STATUS: ", orderStatus)

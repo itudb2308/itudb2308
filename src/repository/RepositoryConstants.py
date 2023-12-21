@@ -13,6 +13,7 @@ class RepositoryConstants:
         ORDER_ITEM_FIND_BY_IDS = "order_item_find_by_ids.sql"
         ORDER_ITEM_FIND_BY_ORDER_ID = "order_item_find_by_order_id.sql"
         ORDER_ITEM_CRAETE_ORDER_ITEMS = "create_order_items.sql"
+        ORDER_ITEM_GET_ALL_INVENTORY_ITEM_IDS_BY_ORDER_ID = "order_item_get_all_inventory_item_ids_by_order_id.sql"
         ORDER_GET_DISTINCT_STATUS = "order_get_distinct_status.sql"
         ORDER_GET_DISTINCT_GENDER = "order_get_distinct_gender.sql"
         ORDER_SET_STATUS = "order_set_status.sql"

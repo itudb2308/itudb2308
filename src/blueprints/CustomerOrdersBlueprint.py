@@ -65,6 +65,16 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             showFlashMessages([("All of the items in your cart removed!", "success")])
         return redirect(url_for("customer.orders.cartPage"))
 
+    @bp.route('/changeOrderStatus/<int:id>', methods=["POST"])
+    def changeOrderStatus(id: int):
+        status = request.form["order_status"]
+        if status in ["Returned", "Cancelled"]:
+            service.setOrderStatusPage(id, status, cancelSale=True)
+            showFlashMessages([(f"Your order {status.lower()} successfully", "success")])
+        else:
+            showFlashMessages([("New status is not permitted", "danger")])
+        return redirect(url_for("customer.orders.orderDetailPage", id=id))
+
     def showFlashMessages(flashMessages):
         if flashMessages != None:
             for flashMessage in flashMessages:
