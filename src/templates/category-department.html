@@ -7,6 +7,16 @@
 <div class="row">
 
     <div class="col-md-4">
+
+        <form action="{{ url_for('customer.products.customerCategoryDepartmentPage',category = querySettings["category"], department =querySettings["department"] )}}" method="POST" class="form-container">
+            <div class="form-group">
+                <label for="brand">Brand</label>
+                <input id="brand" type="text" class="form-control" name="brand" autocomplete="off" required>
+                <div id="suggestion-box" class="suggestion-box"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
         <form action="" method="GET" class="form-container">
 
             <div class="form-group">
@@ -73,14 +83,6 @@
 
     <div class="col-md-8">
         {% if products %}       
-            <form action="{{ url_for('customer.products.customerCategoryDepartmentPage',category = querySettings["category"], department =querySettings["department"] )}}" method="POST" class="form-container">
-                <div class="form-group">
-                    <label for="brand">Brand</label>
-                    <input id="brand" type="text" class="form-control" name="brand" autocomplete="off" required>
-                    <div id="suggestion-box" class="suggestion-box"></div>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
 
             <table class="table table-hover table-striped">
                 <thead>

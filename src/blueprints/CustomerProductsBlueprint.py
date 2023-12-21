@@ -6,9 +6,8 @@ from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 def CustomerProductsBlueprint(name: str, importName: str, service: ProductService):
     bp = Blueprint(name, importName)
 
-
-        
     # only GET method for now
+
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
         product = service.getUserProductDetailPage(id)

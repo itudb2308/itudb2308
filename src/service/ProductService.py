@@ -140,9 +140,7 @@ class ProductService:
     def getUserProductDetailPage(self, id: int, **kwargs) -> UserProduct | None:
         # return the product information with given id
         transaction = kwargs["transaction"]
-        data = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, id)
-        if data is None:
-            return None
+        data = self._inventoryItemRepository.getProductDetailByProductId(transaction, id)  # EXCEPTION FOR NONE
         return UserProduct(data)
 
     # Function to add stock to a product that is specified with id.
