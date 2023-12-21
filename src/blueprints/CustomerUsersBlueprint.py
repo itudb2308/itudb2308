@@ -55,6 +55,8 @@ def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
         session["user_logged_in"] = True
         session["session_id"] = service.sessionIdGenerator()
         session["sequence_number"] = 1
+        session["cart"] = {}
+
         return session
 
     return bp
