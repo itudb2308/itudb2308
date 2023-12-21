@@ -52,7 +52,7 @@ class OrderService:
         return result
 
     @transactional
-    def cartPage(self, cart: dict, **kwargs):
+    def cartPage(self, cart: dict, **kwargs) -> [Product]:
         transaction = kwargs["transaction"]
         productIds = [int(i) for i in cart.keys()]
         if len(productIds) == 0:
@@ -72,6 +72,12 @@ class OrderService:
     def addToCartPage(self, productId: int, **kwargs):
         transaction = kwargs["transaction"]
         return self._productService.getUserProductById(transaction, productId)
+
+    @transactional
+    def setOrderStatusPage(self, id: int, orderStatus: str, **kwargs):
+        transaction = kwargs["transaction"]
+        print(orderStatus, id)
+        self.setOrderStatus(transaction, id, orderStatus)
 
     # SERVICE METHODS
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):
@@ -99,9 +105,9 @@ class OrderService:
         return orderItems
 
     def setOrderStatus(self, transaction: Transaction, id: int, orderStatus: str):
+        print("STATUS: ", orderStatus)
         distinctStatus = self.getDistinctStatus(transaction)
         if orderStatus not in distinctStatus:
-            print("Invalid Order Status")
             raise Exception("Invalid Order Status")
 
         querySettings = {

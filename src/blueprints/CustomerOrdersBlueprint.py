@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, session, redirect, url_for
+from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from service.OrderService import OrderService
 
 
@@ -25,10 +25,12 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             cart = session["cart"]
             orderId = service.giveOrderPage(cart, user_id)
             session["cart"] = {}
+            showFlashMessages([("Your order is created successfully", "success")])
             return redirect(url_for("customer.orders.orderDetailPage", id=orderId))
         cart = session["cart"]
         products = service.cartPage(cart)
-        return render_template("cart.html", cart=cart, products=products)
+        cartPrice = sum(map(lambda p: p.retail_price * cart[str(p.id)], products))
+        return render_template("cart.html", cart=cart, products=products, cartPrice=cartPrice)
 
     @bp.route('/addToCart', methods=["POST"])
     def addToCartPage():
@@ -45,11 +47,22 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
 
         # TODO: return error
 
+        showFlashMessages([(f"Product added to your cart. Current quantity: {newQuantity}", "success")])
         return redirect(url_for("customer.products.productDetailPage", id=product_id))
 
-    @bp.route('/emptyCart', methods=["GET"])
+    @bp.route('/emptyCart', methods=["POST"])
     def emptyCartPage():
-        session["cart"] = {}
+        if "product_id" in request.form.keys():
+            session["cart"].pop(request.form["product_id"])
+            showFlashMessages([("Product removed from your cart", "success")])
+        else:
+            session["cart"] = {}
+            showFlashMessages([("Your cart is empyt", "success")])
         return redirect(url_for("customer.orders.cartPage"))
+
+    def showFlashMessages(flashMessages):
+        if flashMessages != None:
+            for flashMessage in flashMessages:
+                flash(flashMessage[0], flashMessage[1])
 
     return bp

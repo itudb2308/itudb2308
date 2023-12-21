@@ -26,7 +26,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
 
     @bp.route('/', methods=['GET'])
     def indexPage():
-        return redirect(url_for('customer.homePage'))  
+        return redirect(url_for('customer.homePage'))
 
     @bp.route('/home', methods=['GET'])
     def homePage():
