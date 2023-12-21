@@ -35,6 +35,14 @@ body {
 }
 
 
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
 .flex-container {
     display: flex;
     flex-wrap: wrap;
@@ -95,7 +103,6 @@ body {
     transform: translateY(0); /* Slide in */
 }
 
-/* Example of a media query for smaller screens */
 @media (max-width: 600px) {
     .box {
         min-width: 100%;

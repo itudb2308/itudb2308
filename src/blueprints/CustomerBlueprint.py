@@ -23,16 +23,7 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
             except Exception as e:
                 if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                     return redirect(url_for('customer.loginPage'))
-    '''        
-        @bp.route('/home', methods=['GET'])
-        def homePage():
-            querySettings = request.args.to_dict()
-            products = services["product"].productsPage(querySettings)
-            if products is None:
-                return render_template('404.html')
-            return render_template('customerIndex.html', querySettings=querySettings, **products)
-    '''
-
+                  
     @bp.route('/home', methods=['GET'])
     def homePage():
         categories = services["product"].getCategoriesPage()
