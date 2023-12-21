@@ -30,11 +30,8 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
 
     @bp.route('/home', methods=['GET'])
     def homePage():
-        querySettings = request.args.to_dict()
-        products = services["product"].productsPage(querySettings)
-        if products is None:
-            return render_template('404.html')
-        return render_template('customerIndex.html', querySettings=querySettings, **products)
+        categories = services["product"].getCategoriesPage()
+        return render_template('homePage.html', categories=categories)
 
     @bp.route('/login', methods=["GET", "POST"])
     def loginPage():

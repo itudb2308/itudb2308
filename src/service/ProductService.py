@@ -23,6 +23,7 @@ class ProductService:
     # PAGE METHODS
     @transactional
     def productsPage(self, querySettings: dict, **kwargs) -> dict:
+        print(f"QUERY SETTINGS ARE: {querySettings} ")
         transaction = kwargs["transaction"]
         result = dict()
         products, count = self.getAllAndCount(transaction, querySettings)
@@ -42,7 +43,31 @@ class ProductService:
         result["totalSold"] = stockAndSold[0][1]
         return result
 
+    '''
+    result = dict()
+            products, count = self.getAllAndCount(transaction, querySettings)
+            result["products"] = products
+            result["pagination"] = getPaginationObject(count, querySettings)
+            result["columnNames"] = self.getColumnNames(transaction)
+            result["categories"] = self.getCategories(transaction)
+    '''
+    # given query settings includign filters and category and department
+    # returns the result dict that contains the products, brands, pagination, columnNames, categories
+    @transactional
+    def productCategoryDepartmentPage(self, querySettings: dict, **kwargs) -> dict:
+        print(f"QUERY SETTINGS ARE: {querySettings} ")
+        transaction = kwargs["transaction"]
+        result = dict()
+        result["brands"] = self.getBrandNamesByCategoryAndDepartment(querySettings["category"], querySettings["department"], transaction)
+        result["products"], count = self.getAllAndCount(transaction, querySettings)
+        result["pagination"] = getPaginationObject(count, querySettings)
+        result["columnNames"] = self.getColumnNames(transaction)
+        result["categories"] = self.getCategories(transaction)
+
+        return result
+
     # returns newly added products id
+
     @transactional
     def addProductPage(self, method, form, **kwargs) -> int:
         transaction = kwargs["transaction"]
@@ -117,6 +142,7 @@ class ProductService:
         transaction = kwargs["transaction"]
         return self.getUserProductById(transaction, id)
 
+
     # Function to add stock to a product that is specified with id.
     @transactional
     def addStockToInventoryPage(self, id: int, quantity: int, **kwargs):
@@ -141,6 +167,11 @@ class ProductService:
     def getColumnNames(self, transaction: Transaction) -> [str]:
         return [cn[0] for cn in self._productRepository.getColumnNames(transaction)]
 
+    @transactional
+    def getCategoriesPage(self, **kwargs):
+        transaction = kwargs["transaction"]
+        return self.getCategories(transaction)
+
     def getCategories(self, transaction: Transaction) -> [str]:
         return [c[0] for c in self._productRepository.getCategories(transaction)]
 
@@ -150,6 +181,9 @@ class ProductService:
 
     def getBrandNames(self, transaction: Transaction) -> [str]:
         return [b[0] for b in self._productRepository.getBrandNames(transaction)]
+
+    def getBrandNamesByCategoryAndDepartment(self, category: str, department: str, transaction: Transaction) -> [str]:
+        return [b[0] for b in self._productRepository.getBrandNamesByCategoryDepartment(transaction, category, department)]
 
     def deleteProduct(self, transaction: Transaction, id: int) -> int:
         return self._productRepository.deleteProductById(transaction, id)

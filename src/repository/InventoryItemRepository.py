@@ -47,8 +47,8 @@ class InventoryItemRepository(BaseRepository):
         transaction.cursor.execute(query)
         return transaction.cursor.fetchall()
 
-    def getInventoryItemsByProductId(self, transaction: Transaction, product_id: int):
-        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_INVENTORY_ITEMS_BY_PRODUCT_ID
+    def getProductDetailByProductId(self, transaction: Transaction, product_id: int):
+        queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_GET_PRODUCT_DETAIL_BY_PRODUCT_ID
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=product_id)
         transaction.cursor.execute(query)
@@ -59,6 +59,7 @@ class InventoryItemRepository(BaseRepository):
     # We rely on the frontend to make sure that the quantity is not more than the stock
     # TODO : Double check quanttity is less than or equal to stock.
     def sellInventoryItem(self, transaction: Transaction, productId: int, quantity: int):
+
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_SELL_INVENTORY_ITEMS
         query = self._getSqlQueryFromFile(queryFileName)
         query = query.format(product_id=productId, quantity=quantity)

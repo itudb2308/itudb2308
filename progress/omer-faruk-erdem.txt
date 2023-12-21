@@ -30,3 +30,7 @@ Created related wtforms for distribution centers.
 Updated schema.sql, fixed reference issue.
 Added addStockToInventory endpoint.
 Added total sold and stock information to product detail page. Implementefd related queries.
+WEEK 12 :
+Created UI for customers home page and customer product listing pages.
+Implemented product listing and product detail endpoints.
+Fix product detail no stock error issue.

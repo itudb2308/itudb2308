@@ -1,0 +1,17 @@
+{% extends 'customerBase.html' %}
+
+
+{% block body %}
+    <div class="flex-container">
+        {% for c in categories  %}  
+            <div class="box">
+                <span class="box-content"> {{c}} </span>
+                <div class="sub-boxes">
+                    <div class="sub-box"> <a href="{{ url_for('customer.products.customerCategoryDepartmentPage', category=c, department='Men') }}">MEN</a></div>
+                    <div class="sub-box"> <a href =" {{ url_for('customer.products.customerCategoryDepartmentPage', category=c, department='Women') }} "> WOMEN </a> </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
