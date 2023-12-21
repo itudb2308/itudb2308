@@ -24,6 +24,10 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
                 if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
                     return redirect(url_for('customer.loginPage'))
 
+    @bp.route('/', methods=['GET'])
+    def indexPage():
+        return redirect(url_for('customer.homePage'))
+
     @bp.route('/home', methods=['GET'])
     def homePage():
         categories = services["product"].getCategoriesPage()
@@ -63,6 +67,8 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
         session["user_logged_in"] = True
         session["session_id"] = services["user"].sessionIdGenerator()
         session["sequence_number"] = 1
+        session["cart"] = {}
+
         return session
 
     return bp

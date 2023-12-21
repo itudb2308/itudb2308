@@ -12,11 +12,11 @@ def AdminOrdersBlueprint(name: str, importName: str, service: OrderService):
         result = service.ordersPage(querySettings)
         return render_template("orders.html", querySettings=querySettings, **result)
 
-    @bp.route("/<int:id>", methods=["GET", "PUT"])
+    @bp.route("/<int:id>", methods=["GET", "POST"])
     def orderDetailPage(id: int):
-        if request.method == "PUT":
+        if request.method == "POST":
             orderStatus = request.form.get("order_status")
-            service.setOrderStatus(id, orderStatus)
+            service.setOrderStatusPage(id, orderStatus)
         result = service.orderDetailPage(id)
         return render_template("orderDetail.html", **result)
 

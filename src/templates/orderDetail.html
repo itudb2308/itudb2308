@@ -15,9 +15,12 @@
         <hr>
         <h3><strong>Status: </strong>{{ order.statusText }}</h3>
         {% for nextStatus in order.adminNextStatus %}
-            <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" type="submit" onclick="orderChangeStatus('{{ order.id }}', '{{ nextStatus }}')">
-                Set Status {{ nextStatus }}
-            </button>
+            <form action="{{ url_for('admin.orders.orderDetailPage', id = order.id) }}" method="POST">
+                <input name="order_status" value="{{ nextStatus }}" hidden="hidden">
+                <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" type="submit">
+                    Set Status {{ nextStatus }}
+                </button>
+            </form>
         {% endfor %}
         {% if orderItems %}
             <hr>

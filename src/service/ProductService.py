@@ -140,8 +140,8 @@ class ProductService:
     def getUserProductDetailPage(self, id: int, **kwargs) -> UserProduct | None:
         # return the product information with given id
         transaction = kwargs["transaction"]
-        data = self._inventoryItemRepository.getProductDetailByProductId(transaction, id)  # EXCEPTION FOR NONE
-        return UserProduct(data)
+        return self.getUserProductById(transaction, id)
+
 
     # Function to add stock to a product that is specified with id.
     @transactional
@@ -153,6 +153,9 @@ class ProductService:
 
     def findById(self, transaction: Transaction, id: int) -> Product:
         return Product(self._productRepository.findById(transaction, id))
+
+    def findByIds(self, transaction: Transaction, ids: [int]) -> [Product]:
+        return [Product(p) for p in self._productRepository.findByIds(transaction, ids)]
 
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Product], int):
         settings = handleLimitAndOffset(settings)
@@ -201,11 +204,25 @@ class ProductService:
         return
 
     # Given dictionary of product ids and quantities, makes the sold_at field of the inventory item current time
-    def sellProducts(self, transaction: Transaction, products: dict):
+    # and returns the ids of the effected inventory items
+    def sellProducts(self, transaction: Transaction, products: dict) -> dict:
         # sell products and update the database
-        for product_id, quantity in products:
-            self._inventoryItemRepository.sellInventoryItem(transaction, product_id, quantity)
-        return
+        result = dict()
+        for productId, quantity in products.items():
+            productId = int(productId)
+            idsAndPrices = self._inventoryItemRepository.sellInventoryItem(transaction, productId, quantity)
+            result[productId] = {
+                "ids": list(map(lambda x: x[0], idsAndPrices)),
+                "price": idsAndPrices[0][1]
+            }
+        return result
+
+    def getUserProductById(self, transaction: Transaction, productId: int) -> UserProduct | None:
+        userProduct = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, productId)
+        # TODO: throw exception instead of returning none
+        if userProduct is None:
+            return None
+        return UserProduct(userProduct)
 
     def createNewTransaction(self):
         return self._productRepository.createNewTransaction()

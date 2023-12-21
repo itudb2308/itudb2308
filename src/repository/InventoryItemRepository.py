@@ -58,10 +58,10 @@ class InventoryItemRepository(BaseRepository):
     # Here there is an issue with quantity
     # We rely on the frontend to make sure that the quantity is not more than the stock
     # TODO : Double check quanttity is less than or equal to stock.
+    def sellInventoryItem(self, transaction: Transaction, productId: int, quantity: int):
 
-    def sellInventoryItem(self, transaction: Transaction, id: int, quantity: int):
         queryFileName = self._constants.SQL_FILES.INVENTORY_ITEMS_SELL_INVENTORY_ITEMS
         query = self._getSqlQueryFromFile(queryFileName)
-        timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        query = query.format(product_id=id, current_time=timestamp, quantity=quantity)
+        query = query.format(product_id=productId, quantity=quantity)
         transaction.cursor.execute(query)
+        return transaction.cursor.fetchall()

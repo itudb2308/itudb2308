@@ -42,6 +42,7 @@ services = {
 
 # REFER BETWEEN SERVICES
 services["order"].setUserService(services["user"])
+services["order"].setProductService(services["product"])
 services["user"].setOrderService(services["order"])
 services["product"].setDistributionCenterService(services["distributionCenter"])
 

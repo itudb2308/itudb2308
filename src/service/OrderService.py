@@ -1,6 +1,7 @@
 import typing
 
 from dto.Transaction import Transaction
+from dto.User import User
 from repository.OrderRepository import OrderRepository
 from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
@@ -11,6 +12,7 @@ from service.Common import getPaginationObject, handleLimitAndOffset, transactio
 
 if typing.TYPE_CHECKING:
     from service.UserService import UserService
+    from service.ProductService import ProductService
 
 
 class OrderService:
@@ -18,9 +20,13 @@ class OrderService:
         self._orderRepository: OrderRepository = repositories["order"]
         self._orderItemRepository: OrderItemRepository = repositories["orderItem"]
         self._userService: UserService = None
+        self._productService: ProductService = None
 
     def setUserService(self, userService):
         self._userService = userService
+
+    def setProductService(self, productService):
+        self._productService = productService
 
     # PAGE METHODS
     @transactional
@@ -44,6 +50,34 @@ class OrderService:
         user_id = result["order"].user_id
         result["user"] = self._userService.findById(transaction, user_id)
         return result
+
+    @transactional
+    def cartPage(self, cart: dict, **kwargs) -> [Product]:
+        transaction = kwargs["transaction"]
+        productIds = [int(i) for i in cart.keys()]
+        if len(productIds) == 0:
+            return None
+        products = self._productService.findByIds(transaction, productIds)
+        return products
+
+    @transactional
+    def giveOrderPage(self, cart: dict, userId: int, **kwargs):
+        transaction = kwargs["transaction"]
+        orderedProducts = self._productService.sellProducts(transaction, cart)
+        user = self._userService.findById(transaction, userId)
+        orderId = self.createOrder(transaction, user, orderedProducts)
+        return orderId
+
+    @transactional
+    def addToCartPage(self, productId: int, **kwargs):
+        transaction = kwargs["transaction"]
+        return self._productService.getUserProductById(transaction, productId)
+
+    @transactional
+    def setOrderStatusPage(self, id: int, orderStatus: str, **kwargs):
+        transaction = kwargs["transaction"]
+        print(orderStatus, id)
+        self.setOrderStatus(transaction, id, orderStatus)
 
     # SERVICE METHODS
     def getAllAndCount(self, transaction: Transaction, settings: dict) -> ([Order], int):
@@ -71,9 +105,9 @@ class OrderService:
         return orderItems
 
     def setOrderStatus(self, transaction: Transaction, id: int, orderStatus: str):
+        print("STATUS: ", orderStatus)
         distinctStatus = self.getDistinctStatus(transaction)
         if orderStatus not in distinctStatus:
-            print("Invalid Order Status")
             raise Exception("Invalid Order Status")
 
         querySettings = {
@@ -96,6 +130,18 @@ class OrderService:
         querySettings["update_timestamp"] = "" if querySettings["update_timestamp"] else "--"
 
         self._orderRepository.setOrderStatus(transaction, querySettings)
+
+    def createOrder(self, transaction: Transaction, user: User, orderedProducts: dict) -> id:
+        numOfProducts = sum(map(lambda k: len(k["ids"]), orderedProducts.values()))
+
+        createOrderSettings = {
+            "user_id": user.id,
+            "user_gender": user.gender,
+            "num_of_item": numOfProducts
+        }
+        orderId = self._orderRepository.createOrder(transaction, createOrderSettings)
+        self._orderItemRepository.createOrderItems(transaction, orderId, user.id, orderedProducts)
+        return orderId
 
     def createNewTransaction(self):
         return self._orderRepository.createNewTransaction()
