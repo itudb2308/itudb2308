@@ -12,6 +12,7 @@ from repository.UserRepository import UserRepository
 from service.DistributionCenterService import DistributionCenterService
 from service.OrderService import OrderService
 from service.ProductService import ProductService
+from service.TransactionService import TransactionService
 from service.UserService import UserService
 
 connection = psycopg2.connect(
@@ -38,6 +39,7 @@ services = {
     "order": OrderService(repositories),
     "product": ProductService(repositories),
     "user": UserService(repositories),
+    "transaction": TransactionService(connection)
 }
 
 # REFER BETWEEN SERVICES
@@ -53,4 +55,4 @@ app.register_blueprint(CustomerBlueprint("customer", __name__, services), url_pr
 app.config['SECRET_KEY'] = '048275bd7538e006d38094a22bf5e730'
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=6161)

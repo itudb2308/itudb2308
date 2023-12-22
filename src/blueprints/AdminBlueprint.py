@@ -3,13 +3,15 @@ from blueprints.AdminOrdersBlueprint import AdminOrdersBlueprint
 from blueprints.AdminUsersBlueprint import AdminUsersBlueprint
 from blueprints.AdminProductsBlueprint import AdminProductsBlueprint
 from blueprints.AdminDistributionCentersBlueprint import AdminDistributionCentersBlueprint
+from service.TransactionService import TransactionService
 
 from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 
 def AdminBlueprint(name: str, importName: str, services: dict):
     bp = Blueprint(name, importName)
-    bp.register_blueprint(AdminOrdersBlueprint("orders", __name__, services["order"]), url_prefix="/orders")
+    transactionService = services["transaction"]
+    bp.register_blueprint(AdminOrdersBlueprint("orders", __name__, transactionService, services["order"]), url_prefix="/orders")
     bp.register_blueprint(AdminUsersBlueprint("users", __name__, services["user"]), url_prefix="/users")
     bp.register_blueprint(AdminProductsBlueprint("products", __name__, services["product"]), url_prefix="/products")
     bp.register_blueprint(AdminDistributionCentersBlueprint("distributionCenters", __name__, services["distributionCenter"]), url_prefix="/distribution-centers")

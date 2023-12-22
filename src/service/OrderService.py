@@ -80,7 +80,6 @@ class OrderService:
         self.setOrderStatus(transaction, id, orderStatus)
         if "cancelSale" in kwargs and kwargs["cancelSale"]:
             ids = self._orderItemRepository.getInventoryItemIdsByOrderId(transaction, id)
-            print(ids)
             self._productService.cancelSale(transaction, ids)
 
     # SERVICE METHODS
@@ -105,7 +104,6 @@ class OrderService:
         return [OrderItem(d) for d in data]
 
     def setOrderStatus(self, transaction: Transaction, id: int, orderStatus: str):
-        print("STATUS: ", orderStatus)
         distinctStatus = self.getDistinctStatus(transaction)
         if orderStatus not in distinctStatus:
             raise Exception("Invalid Order Status")
@@ -145,3 +143,6 @@ class OrderService:
 
     def createNewTransaction(self):
         return self._orderRepository.createNewTransaction()
+
+    def getUserById(self, transaction: Transaction, userId: int) -> User:
+        return self._userService.findById(transaction, userId)

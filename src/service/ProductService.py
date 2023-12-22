@@ -23,7 +23,6 @@ class ProductService:
     # PAGE METHODS
     @transactional
     def productsPage(self, querySettings: dict, **kwargs) -> dict:
-        print(f"QUERY SETTINGS ARE: {querySettings} ")
         transaction = kwargs["transaction"]
         result = dict()
         products, count = self.getAllAndCount(transaction, querySettings)
@@ -47,7 +46,6 @@ class ProductService:
     # returns the result dict that contains the products, brands, pagination, columnNames, categories
     @transactional
     def productCategoryDepartmentPage(self, querySettings: dict, **kwargs) -> dict:
-        print(f"QUERY SETTINGS ARE: {querySettings} ")
         transaction = kwargs["transaction"]
         result = dict()
         result["brands"] = self.getBrandNamesByCategoryAndDepartment(querySettings["category"], querySettings["department"], transaction)
