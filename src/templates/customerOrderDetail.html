@@ -10,16 +10,16 @@
         <h3>All Status Changes:</h3>
         <ul>
             {% if order.created_at %}
-                <li>Created at: {{ order.created_at.strftime('%-d %B %Y %A, %H:%M') }}</li>
+                <li>Created at: {{ order.created_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
             {% endif %}
             {% if order.shipped_at %}
-                <li>Shipped at: {{ order.shipped_at.strftime('%-d %B %Y %A, %H:%M') }}</li>
+                <li>Shipped at: {{ order.shipped_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
             {% endif %}
             {% if order.delivered_at %}
-                <li>Delivered at: {{ order.delivered_at.strftime('%-d %B %Y %A, %H:%M') }}</li>
+                <li>Delivered at: {{ order.delivered_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
             {% endif %}
             {% if order.returned_at %}
-                <li>Returned at: {{ order.returned_at.strftime('%-d %B %Y %A, %H:%M') }}</li>
+                <li>Returned at: {{ order.returned_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
             {% endif %}
         </ul>
         {% if order.status == 'Processing' %}
