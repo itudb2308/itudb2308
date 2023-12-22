@@ -64,11 +64,14 @@ body {
     overflow: hidden; /* Hide overflow for sliding effect */
     position: relative; /* Needed for absolute positioning of children */
     height: 100px;
+    font-size: large;
 }
 
 .box:hover {
     transform: translateY(-5px); /* Slightly raise the box on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    font-size: medium ;
+    background-color: lightgray;
 }
 
 .box-content {
@@ -91,11 +94,9 @@ body {
 .sub-box {
     flex: 1;
     text-align: center;
-    background-color: #ddd;
+    background-color: lightgray;
     padding: 10px 0;
-}
-.box:hover .box-content {
-    transform: translateY(-100%); /* Slide up */
+    font-size: 1rem;
 }
 
 .box:hover .sub-boxes {

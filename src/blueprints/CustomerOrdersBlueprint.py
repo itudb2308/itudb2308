@@ -29,7 +29,12 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             return redirect(url_for("customer.orders.orderDetailPage", id=orderId))
         cart = session["cart"]
         products = service.cartPage(cart)
-        cartPrice = sum(map(lambda p: p.retail_price * cart[str(p.id)], products))
+
+        if products != None:
+            cartPrice = sum(map(lambda p: p.retail_price * cart[str(p.id)], products))
+        else:
+            cartPrice = 0
+
         return render_template("cart.html", cart=cart, products=products, cartPrice=cartPrice)
 
     @bp.route('/addToCart', methods=["POST"])
@@ -57,8 +62,18 @@ def CustomerOrdersBlueprint(name: str, importName: str, service: OrderService):
             showFlashMessages([("Product removed from your cart", "success")])
         else:
             session["cart"] = {}
-            showFlashMessages([("Your cart is empyt", "success")])
+            showFlashMessages([("All of the items in your cart removed!", "success")])
         return redirect(url_for("customer.orders.cartPage"))
+
+    @bp.route('/changeOrderStatus/<int:id>', methods=["POST"])
+    def changeOrderStatus(id: int):
+        status = request.form["order_status"]
+        if status in ["Returned", "Cancelled"]:
+            service.setOrderStatusPage(id, status, cancelSale=True)
+            showFlashMessages([(f"Your order {status.lower()} successfully", "success")])
+        else:
+            showFlashMessages([("New status is not permitted", "danger")])
+        return redirect(url_for("customer.orders.orderDetailPage", id=id))
 
     def showFlashMessages(flashMessages):
         if flashMessages != None:

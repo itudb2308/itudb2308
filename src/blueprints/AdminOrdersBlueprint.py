@@ -16,7 +16,7 @@ def AdminOrdersBlueprint(name: str, importName: str, service: OrderService):
     def orderDetailPage(id: int):
         if request.method == "POST":
             orderStatus = request.form.get("order_status")
-            service.setOrderStatusPage(id, orderStatus)
+            service.setOrderStatusPage(id, orderStatus, cancelSale=(orderStatus == "Cancelled"))
         result = service.orderDetailPage(id)
         return render_template("orderDetail.html", **result)
 

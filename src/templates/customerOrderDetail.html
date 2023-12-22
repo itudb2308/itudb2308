@@ -5,18 +5,38 @@
 
 {% block body %}
     {% if order %}
-        <h1>Order</h1>
-        <div>
-            <strong>Customer : </strong>
-            <a href = "{{ url_for('customer.users.userPage') }}">
-                {{ user.first_name + " " + user.last_name }}
-            </a>
-        </div>
-        <div><strong>Number of Items: </strong>{{ order.num_of_items }}</div>
-        <div><strong>Ordered At: </strong>{{ order.created_at }}</div>
-        <div><strong>Shipped At: </strong>{{ order.shipped_at }}</div>
-        <div><strong>Delivered At: </strong>{{ order.delivered_at }}</div>
-        <div><strong>Returned At: </strong>{{ order.returned_at }}</div>
+        <h1>Order #{{ order.id }}</h1>
+        <h3>Current Status: {{ order.statusText }}</h3>
+        <h3>All Status Changes:</h3>
+        <ul>
+            {% if order.created_at %}
+                <li>Created at: {{ order.created_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
+            {% endif %}
+            {% if order.shipped_at %}
+                <li>Shipped at: {{ order.shipped_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
+            {% endif %}
+            {% if order.delivered_at %}
+                <li>Delivered at: {{ order.delivered_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
+            {% endif %}
+            {% if order.returned_at %}
+                <li>Returned at: {{ order.returned_at.strftime('%m-%d-%Y %H:%M:%S') }}</li>
+            {% endif %}
+        </ul>
+        {% if order.status == 'Processing' %}
+            <form action="{{ url_for('customer.orders.changeOrderStatus', id = order.id) }}" method="POST">
+                <input name="order_status" value="Cancelled" hidden="hidden">
+                <button class="btn btn-danger" type="submit">
+                    Cancel Order
+                </button>
+            </form>
+        {% elif order.status == 'Complete' %}
+            <form action="{{ url_for('customer.orders.changeOrderStatus', id = order.id) }}" method="POST">
+                <input name="order_status" value="Returned" hidden="hidden">
+                <button class="btn btn-danger" type="submit">
+                    Return Order
+                </button>
+            </form>
+        {% endif %}
     {% if orderItems %}
             <hr>
             <h2>Ordered Products</h2>
@@ -26,28 +46,37 @@
                         <th scope="col">Brand</th>
                         <th scope="col">Category</th>
                         <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Total Price</th>
                     </tr>
                 </thead>
                 {% for orderItem in orderItems %}
                     <tr>
                         <td>
-                            {{ orderItem.product.brand }}
+                            {{ orderItem.product_brand }}
                         </td>
                         <td>
-                            {{ orderItem.product.category }}
+                            {{ orderItem.product_category }}
                         </td>
                         <td>
-                            <a href="{{ url_for('customer.products.productDetailPage', id = orderItem.product.id)}}">
-                                {{ orderItem.product.name }}
+                            <a href="{{ url_for('customer.products.productDetailPage', id = orderItem.product_id)}}">
+                                {{ orderItem.product_name }}
                             </a>
                         </td>
                         <td>
-                            {{ '%.2f' | format(orderItem.sale_price) }}
+                            {{ orderItem.quantity }}
+                        </td>
+                        <td>
+                            {{ '%.2f' | format(orderItem.price) }}
+                        </td>
+                        <td>
+                            {{ '%.2f' | format(orderItem.price * orderItem.quantity) }}
                         </td>
                     </tr>
                 {% endfor %}
             </table>
+            <h3><strong>Total Price: </strong> {{  '%.2f' | format(totalOrderPrice) }}</h3>
         {% endif %}
     {% endif %}
 {% endblock %}

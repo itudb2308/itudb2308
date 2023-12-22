@@ -43,14 +43,6 @@ class ProductService:
         result["totalSold"] = stockAndSold[0][1]
         return result
 
-    '''
-    result = dict()
-            products, count = self.getAllAndCount(transaction, querySettings)
-            result["products"] = products
-            result["pagination"] = getPaginationObject(count, querySettings)
-            result["columnNames"] = self.getColumnNames(transaction)
-            result["categories"] = self.getCategories(transaction)
-    '''
     # given query settings includign filters and category and department
     # returns the result dict that contains the products, brands, pagination, columnNames, categories
     @transactional
@@ -142,8 +134,8 @@ class ProductService:
         transaction = kwargs["transaction"]
         return self.getUserProductById(transaction, id)
 
-
     # Function to add stock to a product that is specified with id.
+
     @transactional
     def addStockToInventoryPage(self, id: int, quantity: int, **kwargs):
         transaction = kwargs["transaction"]
@@ -217,8 +209,13 @@ class ProductService:
             }
         return result
 
+    # Given a list of inventory item ids , makes the sold_at field of the inventory item null
+    def cancelSale(self, transaction: Transaction, inventory_item_ids: list) -> None:
+        for id in inventory_item_ids:
+            self._inventoryItemRepository.cancelSale(transaction, id)
+
     def getUserProductById(self, transaction: Transaction, productId: int) -> UserProduct | None:
-        userProduct = self._inventoryItemRepository.getInventoryItemsByProductId(transaction, productId)
+        userProduct = self._inventoryItemRepository.getProductDetailByProductId(transaction, productId)
         # TODO: throw exception instead of returning none
         if userProduct is None:
             return None

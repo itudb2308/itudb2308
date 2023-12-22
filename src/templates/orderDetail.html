@@ -14,14 +14,16 @@
         </h2>
         <hr>
         <h3><strong>Status: </strong>{{ order.statusText }}</h3>
-        {% for nextStatus in order.adminNextStatus %}
-            <form action="{{ url_for('admin.orders.orderDetailPage', id = order.id) }}" method="POST">
-                <input name="order_status" value="{{ nextStatus }}" hidden="hidden">
-                <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" type="submit">
-                    Set Status {{ nextStatus }}
-                </button>
-            </form>
-        {% endfor %}
+        <div class="row">
+            {% for nextStatus in order.adminNextStatus %}
+                <form action="{{ url_for('admin.orders.orderDetailPage', id = order.id) }}" method="POST">
+                    <input name="order_status" value="{{ nextStatus }}" hidden="hidden">
+                    <button class="btn btn-{{ "success" if nextStatus != "Cancelled" else "danger" }}" style="margin: 0.5em;" type="submit">
+                        Set Status {{ nextStatus }}
+                    </button>
+                </form>
+            {% endfor %}
+        </div>
         {% if orderItems %}
             <hr>
             <h2>Ordered Products</h2>
@@ -31,34 +33,37 @@
                         <th scope="col">Brand</th>
                         <th scope="col">Category</th>
                         <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Distribution Center</th>
+                        <th scope="col">Total Price</th>
                     </tr>
                 </thead>
                 {% for orderItem in orderItems %}
                     <tr>
                         <td>
-                            {{ orderItem.product.brand }}
+                            {{ orderItem.product_brand }}
                         </td>
                         <td>
-                            {{ orderItem.product.category }}
+                            {{ orderItem.product_category }}
                         </td>
                         <td>
-                            <a href="{{ url_for('admin.products.productDetailPage', id = orderItem.product.id)}}">
-                                {{ orderItem.product.name }}
+                            <a href="{{ url_for('customer.products.productDetailPage', id = orderItem.product_id)}}">
+                                {{ orderItem.product_name }}
                             </a>
                         </td>
                         <td>
-                            {{ '%.2f' | format(orderItem.sale_price) }}
+                            {{ orderItem.quantity }}
                         </td>
                         <td>
-                            <a href="{{ url_for('admin.distributionCenters.distributionCenterDetailPage', id = orderItem.distributionCenter.id) }}">
-                                {{ orderItem.distributionCenter.name }}
-                            </a>
+                            {{ '%.2f' | format(orderItem.price) }}
+                        </td>
+                        <td>
+                            {{ '%.2f' | format(orderItem.price * orderItem.quantity) }}
                         </td>
                     </tr>
                 {% endfor %}
             </table>
+            <h3><strong>Total Price: </strong> {{  '%.2f' | format(totalOrderPrice) }}</h3>
         {% endif %}
     {% endif %}
 {% endblock %}
