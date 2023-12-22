@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from service.DistributionCenterService import DistributionCenterService
-from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 
 def AdminDistributionCentersBlueprint(name: str, importName: str, service: DistributionCenterService):

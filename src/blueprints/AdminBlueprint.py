@@ -5,12 +5,10 @@ from blueprints.AdminProductsBlueprint import AdminProductsBlueprint
 from blueprints.AdminDistributionCentersBlueprint import AdminDistributionCentersBlueprint
 from service.TransactionService import TransactionService
 
-from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
-
 
 def AdminBlueprint(name: str, importName: str, services: dict):
     bp = Blueprint(name, importName)
-    transactionService = services["transaction"]
+    transactionService: TransactionService = services["transaction"]
     bp.register_blueprint(AdminOrdersBlueprint("orders", __name__, transactionService, services["order"]), url_prefix="/orders")
     bp.register_blueprint(AdminUsersBlueprint("users", __name__, services["user"]), url_prefix="/users")
     bp.register_blueprint(AdminProductsBlueprint("products", __name__, services["product"]), url_prefix="/products")
@@ -19,11 +17,9 @@ def AdminBlueprint(name: str, importName: str, services: dict):
     @bp.before_request
     def before_request():
         if request.endpoint != "admin.loginPage":
-            try:
-                adminAuth(session)
-            except Exception as e:
-                if e.args[0] == ADMIN_NOT_AUTHENTICATED:
-                    return redirect(url_for('admin.loginPage'))
+            user = session.get("user")
+            if user != "admin":
+                return redirect(url_for('admin.loginPage'))
 
     @bp.route('/', methods=['GET'])
     def homePage():

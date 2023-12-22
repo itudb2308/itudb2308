@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for
 from service.OrderService import OrderService
 from service.TransactionService import TransactionService
-from validation.AdminAuth import adminAuth, ADMIN_NOT_AUTHENTICATED
 
 
 def AdminOrdersBlueprint(name: str, importName: str, transactionService: TransactionService, service: OrderService):

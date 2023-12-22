@@ -2,7 +2,6 @@ from flask import Blueprint, request, redirect, render_template, session, url_fo
 from blueprints.CustomerOrdersBlueprint import CustomerOrdersBlueprint
 from blueprints.CustomerProductsBlueprint import CustomerProductsBlueprint
 from blueprints.CustomerUsersBlueprint import CustomerUsersBlueprint
-from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 
 
 def CustomerBlueprint(name: str, importName: str, services: dict):
@@ -15,14 +14,12 @@ def CustomerBlueprint(name: str, importName: str, services: dict):
     @bp.before_request
     def before_request():
         if request.endpoint != 'customer.loginPage' and request.endpoint != 'customer.users.signUpPage':
-            try:
-                customerAuth(session)
-                session["uri"] = request.path
-                services["user"].addEvent(session)
-                session["sequence_number"] += 1
-            except Exception as e:
-                if e.args[0] == CUSTOMER_NOT_AUTHENTICATED:
-                    return redirect(url_for('customer.loginPage'))
+            isLogged: str = session.get("user_logged_in")
+            if isLogged == None or isLogged == False:
+                return redirect(url_for('customer.loginPage'))
+            session["uri"] = request.path
+            services["user"].addEvent(session)
+            session["sequence_number"] += 1
 
     @bp.route('/', methods=['GET'])
     def indexPage():

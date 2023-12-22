@@ -1,6 +1,5 @@
 from flask import Blueprint, request, render_template, flash, session, redirect, url_for
 from service.UserService import UserService
-from validation.CustomerAuth import customerAuth, CUSTOMER_NOT_AUTHENTICATED
 
 
 def CustomerUsersBlueprint(name: str, importName: str, service: UserService):
