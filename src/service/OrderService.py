@@ -7,8 +7,7 @@ from repository.OrderItemRepository import OrderItemRepository
 from dto.Order import Order
 from dto.OrderItem import OrderItem
 from dto.Product import Product
-from dto.DistributionCenter import DistributionCenter
-from service.Common import getPaginationObject, handleLimitAndOffset, transactional
+from service.Common import getPaginationObject
 
 if typing.TYPE_CHECKING:
     from service.UserService import UserService
@@ -29,7 +28,6 @@ class OrderService:
         self._productService = productService
 
     # PAGE METHODS
-    @transactional
     def ordersPage(self, querySettings: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -41,7 +39,6 @@ class OrderService:
         result["genderItems"] = self.getDistinctGender(transaction)
         return result
 
-    @transactional
     def orderDetailPage(self, id: int, **kwargs):
         transaction = kwargs["transaction"]
         result = dict()
@@ -52,7 +49,6 @@ class OrderService:
         result["totalOrderPrice"] = sum(map(lambda oi: oi.quantity * oi.price, result["orderItems"]))
         return result
 
-    @transactional
     def cartPage(self, cart: dict, **kwargs) -> [Product]:
         transaction = kwargs["transaction"]
         productIds = [int(i) for i in cart.keys()]
@@ -61,7 +57,6 @@ class OrderService:
         products = self._productService.findByIds(transaction, productIds)
         return products
 
-    @transactional
     def giveOrderPage(self, cart: dict, userId: int, **kwargs):
         transaction = kwargs["transaction"]
         orderedProducts = self._productService.sellProducts(transaction, cart)
@@ -69,12 +64,10 @@ class OrderService:
         orderId = self.createOrder(transaction, user, orderedProducts)
         return orderId
 
-    @transactional
     def addToCartPage(self, productId: int, **kwargs):
         transaction = kwargs["transaction"]
         return self._productService.getUserProductById(transaction, productId)
 
-    @transactional
     def setOrderStatusPage(self, id: int, orderStatus: str, **kwargs):
         transaction = kwargs["transaction"]
         self.setOrderStatus(transaction, id, orderStatus)
@@ -140,9 +133,6 @@ class OrderService:
         orderId = self._orderRepository.createOrder(transaction, createOrderSettings)
         self._orderItemRepository.createOrderItems(transaction, orderId, user.id, orderedProducts)
         return orderId
-
-    def createNewTransaction(self):
-        return self._orderRepository.createNewTransaction()
 
     def getUserById(self, transaction: Transaction, userId: int) -> User:
         return self._userService.findById(transaction, userId)

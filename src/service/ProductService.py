@@ -5,7 +5,6 @@ from repository.ProductRepository import ProductRepository
 from repository.InventoryItemRepository import InventoryItemRepository
 from forms.AddProductForm import AddProductForm
 from forms.UpdateProductForm import UpdateProductForm
-from service.Common import getPaginationObject, handleLimitAndOffset, transactional
 
 if typing.TYPE_CHECKING:
     from service.DistributionCenterService import DistributionCenterService
@@ -21,7 +20,6 @@ class ProductService:
         self._distributionCenterService = distributionCenterService
 
     # PAGE METHODS
-    @transactional
     def productsPage(self, querySettings: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -32,7 +30,6 @@ class ProductService:
         result["categories"] = self.getCategories(transaction)
         return result
 
-    @transactional
     def productDetailPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -44,7 +41,6 @@ class ProductService:
 
     # given query settings includign filters and category and department
     # returns the result dict that contains the products, brands, pagination, columnNames, categories
-    @transactional
     def productCategoryDepartmentPage(self, querySettings: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -58,7 +54,6 @@ class ProductService:
 
     # returns newly added products id
 
-    @transactional
     def addProductPage(self, method, form, **kwargs) -> int:
         transaction = kwargs["transaction"]
 
@@ -89,7 +84,6 @@ class ProductService:
                 result["form"] = form
         return result
 
-    @transactional
     def updateProductPage(self, method, form, id, **kwargs) -> int:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
@@ -118,7 +112,6 @@ class ProductService:
                 result["form"] = form
         return result
 
-    @transactional
     def deleteProductPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -126,7 +119,6 @@ class ProductService:
         result["flash"] = [("Product deleted successfully", "success")]
         return result
 
-    @transactional
     def getUserProductDetailPage(self, id: int, **kwargs) -> UserProduct | None:
         # return the product information with given id
         transaction = kwargs["transaction"]
@@ -134,7 +126,6 @@ class ProductService:
 
     # Function to add stock to a product that is specified with id.
 
-    @transactional
     def addStockToInventoryPage(self, id: int, quantity: int, **kwargs):
         transaction = kwargs["transaction"]
         self.addStockToInventory(transaction, id, quantity)
@@ -157,7 +148,6 @@ class ProductService:
     def getColumnNames(self, transaction: Transaction) -> [str]:
         return [cn[0] for cn in self._productRepository.getColumnNames(transaction)]
 
-    @transactional
     def getCategoriesPage(self, **kwargs):
         transaction = kwargs["transaction"]
         return self.getCategories(transaction)
@@ -218,6 +208,3 @@ class ProductService:
         if userProduct is None:
             return None
         return UserProduct(userProduct)
-
-    def createNewTransaction(self):
-        return self._productRepository.createNewTransaction()

@@ -2,14 +2,20 @@ from flask import Blueprint, request, redirect, render_template, session, url_fo
 from blueprints.CustomerOrdersBlueprint import CustomerOrdersBlueprint
 from blueprints.CustomerProductsBlueprint import CustomerProductsBlueprint
 from blueprints.CustomerUsersBlueprint import CustomerUsersBlueprint
+from service.TransactionService import TransactionService
 
 
 def CustomerBlueprint(name: str, importName: str, services: dict):
     bp = Blueprint(name, importName)
+    transactionService: TransactionService = services["transaction"]
 
-    bp.register_blueprint(CustomerOrdersBlueprint("orders", __name__, services["order"]), url_prefix="/orders")
-    bp.register_blueprint(CustomerProductsBlueprint("products", __name__, services["product"]), url_prefix="/products")
-    bp.register_blueprint(CustomerUsersBlueprint("users", __name__, services["user"]), url_prefix="")
+    customerOrdersBP = CustomerOrdersBlueprint("orders", __name__, transactionService, services["order"])
+    customerProductsBP = CustomerProductsBlueprint("products", __name__, transactionService, services["product"])
+    customerUsersBP = CustomerUsersBlueprint("users", __name__, transactionService, services["user"])
+
+    bp.register_blueprint(customerOrdersBP, url_prefix="/orders")
+    bp.register_blueprint(customerProductsBP, url_prefix="/products")
+    bp.register_blueprint(customerUsersBP, url_prefix="")
 
     @bp.before_request
     def before_request():

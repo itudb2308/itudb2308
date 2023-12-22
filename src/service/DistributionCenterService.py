@@ -3,7 +3,6 @@ from repository.DistributionCenterRepository import DistributionCenterRepository
 from dto.DistributionCenter import DistributionCenter
 
 from forms.DistributionCenterForm import DistributionCenterForm, UpdateDistributionCenterForm
-from service.Common import transactional
 
 
 class DistributionCenterService:
@@ -11,21 +10,18 @@ class DistributionCenterService:
         self._distributionCenterRepository: DistributionCenterRepository = repositories["distributionCenter"]
 
     # PAGE METHODS
-    @transactional
     def distributionCentersPage(self, querySettings: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
         result["distributionCenters"] = self.getAll(transaction, querySettings)
         return result
 
-    @transactional
     def distributionCenterDetailPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
         result["distributionCenter"] = self.findById(transaction, id)
         return result
 
-    @transactional
     def addDistributionCenterPage(self, method: str, form: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
@@ -53,7 +49,6 @@ class DistributionCenterService:
 
         return result
 
-    @transactional
     def updateDistributionCenterPage(self, id: int, method: str, form, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None, "id": id}
@@ -86,7 +81,6 @@ class DistributionCenterService:
         return result
 
     # may be success or failure message depending on the result of the delete operation can be returned
-    @transactional
     def deleteDistributionCenterPage(self, id: int, **kwargs):
         transaction = kwargs["transaction"]
         return self._distributionCenterRepository.deleteDistributionCenter(transaction, id)
@@ -98,6 +92,3 @@ class DistributionCenterService:
 
     def getAll(self, transaction: Transaction, settings: dict) -> [DistributionCenter]:
         return [DistributionCenter(dc) for dc in self._distributionCenterRepository.getAll(transaction, **settings)]
-
-    def createNewTransaction(self):
-        return self._distributionCenterRepository.createNewTransaction()

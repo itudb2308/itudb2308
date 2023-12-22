@@ -7,6 +7,7 @@ def AdminOrdersBlueprint(name: str, importName: str, transactionService: Transac
     bp = Blueprint(name, importName)
 
     @bp.route('/', methods=["GET"])
+    @transactionService.transactional()
     def ordersPage():
         querySettings = request.args.to_dict()
         result = service.ordersPage(querySettings)

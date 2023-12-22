@@ -1,8 +1,9 @@
 from flask import Blueprint, request, render_template, session, redirect, url_for, flash
 from service.DistributionCenterService import DistributionCenterService
+from service.TransactionService import TransactionService
 
 
-def AdminDistributionCentersBlueprint(name: str, importName: str, service: DistributionCenterService):
+def AdminDistributionCentersBlueprint(name: str, importName: str, transactionService: TransactionService, service: DistributionCenterService):
     bp = Blueprint(name, importName)
 
     @bp.route('/', methods=["POST", "GET"])

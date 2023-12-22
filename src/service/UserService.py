@@ -9,7 +9,6 @@ from repository.UserRepository import UserRepository
 from repository.EventRepository import EventRepository
 from forms.AddUserForm import AddUserForm
 from forms.UpdateUserForm import UpdateUserForm
-from service.Common import getPaginationObject, handleLimitAndOffset, transactional
 from requests import get
 
 import string
@@ -30,8 +29,6 @@ class UserService:
     def setOrderService(self, orderService):
         self._orderService = orderService
 
-    # PAGE METHODS
-    @transactional
     def usersPage(self, settings: dict, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -42,7 +39,6 @@ class UserService:
         result["countryItems"] = self.getDistinctCountry(transaction)
         return result
 
-    @transactional
     def userDetailPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -51,19 +47,16 @@ class UserService:
         result["events"] = self.getAllEvents(transaction, {"user_id": id})
         return result
 
-    @transactional
     def eventDetailPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
         result["event"] = self.eventsFindById(transaction, id)
         return result
 
-    @transactional
     def customerLoginPage(self, mail, **kwargs) -> User:
         transaction = kwargs["transaction"]
         return self.findByEmail(transaction, mail)
 
-    @transactional
     def signUpPage(self, method, form, **kwargs) -> int:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
@@ -97,7 +90,6 @@ class UserService:
                 result["form"] = form
         return result
 
-    @transactional
     def updateUserPage(self, method, form, id, **kwargs) -> int:
         transaction = kwargs["transaction"]
         result = {"submitted_and_valid": False, "flash": [], "form": None}
@@ -123,7 +115,6 @@ class UserService:
                 result["form"] = form
         return result
 
-    @transactional
     def deleteUserPage(self, id: int, **kwargs) -> dict:
         transaction = kwargs["transaction"]
         result = dict()
@@ -131,12 +122,10 @@ class UserService:
         result["flash"] = [("User deleted successfully", "success")]
         return result
 
-    @transactional
     def addEvent(self, session, **kwargs):
         transaction = kwargs["transaction"]
         return self._addEvent(transaction, session)
 
-    @transactional
     def deleteEventPage(self, id: int, **kwargs):
         transaction = kwargs["transaction"]
         self.deleteEvent(transaction, id)
@@ -235,6 +224,3 @@ class UserService:
             "event_type": event_type
         }
         return event
-
-    def createNewTransaction(self):
-        return self._userRepository.createNewTransaction()

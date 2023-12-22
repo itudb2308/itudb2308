@@ -55,4 +55,4 @@ app.register_blueprint(CustomerBlueprint("customer", __name__, services), url_pr
 app.config['SECRET_KEY'] = '048275bd7538e006d38094a22bf5e730'
 
 if __name__ == "__main__":
-    app.run(debug=True, port=6161)
+    app.run(debug=True)

@@ -9,10 +9,16 @@ from service.TransactionService import TransactionService
 def AdminBlueprint(name: str, importName: str, services: dict):
     bp = Blueprint(name, importName)
     transactionService: TransactionService = services["transaction"]
-    bp.register_blueprint(AdminOrdersBlueprint("orders", __name__, transactionService, services["order"]), url_prefix="/orders")
-    bp.register_blueprint(AdminUsersBlueprint("users", __name__, services["user"]), url_prefix="/users")
-    bp.register_blueprint(AdminProductsBlueprint("products", __name__, services["product"]), url_prefix="/products")
-    bp.register_blueprint(AdminDistributionCentersBlueprint("distributionCenters", __name__, services["distributionCenter"]), url_prefix="/distribution-centers")
+
+    adminOrdersBP = AdminOrdersBlueprint("orders", __name__, transactionService, services["order"])
+    adminUsersBP = AdminUsersBlueprint("users", __name__, transactionService, services["user"])
+    adminProductsBP = AdminProductsBlueprint("products", __name__, transactionService, services["product"])
+    adminDistributionCentersBP = AdminDistributionCentersBlueprint("distributionCenters", __name__, transactionService, services["distributionCenter"])
+
+    bp.register_blueprint(adminOrdersBP, url_prefix="/orders")
+    bp.register_blueprint(adminUsersBP, url_prefix="/users")
+    bp.register_blueprint(adminProductsBP, url_prefix="/products")
+    bp.register_blueprint(adminDistributionCentersBP, url_prefix="/distribution-centers")
 
     @bp.before_request
     def before_request():

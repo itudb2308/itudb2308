@@ -1,8 +1,10 @@
 from flask import Blueprint, request, render_template, flash, session, redirect, url_for
+
+from service.TransactionService import TransactionService
 from service.UserService import UserService
 
 
-def AdminUsersBlueprint(name: str, importName: str, service: UserService):
+def AdminUsersBlueprint(name: str, importName: str, transactionService: TransactionService, service: UserService):
     bp = Blueprint(name, importName)
 
     @bp.route('/', methods=["GET"])
