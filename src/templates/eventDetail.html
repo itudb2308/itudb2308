@@ -5,9 +5,30 @@
 {% block body %}
     {% if event %}
         <h1>Event #{{ event.id }}</h1>
-        <div><strong>Session ID: </strong>{{ event.session_id }}</div>
-        <div><strong>Event Type: </strong>{{ event.event_type }}</div>
-        <div><strong>Event Created At: </strong>{{ event.created_at }}</div>
+        <div>
+            <strong>User ID: </strong>
+            <a href="{{url_for('admin.users.userDetailPage', id = event.user_id) }}">{{ event.user_id }}</a>
+        </div>
+        <div>
+            <strong>Session ID: </strong>
+            {{ event.session_id }}
+        </div>
+        <div>
+            <strong>Event Created At: </strong>
+            {{ event.created_at }}
+        </div>
+        <div>
+            <strong>URI: </strong>
+            {{ event.uri }}
+        </div>
+        <div>
+            <strong>Event Type: </strong>
+            {{ event.event_type }}
+        </div>
+        <div>
+            <strong>Browser: </strong>
+            {{ event.browser }}
+        </div>
         <a href = "{{ url_for('admin.users.deleteEventPage', id = event.id) }}" class="btn btn-danger">Delete</a>
     {% endif %}
 {% endblock %}
