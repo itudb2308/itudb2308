@@ -12,7 +12,7 @@
                     <strong>Category:</strong> {{ product.category }}<br>
                     <strong>Brand:</strong> {{ product.brand }}<br>
                     <strong>Department:</strong> {{ product.department }}<br>
-                    <strong>Price:</strong> ${{ product.price }}<br>
+                    <strong>Price:</strong> ${{ '%.2f' | format(product.price) }}<br>
                     <strong>Total Stock:</strong> {{ product.total_stock }}
                 </p>       
                 <form action="{{url_for('customer.orders.addToCartPage')}}" method="post" class="mt-4">

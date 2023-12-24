@@ -53,6 +53,8 @@ class ProductRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
 
         queryArguments = self.defaultArguments.copy()
+        
+        self.replaceDoubleApostrophes(kwargs)
 
         # ! Assuming all kwargs key will be the same as corresponding columns name
         if "limit" in kwargs.keys() and kwargs["limit"] != "":
@@ -81,7 +83,7 @@ class ProductRepository(BaseRepository):
         if "name" in kwargs and kwargs["name"] != "":
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"] + f" P.name ILIKE '%{kwargs['name']}%' "
+            queryArguments["where"] = queryArguments["where"] + f" P.name LIKE '%{kwargs['name']}%' "
 
         if "brand" in kwargs and kwargs["brand"] != "":
             self.handleWhereStatement(queryArguments)

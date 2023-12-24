@@ -17,7 +17,12 @@ def AdminProductsBlueprint(name: str, importName: str, service: ProductService):
 
     @bp.route('/<int:id>', methods=["GET"])
     def productDetailPage(id):
-        result = service.productDetailPage(id)
+        
+        try : 
+            result = service.productDetailPage(id)
+        except Exception as e:
+            return render_template('404.html')
+        
         return render_template('productDetail.html', **result)
 
     @bp.route('/add_product', methods=["GET", "POST"])

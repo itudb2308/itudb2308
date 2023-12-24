@@ -18,6 +18,9 @@ def CustomerProductsBlueprint(name: str, importName: str, service: ProductServic
         except TypeError:
             return render_template('404.html')
 
+        if product is None:
+            return render_template('404.html')
+        
         return render_template('customerProductDetail.html', product=product)
 
     @bp.route('/', methods=["GET"])
