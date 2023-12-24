@@ -83,7 +83,7 @@ class ProductRepository(BaseRepository):
         if "name" in kwargs and kwargs["name"] != "":
             self.handleWhereStatement(queryArguments)
             # add requested condition
-            queryArguments["where"] = queryArguments["where"] + f" P.name LIKE '%{kwargs['name']}%' "
+            queryArguments["where"] = queryArguments["where"] + f" P.name ILIKE '%{kwargs['name']}%' "
 
         if "brand" in kwargs and kwargs["brand"] != "":
             self.handleWhereStatement(queryArguments)

@@ -115,6 +115,8 @@ CREATE TABLE IF NOT EXISTS order_items
     sale_price        DOUBLE PRECISION
 );
 
+--DELIMETER-FOR-PARSER--
+
 CREATE OR REPLACE FUNCTION update_inventory_item()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -132,6 +134,8 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+--DELIMETER-FOR-PARSER--
 
 CREATE TRIGGER update_product_trigger
 AFTER UPDATE ON products
