@@ -53,6 +53,8 @@ class ProductRepository(BaseRepository):
         query = self._getSqlQueryFromFile(queryFileName)
 
         queryArguments = self.defaultArguments.copy()
+        
+        self.replaceDoubleApostrophes(kwargs)
 
         # ! Assuming all kwargs key will be the same as corresponding columns name
         if "limit" in kwargs.keys() and kwargs["limit"] != "":

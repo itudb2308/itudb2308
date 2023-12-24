@@ -114,3 +114,30 @@ CREATE TABLE IF NOT EXISTS order_items
     returned_at       TIMESTAMP,
     sale_price        DOUBLE PRECISION
 );
+
+--DELIMETER-FOR-PARSER--
+
+CREATE OR REPLACE FUNCTION update_inventory_item()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE inventory_items
+    SET cost = NEW.cost,
+        product_category = NEW.category,
+        product_name = NEW.name,
+        product_brand = NEW.brand,
+        product_retail_price = NEW.retail_price,
+        product_department = NEW.department,
+        product_sku = NEW.sku,
+        product_distribution_center_id = NEW.distribution_center_id
+    WHERE product_id = NEW.id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+--DELIMETER-FOR-PARSER--
+
+CREATE TRIGGER update_product_trigger
+AFTER UPDATE ON products
+FOR EACH ROW
+EXECUTE FUNCTION update_inventory_item();

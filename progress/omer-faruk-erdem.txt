@@ -34,3 +34,5 @@ WEEK 12 :
 Created UI for customers home page and customer product listing pages.
 Implemented product listing and product detail endpoints.
 Fix product detail no stock error issue.
+Create trigger for products table to update inventory_items table.
+Fix some not found errors on detailPages.
