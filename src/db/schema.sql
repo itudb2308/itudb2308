@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS  products, inventory_items, orders, order_items, users, events, distribution_centers;
 
+--DELIMETER-FOR-PARSER--
+
 CREATE TABLE IF NOT EXISTS distribution_centers
 (
     id        BIGSERIAL PRIMARY KEY,
@@ -7,6 +9,8 @@ CREATE TABLE IF NOT EXISTS distribution_centers
     latitude  DOUBLE PRECISION,
     longitude DOUBLE PRECISION
 );
+
+--DELIMETER-FOR-PARSER--
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -27,6 +31,8 @@ CREATE TABLE IF NOT EXISTS users
     created_at     TIMESTAMP
 );
 
+--DELIMETER-FOR-PARSER--
+
 CREATE TABLE IF NOT EXISTS events
 (
     id              BIGSERIAL PRIMARY KEY,
@@ -44,6 +50,8 @@ CREATE TABLE IF NOT EXISTS events
     event_type      VARCHAR(15)
 );
 
+--DELIMETER-FOR-PARSER--
+
 CREATE TABLE IF NOT EXISTS products
 (
     id                     BIGSERIAL PRIMARY KEY,
@@ -56,6 +64,8 @@ CREATE TABLE IF NOT EXISTS products
     sku                    CHAR(32),
     distribution_center_id BIGINT REFERENCES distribution_centers(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+--DELIMETER-FOR-PARSER--
 
 CREATE TABLE IF NOT EXISTS inventory_items
 (
@@ -73,6 +83,8 @@ CREATE TABLE IF NOT EXISTS inventory_items
     product_distribution_center_id BIGINT REFERENCES distribution_centers(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+--DELIMETER-FOR-PARSER--
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id           BIGSERIAL PRIMARY KEY,
@@ -85,6 +97,8 @@ CREATE TABLE IF NOT EXISTS orders
     delivered_at TIMESTAMP,
     num_of_item  BIGINT
 );
+
+--DELIMETER-FOR-PARSER--
 
 CREATE TABLE IF NOT EXISTS order_items
 (
